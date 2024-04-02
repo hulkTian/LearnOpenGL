@@ -1,0 +1,80 @@
+//
+// Created by TS on 2024/2/29.
+//
+
+#include "NativeTriangle4.h"
+
+static float first_vertices[] = {
+        -0.9f, -0.5f, 0.0f,  // left
+        -0.0f, -0.5f, 0.0f,  // right
+        -0.45f, 0.5f, 0.0f,  // top
+};
+static float second_vertices[] = {
+        0.0f, -0.5f, 0.0f,  // left
+        0.9f, -0.5f, 0.0f,  // right
+        0.45f, 0.5f, 0.0f   // top
+};
+
+void NativeTriangle4::Create() {
+    GLUtils::printGLInfo();
+
+    //加载顶点着色器代码
+    VERTEX_SHADER = GLUtils::openTextFile("shaders/vertex_shader_triangle.glsl");
+
+    //加载片段着色器代码
+    FRAGMENT_SHADER = GLUtils::openTextFile("shaders/fragment_shader_triangle.glsl");
+
+    //创建着色器程序,并编译着色器代码
+    m_ProgramObj = GLUtils::createProgram(&VERTEX_SHADER, &FRAGMENT_SHADER);
+
+    if (!m_ProgramObj) {
+        LOGD("Could not create program")
+        return;
+    }
+    //设置清屏颜色
+    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+}
+
+void NativeTriangle4::Draw() {
+    //清除屏幕
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    //声明VBO和VAO
+    GLuint VBOs[2], VAOs[2];
+    glGenVertexArrays(2, VAOs);
+    glGenBuffers(2, VBOs);
+
+    //绑定第一个三角形的VAO和VBO
+    glBindVertexArray(VAOs[0]);
+    glBindBuffer(GL_ARRAY_BUFFER, VBOs[0]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(first_vertices), first_vertices, GL_STATIC_DRAW);
+    //设置顶点属性
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)nullptr);
+    glEnableVertexAttribArray(0);
+
+    //绑定第二个三角形的VAO和VBO
+    glBindVertexArray(VAOs[1]);
+    glBindBuffer(GL_ARRAY_BUFFER, VBOs[1]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(second_vertices), second_vertices, GL_STATIC_DRAW);
+    //给第二个三角形设置顶点属性，由于我们使用的相同的着色器所以设置的顶点属性也相同
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)nullptr);
+    glEnableVertexAttribArray(0);
+
+    //激活着色器程序
+    glUseProgram(m_ProgramObj);
+
+    //绘制形状
+    glBindVertexArray(VAOs[0]);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glBindVertexArray(VAOs[1]);
+    glDrawArrays(GL_TRIANGLES, 0, 3);
+
+    //关闭顶点属性
+    glDeleteVertexArrays(2, VAOs);
+    glDeleteBuffers(2, VBOs);
+    glDeleteProgram(m_ProgramObj);
+}
+
+void NativeTriangle4::Shutdown() {
+    GLBaseSample::Shutdown();
+}
