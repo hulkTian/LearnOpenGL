@@ -17,4 +17,6 @@ public:
     virtual void Draw();
 
     virtual void Shutdown();
+private:
+    GLuint VBOs[2], VAOs[2];
 };

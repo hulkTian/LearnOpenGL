@@ -72,6 +72,5 @@ void NativeTriangle::Shutdown() {
     //关闭顶点属性
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
-    glDeleteProgram(m_ProgramObj);
     GLBaseSample::Shutdown();
 }

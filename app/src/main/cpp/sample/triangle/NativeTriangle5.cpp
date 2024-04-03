@@ -10,11 +10,19 @@ static float vVertices[] = {
         0.5f, -0.5f, 0.0f            // 右下角
 };
 
-//声明VBO和VAO
-GLuint VBO, VAO;
-
 void NativeTriangle5::Create() {
     GLUtils::printGLInfo();
+
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+
+    //绑定三角形的VAO和VBO
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vVertices), vVertices, GL_STATIC_DRAW);
+    //设置顶点属性
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *) nullptr);
+    glEnableVertexAttribArray(0);
 
     //加载顶点着色器代码
     VERTEX_SHADER = GLUtils::openTextFile("shaders/vertex_shader_triangle5.glsl");
@@ -31,27 +39,15 @@ void NativeTriangle5::Create() {
     }
     //设置清屏颜色
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-
-    //绑定三角形的VAO和VBO
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vVertices), vVertices, GL_STATIC_DRAW);
-    //设置顶点属性
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)nullptr);
-    glEnableVertexAttribArray(0);
-
-    glBindVertexArray(VAO);
 }
-
 
 void NativeTriangle5::Draw() {
     //清除屏幕
     glClear(GL_COLOR_BUFFER_BIT);
 
     glUseProgram(m_ProgramObj);
+
+    glBindVertexArray(VAO);
 
     // 更新uniform颜色
     int time = TimeUtils::currentTimeSeconds();

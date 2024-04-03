@@ -23,6 +23,28 @@ unsigned int indices[] = {
 void NativeRectangle::Create() {
     GLUtils::printGLInfo();
 
+    //顶点数组对象和元素缓冲对象
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+    glGenBuffers(1, &EBO);
+
+    // 1. 绑定VAO，后面设置的顶点属性就会存放在这个VAO中了
+    glBindVertexArray(VAO);
+
+    // 2. 把顶点数组复制到缓冲中供OpenGL使用
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+    // 3. 设置顶点属性指针
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)nullptr);
+    glEnableVertexAttribArray(0);
+
+    //解除绑定VBO
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
     //加载顶点着色器代码
     VERTEX_SHADER = GLUtils::openTextFile("shaders/vertex_shader_triangle.glsl");
 
@@ -44,41 +66,19 @@ void NativeRectangle::Draw() {
     //清除屏幕
     glClear(GL_COLOR_BUFFER_BIT);
 
-    //声明顶点缓存对象、顶点数组对象和元素缓冲对象
-    unsigned int VBO, VAO, EBO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
-
-    // 1. 绑定VAO
-    glBindVertexArray(VAO);
-
-    // 2. 把顶点数组复制到缓冲中供OpenGL使用
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-    // 3. 设置顶点属性指针
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)nullptr);
-    glEnableVertexAttribArray(0);
-
-    //解除绑定VBO
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
     //激活着色器程序
     glUseProgram(m_ProgramObj);
 
+    // 绑定需要绘制的VAO
+    glBindVertexArray(VAO);
+
     //绘制形状
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
-
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &EBO);
-    glDeleteProgram(m_ProgramObj);
 }
 
 void NativeRectangle::Shutdown() {
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &EBO);
     GLBaseSample::Shutdown();
 }

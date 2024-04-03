@@ -17,4 +17,7 @@ public:
     virtual void Draw();
 
     virtual void Shutdown();
+private:
+    //声明VBO和VAO
+    GLuint VBO, VAO;
 };

@@ -18,6 +18,9 @@ public:
     virtual void Draw();
 
     virtual void Shutdown();
+
+private:
+    unsigned int VBO, VAO, EBO;
 };
 
 
