@@ -112,19 +112,25 @@ char *GLUtils::openTextFile(const char *path) {
  * @param fragmentSource 片段着色器代码字符串
  * @return 着色器程序id
  */
-GLuint GLUtils::createProgram(const char **vertexSource, const char **fragmentSource) {
+GLuint GLUtils::createProgram(const char *vertexPath, const char *fragmentPath) {
+    //加载顶点着色器代码
+    const char *vertexCode = openTextFile(vertexPath);
+
+    //加载片段着色器代码
+    const char *fragmentCode = openTextFile(fragmentPath);
+
     //声明着色器程序id
     GLuint programId;
 
     FUN_BEGIN_TIME("GLUtils::createProgram")
         //加载顶点着色器代码并创建shader对象
-        GLuint vertexShader = loadShader(GL_VERTEX_SHADER, vertexSource);
+        GLuint vertexShader = loadShader(GL_VERTEX_SHADER, &vertexCode);
         if (vertexShader == 0) {
             return 0;
         }
 
         //加载片段着色器代码并创建shader对象
-        GLuint fragmentShader = loadShader(GL_FRAGMENT_SHADER, fragmentSource);
+        GLuint fragmentShader = loadShader(GL_FRAGMENT_SHADER, &fragmentCode);
         if (fragmentShader == 0) {
             return 0;
         }
@@ -150,6 +156,18 @@ GLuint GLUtils::createProgram(const char **vertexSource, const char **fragmentSo
         GLint linkStatus;
         glGetProgramiv(programId, GL_LINK_STATUS, &linkStatus);
 
+        //释放顶点着色器对象和片段着色器对象
+        glDeleteShader(vertexShader);
+        glDeleteShader(fragmentShader);
+        if (vertexCode != nullptr) {
+            delete[] vertexCode;
+            vertexCode = nullptr;
+        }
+        if (fragmentCode != nullptr) {
+            delete[] fragmentCode;
+            fragmentCode = nullptr;
+        }
+
         if (!linkStatus) {
             GLint infoLen = 0;
             glGetProgramiv(programId, GL_INFO_LOG_LENGTH, &infoLen);
@@ -164,10 +182,6 @@ GLuint GLUtils::createProgram(const char **vertexSource, const char **fragmentSo
             glDeleteProgram(programId);
             return 0;
         }
-
-        //释放顶点着色器对象和片段着色器对象
-        glDeleteShader(vertexShader);
-        glDeleteShader(fragmentShader);
 
     FUN_END_TIME("GLUtils::createProgram")
     return programId;

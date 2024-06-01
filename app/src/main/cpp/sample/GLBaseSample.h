@@ -44,14 +44,6 @@ public:
             glDeleteProgram(m_ProgramObj);
             m_ProgramObj = GL_NONE;
         }
-        if (VERTEX_SHADER != nullptr) {
-            delete[] VERTEX_SHADER;
-            VERTEX_SHADER = nullptr;
-        }
-        if (FRAGMENT_SHADER != nullptr) {
-            delete[] FRAGMENT_SHADER;
-            FRAGMENT_SHADER = nullptr;
-        }
     }
 
 protected:
@@ -59,14 +51,6 @@ protected:
      * 程序对象
      */
     GLuint m_ProgramObj;
-    /**
-     * 顶点着色器
-     */
-    const char *VERTEX_SHADER;
-    /**
-     * 片段着色器脚本
-     */
-    const char *FRAGMENT_SHADER;
     /**
      * 屏幕宽高
      */

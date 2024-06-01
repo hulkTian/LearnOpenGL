@@ -1,6 +1,7 @@
 //
 // Created by TS on 2024/2/29.
 //
+//通过绘制两个不同的三角形，了解多个VAO和VBO的使用方式
 
 #include "NativeTriangle4.h"
 
@@ -38,14 +39,9 @@ void NativeTriangle4::Create() {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)nullptr);
     glEnableVertexAttribArray(0);
 
-    //加载顶点着色器代码
-    VERTEX_SHADER = GLUtils::openTextFile("shaders/vertex_shader_triangle.glsl");
-
-    //加载片段着色器代码
-    FRAGMENT_SHADER = GLUtils::openTextFile("shaders/fragment_shader_triangle.glsl");
-
     //创建着色器程序,并编译着色器代码
-    m_ProgramObj = GLUtils::createProgram(&VERTEX_SHADER, &FRAGMENT_SHADER);
+    m_ProgramObj = GLUtils::createProgram("shaders/vertex_shader_triangle.glsl",
+                                          "shaders/fragment_shader_triangle.glsl");
 
     if (!m_ProgramObj) {
         LOGD("Could not create program")
@@ -67,7 +63,6 @@ void NativeTriangle4::Draw() {
     glDrawArrays(GL_TRIANGLES, 0, 3);
     glBindVertexArray(VAOs[1]);
     glDrawArrays(GL_TRIANGLES, 0, 3);
-
 }
 
 void NativeTriangle4::Shutdown() {

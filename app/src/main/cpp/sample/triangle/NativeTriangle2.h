@@ -21,6 +21,5 @@ public:
 
 private:
     GLuint vao;
-    GLuint points_vbo;
-    GLuint colours_vbo;
+    GLuint vbo;
 };

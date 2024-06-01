@@ -1,6 +1,7 @@
 //
 // Created by TS on 2024/2/28.
 //
+//使用EBO指定顶点的绘制顺序，只用四个不同的顶点数据绘制一个矩形
 
 #include "NativeRectangle.h"
 
@@ -45,14 +46,9 @@ void NativeRectangle::Create() {
     //解除绑定VBO
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    //加载顶点着色器代码
-    VERTEX_SHADER = GLUtils::openTextFile("shaders/vertex_shader_triangle.glsl");
-
-    //加载片段着色器代码
-    FRAGMENT_SHADER = GLUtils::openTextFile("shaders/fragment_shader_triangle.glsl");
-
     //创建着色器程序,并编译着色器代码
-    m_ProgramObj = GLUtils::createProgram(&VERTEX_SHADER, &FRAGMENT_SHADER);
+    m_ProgramObj = GLUtils::createProgram("shaders/vertex_shader_triangle.glsl",
+                                          "shaders/fragment_shader_triangle.glsl");
 
     if (!m_ProgramObj) {
         LOGD("Could not create program")

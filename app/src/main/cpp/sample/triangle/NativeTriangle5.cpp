@@ -1,6 +1,7 @@
 //
 // Created by TS on 2024/3/1.
 //
+//使用uniform定义一个颜色变量，再循环渲染过程中随着时间设置颜色变量的值
 
 #include "NativeTriangle5.h"
 
@@ -24,14 +25,9 @@ void NativeTriangle5::Create() {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *) nullptr);
     glEnableVertexAttribArray(0);
 
-    //加载顶点着色器代码
-    VERTEX_SHADER = GLUtils::openTextFile("shaders/vertex_shader_triangle5.glsl");
-
-    //加载片段着色器代码
-    FRAGMENT_SHADER = GLUtils::openTextFile("shaders/fragment_shader_triangle5.glsl");
-
     //创建着色器程序,并编译着色器代码
-    m_ProgramObj = GLUtils::createProgram(&VERTEX_SHADER, &FRAGMENT_SHADER);
+    m_ProgramObj = GLUtils::createProgram("shaders/vertex_shader_triangle5.glsl",
+                                          "shaders/fragment_shader_triangle5.glsl");
 
     if (!m_ProgramObj) {
         LOGD("Could not create program")
@@ -51,7 +47,7 @@ void NativeTriangle5::Draw() {
 
     // 更新uniform颜色
     int time = TimeUtils::currentTimeSeconds();
-    float greenValue = sin(time) / 2.0f + 0.5f;
+    auto greenValue = static_cast<float>(sin(time) / 2.0 + 0.5);
     int vertexColorLocation = glGetUniformLocation(m_ProgramObj, "ourColor");
     glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
 

@@ -4,7 +4,6 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.SparseIntArray
-import android.widget.TextView
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.learnopengl.adapter.GLRecyclerAdapter
@@ -57,7 +56,7 @@ class MainActivity : AppCompatActivity() {
             i++,
             R.mipmap.triangle,
             "绘制三角形",
-            "展示如何使用VAO和VBO绘制三角形",
+            "通过绘制一个三角形，理解VAO、VBO、顶点属性指针、着色器代码编译过程、着色器程序对象和图形的渲染过程。",
             IMyNativeRendererType.SAMPLE_TYPE_TRIANGLE
         )
 
@@ -73,7 +72,7 @@ class MainActivity : AppCompatActivity() {
             i++,
             R.mipmap.triangle2,
             "绘制彩色三角形",
-            "给三角形增加颜色顶点属性，理解每个像素的颜色插值来源",
+            "在着色器代码中定义两个属性，一个位置属性，一个颜色属性，并通过CPU代码把位置数据和颜色数据设置给两个属性",
             IMyNativeRendererType.SAMPLE_TYPE_TRIANGLE2
         )
 
@@ -81,7 +80,7 @@ class MainActivity : AppCompatActivity() {
             i++,
             R.mipmap.triangle3,
             "绘制两个三角形",
-            "添加更多顶点到数据中，使用glDrawArrays绘制两个相连的三角形",
+            "使用glDrawArrays绘制两个相连的三角形，按照默认顺序绘制多个顶点",
             IMyNativeRendererType.SAMPLE_TYPE_TRIANGLE3
         )
 
@@ -89,7 +88,7 @@ class MainActivity : AppCompatActivity() {
             i++,
             R.mipmap.triangle3,
             "绘制两个三角形",
-            "使用不同的VAO和VBO绘制两个三角形",
+            "使用不同的VAO和VBO绘制两个三角形，理解VAO的意义",
             IMyNativeRendererType.SAMPLE_TYPE_TRIANGLE4
         )
 

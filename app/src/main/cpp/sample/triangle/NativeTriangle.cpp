@@ -1,6 +1,7 @@
 //
 // Created by TS on 2024/2/28.
 //
+//通过绘制一个三角形，理解VAO、VBO、顶点属性指针、着色器代码编译过程、着色器程序对象和图形的渲染过程。
 
 #include "NativeTriangle.h"
 
@@ -34,14 +35,9 @@ void NativeTriangle::Create() {
     //启用顶点属性，这里也要传递对应的属性位置值
     glEnableVertexAttribArray(0);
 
-    //加载顶点着色器代码
-    VERTEX_SHADER = GLUtils::openTextFile("shaders/vertex_shader_triangle.glsl");
-
-    //加载片段着色器代码
-    FRAGMENT_SHADER = GLUtils::openTextFile("shaders/fragment_shader_triangle.glsl");
-
     //创建着色器程序,并编译着色器代码
-    m_ProgramObj = GLUtils::createProgram(&VERTEX_SHADER, &FRAGMENT_SHADER);
+    m_ProgramObj = GLUtils::createProgram("shaders/vertex_shader_triangle.glsl",
+                                          "shaders/fragment_shader_triangle.glsl");
 
     if (!m_ProgramObj) {
         LOGD("Could not create program")

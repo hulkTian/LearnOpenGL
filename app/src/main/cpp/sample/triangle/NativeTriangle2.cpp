@@ -1,53 +1,41 @@
 //
 // Created by TS on 2024/2/28.
 //
+// 在着色器代码中定义两个属性，一个位置属性，一个颜色属性，并通过CPU代码把位置数据和颜色数据设置给两个属性
 
 #include "NativeTriangle2.h"
 
-GLfloat points[] = {
-        0.0f,  0.5f,  0.0f,
-        0.5f, -0.5f,  0.0f,
-        -0.5f, -0.5f,  0.0f
-};
-
-GLfloat colours[] = {
-        1.0f, 0.0f,  0.0f,
-        0.0f, 1.0f,  0.0f,
-        0.0f, 0.0f,  1.0f
+GLfloat vertices[] = {
+        //顶点数据                         //颜色数据
+        0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+        -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+        0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f
 };
 
 void NativeTriangle2::Create() {
     GLUtils::printGLInfo();
 
     //创建并绑定顶点数据VBO
-    glGenBuffers(1, &points_vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, points_vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(points), points, GL_STATIC_DRAW);
-
-    //创建并绑定颜色数据VBO
-    glGenBuffers(1, &colours_vbo);
-    glBindBuffer(GL_ARRAY_BUFFER, colours_vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(colours), colours, GL_STATIC_DRAW);
+    glGenBuffers(1, &vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     //创建并绑定VAO
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
-    glBindBuffer(GL_ARRAY_BUFFER, points_vbo);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)nullptr);
-    glBindBuffer(GL_ARRAY_BUFFER, colours_vbo);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, (void*)nullptr);
 
+    //设置位置属性
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *) nullptr);
     glEnableVertexAttribArray(0);
+    //设置颜色属性，最后一个参数需要注意设置起始位置的偏移量
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
+                          (void *) (3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
-    //加载顶点着色器代码
-    VERTEX_SHADER = GLUtils::openTextFile("shaders/vertex_shader_triangle2.glsl");
-
-    //加载片段着色器代码
-    FRAGMENT_SHADER = GLUtils::openTextFile("shaders/fragment_shader_triangle2.glsl");
 
     //创建着色器程序,并编译着色器代码
-    m_ProgramObj = GLUtils::createProgram(&VERTEX_SHADER, &FRAGMENT_SHADER);
+    m_ProgramObj = GLUtils::createProgram("shaders/vertex_shader_triangle2.glsl",
+                                          "shaders/fragment_shader_triangle2.glsl");
 
     if (!m_ProgramObj) {
         LOGD("Could not create program")
@@ -61,16 +49,17 @@ void NativeTriangle2::Draw() {
     //清除屏幕
     glClear(GL_COLOR_BUFFER_BIT);
 
-    //绘制
+    //激活着色器程序
     glUseProgram(m_ProgramObj);
+    //绑定VAO
     glBindVertexArray(vao);
+    //绘制三角形
     glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
 void NativeTriangle2::Shutdown() {
     //释放缓冲区资源
     glDeleteVertexArrays(1, &vao);
-    glDeleteBuffers(1, &points_vbo);
-    glDeleteBuffers(1, &colours_vbo);
+    glDeleteBuffers(1, &vbo);
     GLBaseSample::Shutdown();
 }

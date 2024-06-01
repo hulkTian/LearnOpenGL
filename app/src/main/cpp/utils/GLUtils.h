@@ -42,7 +42,7 @@ public:
 	 * Create a program with the given vertex and framgent
 	 * shader source code.
 	 */
-    static GLuint createProgram(const char **vertexSource, const char **fragmentSource);
+    static GLuint createProgram(const char* vertexPath, const char* fragmentPath);
 
     static void DeleteProgram(GLuint &program);
 
