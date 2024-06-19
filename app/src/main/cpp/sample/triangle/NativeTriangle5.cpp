@@ -55,6 +55,7 @@ void NativeTriangle5::Draw() {
 }
 
 void NativeTriangle5::Shutdown() {
+
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
     GLBaseSample::Shutdown();

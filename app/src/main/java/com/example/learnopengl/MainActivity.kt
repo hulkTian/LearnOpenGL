@@ -99,7 +99,28 @@ class MainActivity : AppCompatActivity() {
             "使用Uniform在片段着色器声明一个变量，实现一个颜色会变化的三角形",
             IMyNativeRendererType.SAMPLE_TYPE_TRIANGLE5
         )
+        addItem(
+            i++,
+            R.mipmap.triangle6,
+            "纹理",
+            "使用图片生成纹理，了解纹理冲生成到使用的过程",
+            IMyNativeRendererType.SAMPLE_TYPE_TEXTURE
+        )
+        addItem(
+            i++,
+            R.mipmap.triangle6,
+            "纹理单元",
+            "通过纹理单元让多个纹理显示在一个图形上",
+            IMyNativeRendererType.SAMPLE_TYPE_TEXTURE2
+        )
 
+        addItem(
+            i++,
+            R.mipmap.triangle6,
+            "变换",
+            "使用变换矩阵实现物体的缩放、位移和旋转",
+            IMyNativeRendererType.SAMPLE_TYPE_MAT
+        )
     }
 
     private fun addItem(index: Int, redId: Int, title: String, subtitle: String, type: Int) {

@@ -13,6 +13,9 @@
 #define SAMPLE_TYPE_TRIANGLE3                                       SAMPLE_TYPE + 3
 #define SAMPLE_TYPE_TRIANGLE4                                       SAMPLE_TYPE + 4
 #define SAMPLE_TYPE_TRIANGLE5                                       SAMPLE_TYPE + 5
+#define SAMPLE_TYPE_TEXTURE                                         SAMPLE_TYPE + 6
+#define SAMPLE_TYPE_TEXTURE2                                        SAMPLE_TYPE + 7
+#define SAMPLE_TYPE_MAT                                             SAMPLE_TYPE + 8
 
 #include <GLUtils.h>
 

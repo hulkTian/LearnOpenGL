@@ -4,6 +4,8 @@
 
 #include "GLUtils.h"
 #include <cstdlib>
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 static JNIEnv *sEnv = nullptr;
 static jobject sAssetManager = nullptr;
@@ -96,7 +98,7 @@ char *GLUtils::openTextFile(const char *path) {
         int num = AAsset_read(asset, buffer, length);
         AAsset_close(asset);
         if (num != length) {
-            LOGE("Couldn't load %s", path);
+            LOGE("Couldn't load %s", path)
             delete[] buffer;
             return nullptr;
         }
@@ -191,4 +193,55 @@ void GLUtils::checkGlError(const char *pGLOperation) {
     for (GLint error = glGetError(); error; error = glGetError()) {
         LOGE("GLUtils::CheckGLError after GL Operation %s() glError (0x%x)\n", pGLOperation, error)
     }
+}
+
+//从图片中加载纹理
+GLuint GLUtils::loadTgaTexture(const char *fileName) {
+    GLuint textureId;
+    FUN_BEGIN_TIME("GLUtils::loadTgaTexture")
+    glGenTextures(1, &textureId);
+    glBindTexture(GL_TEXTURE_2D, textureId);
+
+    // 打开assets中的文件
+    AAsset* asset = loadAsset(fileName);
+
+    // 获取文件大小
+    off_t assetLength = AAsset_getLength(asset);
+    void* assetBuffer = malloc(assetLength);
+    AAsset_read(asset, assetBuffer, assetLength);
+    AAsset_close(asset);
+
+    stbi_set_flip_vertically_on_load(true);
+
+    // 使用stb_image解码图片数据
+    int width, height, channels;
+    unsigned char* imageData = stbi_load_from_memory(static_cast<stbi_uc*>(assetBuffer),
+                                                     static_cast<int>(assetLength),
+                                                     &width, &height,
+                                                     &channels, 4);
+
+    free(assetBuffer);
+
+    if (imageData == nullptr) {
+        // 图片解码失败的处理逻辑
+        LOGD("Image data is null")
+        return 0;
+    }
+
+    //加载纹理数据
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height,
+                 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
+    // 生成多级渐远纹理
+    glGenerateMipmap(GL_TEXTURE_2D);
+    // 为当前绑定的纹理对象设置环绕、过滤方式
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+    // 释放图片数据
+    stbi_image_free(imageData);
+
+    FUN_END_TIME("GLUtils::loadTgaTexture")
+    return textureId;
 }

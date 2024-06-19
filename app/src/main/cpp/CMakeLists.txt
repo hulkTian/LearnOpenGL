@@ -24,6 +24,7 @@ include_directories(
         utils
         utils/log
         utils/time
+        utils/stb
 )
 
 #自定义搜索规则

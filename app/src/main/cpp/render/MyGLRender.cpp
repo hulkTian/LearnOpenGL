@@ -3,6 +3,9 @@
 //
 
 #include "MyGLRender.h"
+#include "NativeTransform.h"
+#include <NativeTriangle7.h>
+#include <NativeTriangle6.h>
 #include <NativeTriangle.h>
 #include <NativeRectangle.h>
 #include <NativeTriangle2.h>
@@ -25,13 +28,13 @@ public:
 MyGLRender *MyGLRender::m_instance = nullptr;
 
 MyGLRender::MyGLRender() {
-    LOGD("MyGLRender::MyGLRender()");
+    LOGD("MyGLRender::MyGLRender()")
     m_before_sample = nullptr;
     m_curr_sample = nullptr;
 }
 
 MyGLRender::~MyGLRender() {
-    LOGD("MyGLRender::~MyGLRender");
+    LOGD("MyGLRender::~MyGLRender")
 
     if (m_curr_sample) {
         m_curr_sample->Shutdown();
@@ -69,6 +72,12 @@ void MyGLRender::SetRenderType(int renderSampleType) {
         case SAMPLE_TYPE_TRIANGLE5:
             m_curr_sample = new NativeTriangle5();
             break;
+        case SAMPLE_TYPE_TEXTURE:
+            m_curr_sample = new NativeTriangle6();
+            break;
+//        case SAMPLE_TYPE_MAT:
+//            m_curr_sample = new NativeTransform();
+//            break;
         default:
             break;
     }
