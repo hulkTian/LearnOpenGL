@@ -108,7 +108,7 @@ class MainActivity : AppCompatActivity() {
         )
         addItem(
             i++,
-            R.mipmap.triangle6,
+            R.mipmap.texture_unit,
             "纹理单元",
             "通过纹理单元让多个纹理显示在一个图形上",
             IMyNativeRendererType.SAMPLE_TYPE_TEXTURE2

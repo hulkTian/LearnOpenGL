@@ -3,7 +3,7 @@
 //
 
 #include "MyGLRender.h"
-#include "NativeTransform.h"
+#include "Transform.h"
 #include <NativeTriangle7.h>
 #include <NativeTriangle6.h>
 #include <NativeTriangle.h>
@@ -75,9 +75,12 @@ void MyGLRender::SetRenderType(int renderSampleType) {
         case SAMPLE_TYPE_TEXTURE:
             m_curr_sample = new NativeTriangle6();
             break;
-//        case SAMPLE_TYPE_MAT:
-//            m_curr_sample = new NativeTransform();
-//            break;
+        case SAMPLE_TYPE_TEXTURE2:
+            m_curr_sample = new NativeTriangle7();
+            break;
+        case SAMPLE_TYPE_MAT:
+            m_curr_sample = new Transform();
+            break;
         default:
             break;
     }

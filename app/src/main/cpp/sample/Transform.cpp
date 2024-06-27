@@ -1,26 +1,25 @@
-// 这个例子使用了纹理相关知识。
-// 包括纹理坐标、加载纹理图片、纹理对象生成、配置纹理的环绕和过滤、使用多级渐远纹理。
-// 纹理坐标范围和分辨率无关，一般在00到11的范围内；
-// 如果想调整图片方向可以变换纹理坐标
-// 如果想取纹理的一部分，可以定义纹理坐标范围到想要的区域
-// 提供调节纹理坐标和环绕方式和过滤方式可以实现很多效果
+//
+// Created by 田浩 on 2024/6/16.
+//
+// 组合矩阵需要按照从右到左的方式组合矩阵，并且组合式要先缩放再旋转最后位移
 
-#include "NativeTriangle7.h"
+#include "Transform.h"
+#include "glm/ext/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
 
-static float  vertices[] = {
-//               ---- 位置 ----                           ---- 颜色 ----              - 纹理坐标 -
-        0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // 右上
-        0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // 右下
-        -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // 左下
-        -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // 左上
+static float vertices[] = {
+//               ---- 位置 ----         - 纹理坐标 -
+        0.5f, 0.5f, 0.0f, 1.0f, 1.0f,   // 右上
+        0.5f, -0.5f, 0.0f, 1.0f, 0.0f,   // 右下
+        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,   // 左下
+        -0.5f, 0.5f, 0.0f, 0.0f, 1.0f    // 左上
 };
-
 static unsigned int indices[] = {
         0, 1, 3, // first triangle
         1, 2, 3  // second triangle
 };
 
-void NativeTriangle7::Create() {
+void Transform::Create() {
     GLUtils::printGLInfo();
 
     glGenVertexArrays(1, &VAO);
@@ -36,14 +35,12 @@ void NativeTriangle7::Create() {
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) 0);
     glEnableVertexAttribArray(0);
-    // color attribute
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
     // texture coord attribute
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-    glEnableVertexAttribArray(2);
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
+                          (void *) (3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
 
     //load texture1
     texture1 = GLUtils::loadTgaTexture("textures/container.jpg");
@@ -52,18 +49,19 @@ void NativeTriangle7::Create() {
     texture2 = GLUtils::loadTgaTexture("textures/awesomeface.png");
 
     //创建着色器程序,并编译着色器代码
-    m_ProgramObj = GLUtils::createProgram("shaders/vertex_shader_triangle6.glsl",
-                                          "shaders/fragment_shader_triangle7.glsl");
+    m_ProgramObj = GLUtils::createProgram("shaders/vertex_shader_transform.glsl",
+                                          "shaders/fragment_shader_transform.glsl");
 
     if (!m_ProgramObj) {
         LOGD("Could not create program")
         return;
     }
+
     //设置清屏颜色
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 }
 
-void NativeTriangle7::Draw() {
+void Transform::Draw() {
     //清除屏幕
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -82,14 +80,30 @@ void NativeTriangle7::Draw() {
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, texture2);
 
+    glm::mat4 trans = glm::mat4(1.0f);
+    /*trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
+    trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));*/
+    int time = TimeUtils::currentTimeSeconds();
+    trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+    trans = glm::rotate(trans, static_cast<float>(time), glm::vec3(0.0f, 0.0f, 1.0f));
+    setMat4(m_ProgramObj, "transform", trans);
+
     //绑定VAO
     glBindVertexArray(VAO);
 
     //绘制形状
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+    trans = glm::mat4(1.0f);
+    auto scale = abs(static_cast<float>(sin(time)));
+    trans = glm::translate(trans, glm::vec3(-0.5f, 0.5f, 0.0f));
+    trans = glm::scale(trans, glm::vec3(scale, scale, 1.0f));
+    setMat4(m_ProgramObj, "transform", trans);
+
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
-void NativeTriangle7::Shutdown() {
+void Transform::Shutdown() {
     //关闭顶点属性
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);

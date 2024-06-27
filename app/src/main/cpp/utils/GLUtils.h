@@ -41,7 +41,7 @@ public:
 	 * Create a program with the given vertex and framgent
 	 * shader source code.
 	 */
-    static GLuint createProgram(const char* vertexPath, const char* fragmentPath);
+    static GLuint createProgram(const char *vertexPath, const char *fragmentPath);
 
     static void DeleteProgram(GLuint &program);
 
@@ -149,7 +149,7 @@ static void setMat3(GLuint programId, const std::string &name, const glm::mat3 &
     glUniformMatrix3fv(glGetUniformLocation(programId, name.c_str()), 1, GL_FALSE, &mat[0][0]);
 }
 
-static void setMat4(GLuint programId,  const std::string &name, const glm::mat4 &mat){
+static void setMat4(GLuint programId, const std::string &name, const glm::mat4 &mat) {
     glUniformMatrix4fv(glGetUniformLocation(programId, name.c_str()), 1, GL_FALSE, &mat[0][0]);
 }
 

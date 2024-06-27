@@ -3,10 +3,10 @@ precision mediump float;
 
 //输出的片段颜色
 out vec4 FragColor;
-//顶点着色器输入的顶点颜色
-in vec3 ourColor;
+
 //顶点着色器输入的纹理坐标
 in vec2 TexCoord;
+
 //内置的全局纹理对象
 uniform sampler2D texture1;
 uniform sampler2D texture2;
