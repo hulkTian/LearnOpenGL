@@ -116,10 +116,18 @@ class MainActivity : AppCompatActivity() {
 
         addItem(
             i++,
-            R.mipmap.triangle6,
+            R.mipmap.transform,
             "变换",
             "使用变换矩阵实现物体的缩放、位移和旋转",
             IMyNativeRendererType.SAMPLE_TYPE_MAT
+        )
+
+        addItem(
+            i++,
+            R.mipmap.coordinate,
+            "坐标系统",
+            "使用矩阵构建坐标系，实现3D效果",
+            IMyNativeRendererType.SAMPLE_TYPE_COORDINATE
         )
     }
 

@@ -4,6 +4,7 @@
 
 #include "MyGLRender.h"
 #include "Transform.h"
+#include "CoordinateSystems.h"
 #include <NativeTriangle7.h>
 #include <NativeTriangle6.h>
 #include <NativeTriangle.h>
@@ -80,6 +81,9 @@ void MyGLRender::SetRenderType(int renderSampleType) {
             break;
         case SAMPLE_TYPE_MAT:
             m_curr_sample = new Transform();
+            break;
+        case SAMPLE_TYPE_COORDINATE:
+            m_curr_sample = new CoordinateSystems();
             break;
         default:
             break;

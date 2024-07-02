@@ -149,7 +149,9 @@ class NativeRenderActivity : Activity() {
      * 根据渲染类型设置渲染模式.
      */
     private fun setRenderMode(glSurfaceView: MyGLSurfaceView) {
-        if (type == IMyNativeRendererType.SAMPLE_TYPE_TRIANGLE5 || type == IMyNativeRendererType.SAMPLE_TYPE_MAT) {
+        if (type == IMyNativeRendererType.SAMPLE_TYPE_TRIANGLE5
+            || type == IMyNativeRendererType.SAMPLE_TYPE_MAT
+            || type == IMyNativeRendererType.SAMPLE_TYPE_COORDINATE) {
             glSurfaceView.renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY
         } else {
             glSurfaceView.renderMode = GLSurfaceView.RENDERMODE_WHEN_DIRTY

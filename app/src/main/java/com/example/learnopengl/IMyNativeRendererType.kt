@@ -13,4 +13,5 @@ object IMyNativeRendererType {
     const val SAMPLE_TYPE_TEXTURE = SAMPLE_TYPE + 6
     const val SAMPLE_TYPE_TEXTURE2 = SAMPLE_TYPE + 7
     const val SAMPLE_TYPE_MAT = SAMPLE_TYPE + 8
+    const val SAMPLE_TYPE_COORDINATE = SAMPLE_TYPE + 9
 }
