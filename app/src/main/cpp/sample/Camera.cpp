@@ -149,11 +149,13 @@ void Camera::Draw() {
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, texture2);
 
-    // LookAt矩阵，构建摄像机视角矩阵
-    float radius = 10.0f;
+    // 定义圆的半径
+    float radius = 20.0f;
+    // 随着时间的变化，遍历圆上的X和Y坐标
     float camX = sin(TimeUtils::currentTimeSeconds()) * radius;
     float camZ = cos(TimeUtils::currentTimeSeconds()) * radius;
-    // 构建一个移动的LookAt矩阵
+    // 使用gml提供的函数，构建一个移动的LookAt矩阵：
+    // 第一个参数：摄像机坐标，随时间变化，在圆上移动；第二个参数：摄像机观察目标的位置；第三个参数：世界空间中的上向量；
     glm::mat4 view = glm::lookAt(glm::vec3(camX, 0.0, camZ), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
     setMat4(m_ProgramObj, "view", view);
 
