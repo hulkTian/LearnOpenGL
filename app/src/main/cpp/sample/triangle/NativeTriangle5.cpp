@@ -46,8 +46,8 @@ void NativeTriangle5::Draw() {
     glBindVertexArray(VAO);
 
     // 更新uniform颜色
-    int time = TimeUtils::currentTimeSeconds();
-    auto greenValue = static_cast<float>(sin(time) / 2.0 + 0.5);
+    float time = TimeUtils::currentTimeSeconds();
+    auto greenValue = sin(time) / 2.0f + 0.5f;
     int vertexColorLocation = glGetUniformLocation(m_ProgramObj, "ourColor");
     glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
 

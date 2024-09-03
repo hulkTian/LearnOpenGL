@@ -10,10 +10,14 @@
 class TimeUtils{
 
 public:
-    static int currentTimeSeconds() {
-        time_t now = time(NULL);
+    static float currentTimeSeconds() {
+        /*time_t now = time(NULL);
         struct tm *t = localtime(&now);
-        return t->tm_sec;
+        return t->tm_sec;*/
+
+        clock_t ct;
+        ct = clock();
+        return ((float)ct/CLOCKS_PER_SEC);
     }
 };
 

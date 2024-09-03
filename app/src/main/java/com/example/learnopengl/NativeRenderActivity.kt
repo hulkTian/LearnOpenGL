@@ -151,7 +151,8 @@ class NativeRenderActivity : Activity() {
     private fun setRenderMode(glSurfaceView: MyGLSurfaceView) {
         if (type == IMyNativeRendererType.SAMPLE_TYPE_TRIANGLE5
             || type == IMyNativeRendererType.SAMPLE_TYPE_MAT
-            || type == IMyNativeRendererType.SAMPLE_TYPE_COORDINATE) {
+            || type == IMyNativeRendererType.SAMPLE_TYPE_COORDINATE
+            || type == IMyNativeRendererType.SAMPLE_TYPE_CAMERA) {
             glSurfaceView.renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY
         } else {
             glSurfaceView.renderMode = GLSurfaceView.RENDERMODE_WHEN_DIRTY

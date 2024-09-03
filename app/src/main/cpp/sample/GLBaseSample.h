@@ -17,6 +17,7 @@
 #define SAMPLE_TYPE_TEXTURE2                                        SAMPLE_TYPE + 7
 #define SAMPLE_TYPE_MAT                                             SAMPLE_TYPE + 8
 #define SAMPLE_TYPE_COORDINATE                                      SAMPLE_TYPE + 9
+#define SAMPLE_TYPE_CAMERA                                          SAMPLE_TYPE + 10
 
 #include <GLUtils.h>
 

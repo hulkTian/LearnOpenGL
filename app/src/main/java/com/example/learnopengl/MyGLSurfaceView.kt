@@ -1,9 +1,11 @@
 package com.example.learnopengl
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.opengl.GLSurfaceView
 import android.util.AttributeSet
 import android.util.Log
+import android.view.MotionEvent
 
 class MyGLSurfaceView : GLSurfaceView {
     private lateinit var mRenderer: MyNativeRenderer
@@ -48,6 +50,12 @@ class MyGLSurfaceView : GLSurfaceView {
                 setMeasuredDimension(height * mRatioWidth / mRatioHeight, height)
             }
         }
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        queueEvent { mRenderer.nativeOnTouch(event) }
+        return true
     }
 
     fun setAspectRatio(width: Int, height: Int) {

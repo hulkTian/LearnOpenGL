@@ -12,6 +12,7 @@ uniform mat4 view;
 uniform mat4 projection;
 
 void main() {
+    // 从右向左变换顶点坐标，最终输出裁剪空间的坐标。OpenGL然后对裁剪坐标执行透视除法从而将它们变换到标准化设备坐标。
     gl_Position = projection * view * model * vec4(aPos, 1.0);
     TexCoord = aTexCoord;
 }

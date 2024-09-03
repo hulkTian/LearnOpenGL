@@ -129,6 +129,13 @@ class MainActivity : AppCompatActivity() {
             "使用矩阵构建坐标系，实现3D效果",
             IMyNativeRendererType.SAMPLE_TYPE_COORDINATE
         )
+        addItem(
+            i++,
+            R.mipmap.coordinate,
+            "摄像机",
+            "使用摄像机矩阵，实现3D空间观察视角",
+            IMyNativeRendererType.SAMPLE_TYPE_CAMERA
+        )
     }
 
     private fun addItem(index: Int, redId: Int, title: String, subtitle: String, type: Int) {

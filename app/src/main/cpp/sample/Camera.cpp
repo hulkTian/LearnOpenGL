@@ -1,8 +1,31 @@
 //
-// Created by ts on 2024/7/1.
-//
+// Created by ts on 2024/7/3.
+// LookAt矩阵可以构建出想要的观察矩阵，即把世界坐标系中的顶点，以摄像机的位置作为原点构建的观察坐标系。
+// lookAt函数需要三个参数：摄像机位置向量，摄像机方向向量，向上的轴的向量。
 
-#include "CoordinateSystems.h"
+//
+//
+//
+/**
+ * 构建坐标系需要四要素：原点、Z轴、X轴和Y轴。
+ * 对应的构建摄像机的观察坐标系，需要：
+ * 1. 摄像机位置，即原点；
+ * 2. 摄像机方向，即摄像机坐标的z轴的正方向；
+ * 3. 摄像机右轴，即摄像机空间的x轴的正方向；
+ * 4. 摄像机上轴，即摄像机空间的y轴的正方向；
+ *
+ * 小技巧：定义一个上向量并和摄像机方向进行叉乘就可得到右向量，同理，把右向量和方向向量进行叉乘得到上轴。
+ *
+ * LookAt矩阵：3个相互垂直的轴和一个定义摄像机空间的位置坐标。注意，位置向量是相反的，因为我们最终希望把世界平移到与我们自身移动的相反方向。
+ *
+ *    ⎢Rx Ry Rz 0⎢ ⎢1 0 0 -Px⎢
+ *    ⎢Ux Uy Uz 0⎢ ⎢1 1 0 -Py⎢
+ *    ⎢Dx Dy Dz 0⎢ ⎢1 0 1 -Pz⎢
+ *    ⎢0  0  0  1⎢ ⎢1 0 0  1 ⎢
+ *
+ */
+
+#include "Camera.h"
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
@@ -51,10 +74,6 @@ static float vertices[] = {
         -0.5f, 0.5f, 0.5f, 0.0f, 0.0f,
         -0.5f, 0.5f, -0.5f, 0.0f, 1.0f
 };
-static unsigned int indices[] = {
-        0, 1, 3, // first triangle
-        1, 2, 3  // second triangle
-};
 
 static glm::vec3 cubePositions[] = {
         glm::vec3(0.0f, 0.0f, 0.0f),
@@ -69,7 +88,7 @@ static glm::vec3 cubePositions[] = {
         glm::vec3(-1.3f, 1.0f, -1.5f)
 };
 
-void CoordinateSystems::Create() {
+void Camera::Create() {
     GLUtils::printGLInfo();
 
     glGenVertexArrays(1, &VAO);
@@ -80,9 +99,6 @@ void CoordinateSystems::Create() {
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
     // position attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) 0);
@@ -114,7 +130,7 @@ void CoordinateSystems::Create() {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 }
 
-void CoordinateSystems::Draw() {
+void Camera::Draw() {
     //清除屏幕和深度缓冲
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -133,44 +149,23 @@ void CoordinateSystems::Draw() {
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, texture2);
 
-    /*// 模型矩阵，把局部空间坐标系中的顶点，变换到世界空间的坐标系中
-    glm::mat4 model = glm::mat4(1.0f);
-    model = glm::rotate(model, (float)TimeUtils::currentTimeSeconds() * glm::radians(50.0f), glm::vec3(0.5f, 1.0f, 0.0f));
-    setMat4(m_ProgramObj, "model", model);
-
-    // 观察矩阵，把世界空间坐标系中的顶点，变换到观察空间的坐标系中
-    glm::mat4 view = glm::mat4(1.0f);
-    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -5.0f));
-    setMat4(m_ProgramObj, "view", view);
-
-    // 透视投影矩阵，把观察空间坐标系中的顶点，变换到裁剪空间的坐标系中
-    glm::mat4 projection = glm::mat4(1.0f);
-    projection = glm::perspective(glm::radians(45.0f), 1080.0f / 2220.0f, 0.1f, 100.0f);
-    setMat4(m_ProgramObj, "projection", projection);
-
-    //绑定VAO
-    glBindVertexArray(VAO);
-
-    //绘制形状
-    glDrawArrays(GL_TRIANGLES, 0, 36);*/
-
-    // 观察矩阵
-    glm::mat4 view = glm::mat4(1.0f);
-    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -9.0f));
+    // LookAt矩阵，构建摄像机视角矩阵
+    float radius = 10.0f;
+    float camX = sin(TimeUtils::currentTimeSeconds()) * radius;
+    float camZ = cos(TimeUtils::currentTimeSeconds()) * radius;
+    // 构建一个移动的LookAt矩阵
+    glm::mat4 view = glm::lookAt(glm::vec3(camX, 0.0, camZ), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
     setMat4(m_ProgramObj, "view", view);
 
     // 透视投影矩阵
     glm::mat4 projection = glm::mat4(1.0f);
-    projection = glm::perspective(glm::radians(60.0f), 1080.0f / 2220.0f, 0.1f, 100.0f);
+    projection = glm::perspective(glm::radians(60.0f), 1080.0f / 2220.0f, 0.01f, 100.0f);
     setMat4(m_ProgramObj, "projection", projection);
 
     for (unsigned int i = 0; i < 10; i++) {
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, cubePositions[i]);
         float angle = 20.0f * i;
-        if (i % 3 == 0) {
-            angle = TimeUtils::currentTimeSeconds() * 25.0f;
-        }
         model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
         setMat4(m_ProgramObj, "model", model);
 
@@ -178,7 +173,7 @@ void CoordinateSystems::Draw() {
     }
 }
 
-void CoordinateSystems::Shutdown() {
+void Camera::Shutdown() {
     //关闭顶点属性
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);

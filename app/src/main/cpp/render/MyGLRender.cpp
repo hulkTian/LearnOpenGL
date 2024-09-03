@@ -5,6 +5,7 @@
 #include "MyGLRender.h"
 #include "Transform.h"
 #include "CoordinateSystems.h"
+#include "Camera.h"
 #include <NativeTriangle7.h>
 #include <NativeTriangle6.h>
 #include <NativeTriangle.h>
@@ -84,6 +85,9 @@ void MyGLRender::SetRenderType(int renderSampleType) {
             break;
         case SAMPLE_TYPE_COORDINATE:
             m_curr_sample = new CoordinateSystems();
+            break;
+        case SAMPLE_TYPE_CAMERA:
+            m_curr_sample = new Camera();
             break;
         default:
             break;

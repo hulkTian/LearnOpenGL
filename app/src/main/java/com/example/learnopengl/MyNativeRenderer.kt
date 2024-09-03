@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.res.AssetManager
 import android.opengl.GLSurfaceView
 import android.util.Log
+import android.view.MotionEvent
 import javax.microedition.khronos.egl.EGLConfig
 import javax.microedition.khronos.opengles.GL10
 
@@ -40,5 +41,7 @@ class MyNativeRenderer(activity: Activity) : GLSurfaceView.Renderer {
     private external fun nativeOnDrawFrame()
     private external fun nativeSetRenderType(renderSampleType: Int)
     private external fun nativeOnDestroy()
+
+    public external fun nativeOnTouch(event:MotionEvent)
 
 }

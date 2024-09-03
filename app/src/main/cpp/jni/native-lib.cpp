@@ -29,3 +29,8 @@ JNIEXPORT void JNICALL
 Java_com_example_learnopengl_MyNativeRenderer_nativeOnDestroy(JNIEnv *env, jobject thiz) {
     MyGLRender::DestroyInstance();
 }
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_example_learnopengl_MyNativeRenderer_nativeOnTouch(JNIEnv *env, jobject thiz,
+                                                            jobject event) {
+}
