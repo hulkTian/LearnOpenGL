@@ -141,7 +141,7 @@ class MainActivity : AppCompatActivity() {
             i++,
             R.mipmap.coordinate,
             "移动摄像机位置",
-            "使用按钮事件改变摄像机位置",
+            "使用事件改变摄像机位置，包括按钮点击和手指滑动",
             IMyNativeRendererType.SAMPLE_TYPE_CAMERA_AUTO_MOVE
         )
     }

@@ -32,8 +32,12 @@ class MyNativeRenderer(activity: Activity) : GLSurfaceView.Renderer {
         nativeSetRenderType(renderSampleType)
     }
 
-    fun processInput(key:Int) {
+    fun processInput(key: Int) {
         nativeProcessInput(key)
+    }
+
+    fun moveCallback(x: Double, y: Double, z: Double) {
+        nativeMoveCallback(x, y, z)
     }
 
     fun onDestroy() {
@@ -49,6 +53,8 @@ class MyNativeRenderer(activity: Activity) : GLSurfaceView.Renderer {
     /**
      * 处理按钮点击事件：
      */
-    private external fun nativeProcessInput(key:Int)
+    private external fun nativeProcessInput(key: Int)
+
+    private external fun nativeMoveCallback(x: Double, y: Double, z: Double)
 
 }

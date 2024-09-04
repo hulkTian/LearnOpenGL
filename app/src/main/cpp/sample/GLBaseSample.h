@@ -54,12 +54,18 @@ public:
 
     }
 
+    virtual void MoveCallback(double x, double y, double z) {
+
+    }
+
     virtual void Shutdown() {
         if (m_ProgramObj) {
             glDeleteProgram(m_ProgramObj);
             m_ProgramObj = GL_NONE;
         }
     }
+
+
 
 protected:
     /**

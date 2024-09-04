@@ -126,6 +126,11 @@ void CameraAutoMove::ProcessInput(int i) {
     }
 }
 
+void CameraAutoMove::MoveCallback(double x, double y, double z) {
+    glm::vec3 front = glm::vec3(x, y, z);
+    cameraFront = glm::normalize(front);
+}
+
 void CameraAutoMove::Draw() {
     //清除屏幕和深度缓冲
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

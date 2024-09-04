@@ -32,6 +32,12 @@ Java_com_example_learnopengl_MyNativeRenderer_nativeProcessInput(JNIEnv *env, jo
 }
 extern "C"
 JNIEXPORT void JNICALL
+Java_com_example_learnopengl_MyNativeRenderer_nativeMoveCallback(JNIEnv *env, jobject thiz,
+                                                                 jdouble x, jdouble y, jdouble z) {
+    MyGLRender::GetInstance()->MoveCallback(x, y, z);
+}
+extern "C"
+JNIEXPORT void JNICALL
 Java_com_example_learnopengl_MyNativeRenderer_nativeOnDestroy(JNIEnv *env, jobject thiz) {
     MyGLRender::DestroyInstance();
 }

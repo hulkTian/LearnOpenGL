@@ -158,3 +158,13 @@ void MyGLRender::ProcessInput(int i) {
     }
 }
 
+void MyGLRender::MoveCallback(double x, double y, double z) {
+    LOGD("MyGLRender::MoveCallback x = %f，y = %f，z = %f", x, y, z)
+    if (m_curr_sample == nullptr) {
+        throw MyGLException(
+                "MyGLRender::MoveCallback() 请注意：你应该忘记初始化你要展示的Sample类型 ，请补上初始化的代码，否则无法渲染");
+    } else {
+        m_curr_sample->MoveCallback(x, y, z);
+    }
+}
+

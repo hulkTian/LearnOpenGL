@@ -18,6 +18,8 @@ public:
 
     virtual void ProcessInput(int i);
 
+    virtual void MoveCallback(double x, double y, double z);
+
     virtual void Draw();
 
     virtual void Shutdown();
