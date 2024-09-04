@@ -136,6 +136,14 @@ class MainActivity : AppCompatActivity() {
             "使用摄像机矩阵，实现3D空间观察视角",
             IMyNativeRendererType.SAMPLE_TYPE_CAMERA
         )
+
+        addItem(
+            i++,
+            R.mipmap.coordinate,
+            "移动摄像机位置",
+            "使用按钮事件改变摄像机位置",
+            IMyNativeRendererType.SAMPLE_TYPE_CAMERA_AUTO_MOVE
+        )
     }
 
     private fun addItem(index: Int, redId: Int, title: String, subtitle: String, type: Int) {

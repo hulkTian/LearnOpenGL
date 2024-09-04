@@ -9,6 +9,7 @@ import android.opengl.GLSurfaceView
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import android.widget.Toast
@@ -69,12 +70,14 @@ class NativeRenderActivity : Activity() {
                     finish()
                 }
 
+                initClickLayout()
+
                 val lp = RelativeLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
                 )
                 lp.addRule(RelativeLayout.CENTER_IN_PARENT)
-                lp.topMargin = 140
-                binding.rootView.addView(glSurfaceView, lp)
+                glSurfaceView.layoutParams = lp
+                binding.rootView.addView(glSurfaceView, 0)
 
                 if (binding.rootView.width != glSurfaceView.width
                     || binding.rootView.height != glSurfaceView.height
@@ -96,6 +99,26 @@ class NativeRenderActivity : Activity() {
 
     private fun loadRenderContent() {
         Log.i("", "===================")
+    }
+
+    private fun initClickLayout() {
+        if (type == IMyNativeRendererType.SAMPLE_TYPE_CAMERA_AUTO_MOVE) {
+            binding.llClick.visibility = View.VISIBLE
+            binding.btW.setOnClickListener {
+                mRenderer?.processInput(Key.KEY_W)
+            }
+            binding.btS.setOnClickListener {
+                mRenderer?.processInput(Key.KEY_S)
+            }
+            binding.btA.setOnClickListener {
+                mRenderer?.processInput(Key.KEY_A)
+            }
+            binding.btD.setOnClickListener {
+                mRenderer?.processInput(Key.KEY_D)
+            }
+        } else {
+            binding.llClick.visibility = View.GONE
+        }
     }
 
     override fun onResume() {
@@ -152,7 +175,8 @@ class NativeRenderActivity : Activity() {
         if (type == IMyNativeRendererType.SAMPLE_TYPE_TRIANGLE5
             || type == IMyNativeRendererType.SAMPLE_TYPE_MAT
             || type == IMyNativeRendererType.SAMPLE_TYPE_COORDINATE
-            || type == IMyNativeRendererType.SAMPLE_TYPE_CAMERA) {
+            || type == IMyNativeRendererType.SAMPLE_TYPE_CAMERA
+            || type == IMyNativeRendererType.SAMPLE_TYPE_CAMERA_AUTO_MOVE) {
             glSurfaceView.renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY
         } else {
             glSurfaceView.renderMode = GLSurfaceView.RENDERMODE_WHEN_DIRTY

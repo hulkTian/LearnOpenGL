@@ -15,4 +15,12 @@ object IMyNativeRendererType {
     const val SAMPLE_TYPE_MAT = SAMPLE_TYPE + 8
     const val SAMPLE_TYPE_COORDINATE = SAMPLE_TYPE + 9
     const val SAMPLE_TYPE_CAMERA = SAMPLE_TYPE + 10
+    const val SAMPLE_TYPE_CAMERA_AUTO_MOVE = SAMPLE_TYPE + 11
+}
+
+object Key {
+    const val KEY_W = 1
+    const val KEY_S = 2
+    const val KEY_A = 3
+    const val KEY_D = 4
 }

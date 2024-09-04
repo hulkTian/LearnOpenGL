@@ -6,6 +6,7 @@
 #include "Transform.h"
 #include "CoordinateSystems.h"
 #include "Camera.h"
+#include "CameraAutoMove.h"
 #include <NativeTriangle7.h>
 #include <NativeTriangle6.h>
 #include <NativeTriangle.h>
@@ -89,6 +90,9 @@ void MyGLRender::SetRenderType(int renderSampleType) {
         case SAMPLE_TYPE_CAMERA:
             m_curr_sample = new Camera();
             break;
+        case SAMPLE_TYPE_CAMERA_AUTO_MOVE:
+            m_curr_sample = new CameraAutoMove();
+            break;
         default:
             break;
     }
@@ -141,6 +145,16 @@ void MyGLRender::DestroyInstance() {
     if (m_instance) {
         delete m_instance;
         m_instance = nullptr;
+    }
+}
+
+void MyGLRender::ProcessInput(int i) {
+    LOGD("MyGLRender::ProcessInput key = %d", i)
+    if (m_curr_sample == nullptr) {
+        throw MyGLException(
+                "MyGLRender::ProcessInput() 请注意：你应该忘记初始化你要展示的Sample类型 ，请补上初始化的代码，否则无法渲染");
+    } else {
+        m_curr_sample->ProcessInput(i);
     }
 }
 

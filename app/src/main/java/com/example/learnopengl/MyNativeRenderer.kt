@@ -32,6 +32,10 @@ class MyNativeRenderer(activity: Activity) : GLSurfaceView.Renderer {
         nativeSetRenderType(renderSampleType)
     }
 
+    fun processInput(key:Int) {
+        nativeProcessInput(key)
+    }
+
     fun onDestroy() {
         nativeOnDestroy()
     }
@@ -42,6 +46,9 @@ class MyNativeRenderer(activity: Activity) : GLSurfaceView.Renderer {
     private external fun nativeSetRenderType(renderSampleType: Int)
     private external fun nativeOnDestroy()
 
-    public external fun nativeOnTouch(event:MotionEvent)
+    /**
+     * 处理按钮点击事件：
+     */
+    private external fun nativeProcessInput(key:Int)
 
 }

@@ -52,12 +52,6 @@ class MyGLSurfaceView : GLSurfaceView {
         }
     }
 
-    @SuppressLint("ClickableViewAccessibility")
-    override fun onTouchEvent(event: MotionEvent): Boolean {
-        queueEvent { mRenderer.nativeOnTouch(event) }
-        return true
-    }
-
     fun setAspectRatio(width: Int, height: Int) {
         Log.d(TAG, "setAspectRatio() called with: width = [$width], height = [$height]")
         require(!(width < 0 || height < 0)) { "Size cannot be negative." }

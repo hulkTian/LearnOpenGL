@@ -19,6 +19,8 @@ class MyGLRender {
 public:
     void SetRenderType(int renderSampleType);
 
+    void ProcessInput(int i);
+
     void OnSurfaceCreated(JNIEnv *env, jobject assetManager);
 
     void OnSurfaceChanged(int width, int height);

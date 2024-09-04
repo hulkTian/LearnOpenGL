@@ -26,11 +26,12 @@ Java_com_example_learnopengl_MyNativeRenderer_nativeSetRenderType(JNIEnv *env, j
 }
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_learnopengl_MyNativeRenderer_nativeOnDestroy(JNIEnv *env, jobject thiz) {
-    MyGLRender::DestroyInstance();
+Java_com_example_learnopengl_MyNativeRenderer_nativeProcessInput(JNIEnv *env, jobject thiz,
+                                                                 jint key) {
+    MyGLRender::GetInstance()->ProcessInput(key);
 }
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_example_learnopengl_MyNativeRenderer_nativeOnTouch(JNIEnv *env, jobject thiz,
-                                                            jobject event) {
+Java_com_example_learnopengl_MyNativeRenderer_nativeOnDestroy(JNIEnv *env, jobject thiz) {
+    MyGLRender::DestroyInstance();
 }

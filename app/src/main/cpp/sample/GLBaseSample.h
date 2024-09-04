@@ -18,6 +18,12 @@
 #define SAMPLE_TYPE_MAT                                             SAMPLE_TYPE + 8
 #define SAMPLE_TYPE_COORDINATE                                      SAMPLE_TYPE + 9
 #define SAMPLE_TYPE_CAMERA                                          SAMPLE_TYPE + 10
+#define SAMPLE_TYPE_CAMERA_AUTO_MOVE                                SAMPLE_TYPE + 11
+
+#define KEY_W 1
+#define KEY_S 2
+#define KEY_A 3
+#define KEY_D 4
 
 #include <GLUtils.h>
 
@@ -43,6 +49,10 @@ public:
     }
 
     virtual void Draw() = 0;
+
+    virtual void ProcessInput(int i) {
+
+    }
 
     virtual void Shutdown() {
         if (m_ProgramObj) {
