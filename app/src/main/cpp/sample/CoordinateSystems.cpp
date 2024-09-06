@@ -145,7 +145,7 @@ void CoordinateSystems::Draw() {
 
     // 透视投影矩阵，把观察空间坐标系中的顶点，变换到裁剪空间的坐标系中
     glm::mat4 projection = glm::mat4(1.0f);
-    projection = glm::perspective(glm::radians(45.0f), 1080.0f / 2220.0f, 0.1f, 100.0f);
+    projection = glm::perspective(glm::radians(45.0f), m_Width / m_Height, 0.1f, 100.0f);
     setMat4(m_ProgramObj, "projection", projection);
 
     //绑定VAO
@@ -161,7 +161,7 @@ void CoordinateSystems::Draw() {
 
     // 透视投影矩阵
     glm::mat4 projection = glm::mat4(1.0f);
-    projection = glm::perspective(glm::radians(60.0f), 1080.0f / 2220.0f, 0.1f, 100.0f);
+    projection = glm::perspective(glm::radians(60.0f), m_Width / m_Height, 0.1f, 100.0f);
     setMat4(m_ProgramObj, "projection", projection);
 
     for (unsigned int i = 0; i < 10; i++) {

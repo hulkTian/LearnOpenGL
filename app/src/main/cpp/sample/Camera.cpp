@@ -161,7 +161,7 @@ void Camera::Draw() {
 
     // 透视投影矩阵
     glm::mat4 projection = glm::mat4(1.0f);
-    projection = glm::perspective(glm::radians(60.0f), 1080.0f / 2220.0f, 0.01f, 100.0f);
+    projection = glm::perspective(glm::radians(60.0f), m_Width / m_Height, 0.01f, 100.0f);
     setMat4(m_ProgramObj, "projection", projection);
 
     for (unsigned int i = 0; i < 10; i++) {

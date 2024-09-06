@@ -144,6 +144,14 @@ class MainActivity : AppCompatActivity() {
             "使用事件改变摄像机位置，包括按钮点击和手指滑动",
             IMyNativeRendererType.SAMPLE_TYPE_CAMERA_AUTO_MOVE
         )
+
+        addItem(
+            i++,
+            R.mipmap.color_light,
+            "创建一个光照场景",
+            "用3D立方体创建一个基本的光源",
+            IMyNativeRendererType.SAMPLE_TYPE_COLORS
+        )
     }
 
     private fun addItem(index: Int, redId: Int, title: String, subtitle: String, type: Int) {

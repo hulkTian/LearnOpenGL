@@ -20,6 +20,7 @@ include_directories(
 
         sample
         sample/triangle
+        sample/light
 
         utils
         utils/log

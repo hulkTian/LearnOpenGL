@@ -19,6 +19,7 @@
 #define SAMPLE_TYPE_COORDINATE                                      SAMPLE_TYPE + 9
 #define SAMPLE_TYPE_CAMERA                                          SAMPLE_TYPE + 10
 #define SAMPLE_TYPE_CAMERA_AUTO_MOVE                                SAMPLE_TYPE + 11
+#define SAMPLE_TYPE_COLORS                                          SAMPLE_TYPE + 12
 
 #define KEY_W 1
 #define KEY_S 2
@@ -37,8 +38,8 @@ public:
 
     virtual void Create() = 0;
 
-    virtual void Change(int width, int height) {
-        LOGD("Change() width = %d , height = %d\n", width, height)
+    virtual void Change(float width, float height) {
+        LOGD("Change() width = %f , height = %f\n", width, height)
         m_Width = width;
         m_Height = height;
         // Set the viewport
@@ -75,8 +76,9 @@ protected:
     /**
      * 屏幕宽高
      */
-    int m_Width;
-    int m_Height;
+    float m_Width;
+    float m_Height;
+
 };
 
 #endif //LEARNOPENGL_GLBASESAMPLE_H
