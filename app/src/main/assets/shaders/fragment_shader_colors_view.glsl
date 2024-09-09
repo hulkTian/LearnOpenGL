@@ -5,26 +5,24 @@ out vec4 FragColor;
 
 uniform vec3 objectColor;
 uniform vec3 lightColor;
-uniform vec3 lightPos;
 uniform vec3 viewPos;
 
 in vec3 Normal;
-in vec3 FragPos;
+in vec3 FragPos;//视图空间的片段坐标
+in vec3 LightPos;//视图空间的光源坐标
 
 void main()
 {
     // 标准化法向量
     vec3 norm = normalize(Normal);
     // 计算光照方向向量，并标准化为单位向量
-    vec3 lightDir = normalize(lightPos - FragPos);
+    vec3 lightDir = normalize(LightPos - FragPos);
 
     // 计算光源对当前片段实际的漫反射影响，结果值再乘以光的颜色，得到漫反射分量
-    // float diff = max(dot(norm, lightDir), 1.1); 漫反射越太强，物体整体显示颜色越亮
     float diff = max(dot(norm, lightDir), 0.0);
     vec3 diffuse = diff * lightColor;
 
     //常量环境因子
-    //float ambientStrength = 0.4; 环境光越太强，物体整体显示颜色越亮
     float ambientStrength = 0.1;
     // 光的颜色乘以一个很小的常量环境因子，得到环境光分量
     vec3 ambient = ambientStrength * lightColor;
@@ -41,8 +39,6 @@ void main()
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0);
     vec3 specular = specularStrength * spec * lightColor;
 
-    //vec3 result = lightColor * objectColor;
-    //vec3 result = (ambient + diffuse) * objectColor;
     vec3 result = (ambient + diffuse + specular) * objectColor;
     FragColor = vec4(result, 1.0);
 }

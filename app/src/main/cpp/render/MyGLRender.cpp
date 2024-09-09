@@ -8,6 +8,7 @@
 #include "Camera.h"
 #include "CameraAutoMove.h"
 #include "light/ColorsLight.h"
+#include "ColorsAtView.h"
 #include <NativeTriangle7.h>
 #include <NativeTriangle6.h>
 #include <NativeTriangle.h>
@@ -96,6 +97,9 @@ void MyGLRender::SetRenderType(int renderSampleType) {
             break;
         case SAMPLE_TYPE_COLORS:
             m_curr_sample = new ColorsLight();
+            break;
+        case SAMPLE_TYPE_COLORS_VIEW:
+            m_curr_sample = new ColorsAtView();
             break;
         default:
             break;

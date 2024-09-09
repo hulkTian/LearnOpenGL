@@ -17,6 +17,7 @@ object IMyNativeRendererType {
     const val SAMPLE_TYPE_CAMERA = SAMPLE_TYPE + 10
     const val SAMPLE_TYPE_CAMERA_AUTO_MOVE = SAMPLE_TYPE + 11
     const val SAMPLE_TYPE_COLORS = SAMPLE_TYPE + 12
+    const val SAMPLE_TYPE_COLORS_VIEW = SAMPLE_TYPE + 13
 }
 
 object Key {

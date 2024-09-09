@@ -51,7 +51,6 @@ class MainActivity : AppCompatActivity() {
     //初始化数据
     private fun initData() {
         var i = 0
-
         addItem(
             i++,
             R.mipmap.triangle,
@@ -59,7 +58,6 @@ class MainActivity : AppCompatActivity() {
             "通过绘制一个三角形，理解VAO、VBO、顶点属性指针、着色器代码编译过程、着色器程序对象和图形的渲染过程。",
             IMyNativeRendererType.SAMPLE_TYPE_TRIANGLE
         )
-
         addItem(
             i++,
             R.mipmap.rectangle,
@@ -67,7 +65,6 @@ class MainActivity : AppCompatActivity() {
             "展示如何使用VAO、VBO和IBO绘制矩形",
             IMyNativeRendererType.SAMPLE_TYPE_RECTANGLE
         )
-
         addItem(
             i++,
             R.mipmap.triangle2,
@@ -75,7 +72,6 @@ class MainActivity : AppCompatActivity() {
             "在着色器代码中定义两个属性，一个位置属性，一个颜色属性，并通过CPU代码把位置数据和颜色数据设置给两个属性",
             IMyNativeRendererType.SAMPLE_TYPE_TRIANGLE2
         )
-
         addItem(
             i++,
             R.mipmap.triangle3,
@@ -83,7 +79,6 @@ class MainActivity : AppCompatActivity() {
             "使用glDrawArrays绘制两个相连的三角形，按照默认顺序绘制多个顶点",
             IMyNativeRendererType.SAMPLE_TYPE_TRIANGLE3
         )
-
         addItem(
             i++,
             R.mipmap.triangle3,
@@ -91,7 +86,6 @@ class MainActivity : AppCompatActivity() {
             "使用不同的VAO和VBO绘制两个三角形，理解VAO的意义",
             IMyNativeRendererType.SAMPLE_TYPE_TRIANGLE4
         )
-
         addItem(
             i++,
             R.mipmap.triangle,
@@ -113,7 +107,6 @@ class MainActivity : AppCompatActivity() {
             "通过纹理单元让多个纹理显示在一个图形上",
             IMyNativeRendererType.SAMPLE_TYPE_TEXTURE2
         )
-
         addItem(
             i++,
             R.mipmap.transform,
@@ -121,7 +114,6 @@ class MainActivity : AppCompatActivity() {
             "使用变换矩阵实现物体的缩放、位移和旋转",
             IMyNativeRendererType.SAMPLE_TYPE_MAT
         )
-
         addItem(
             i++,
             R.mipmap.coordinate,
@@ -136,7 +128,6 @@ class MainActivity : AppCompatActivity() {
             "使用摄像机矩阵，实现3D空间观察视角",
             IMyNativeRendererType.SAMPLE_TYPE_CAMERA
         )
-
         addItem(
             i++,
             R.mipmap.coordinate,
@@ -144,13 +135,19 @@ class MainActivity : AppCompatActivity() {
             "使用事件改变摄像机位置，包括按钮点击和手指滑动",
             IMyNativeRendererType.SAMPLE_TYPE_CAMERA_AUTO_MOVE
         )
-
         addItem(
             i++,
             R.mipmap.color_light,
             "创建一个光照场景",
             "用3D立方体创建一个基本的光源",
             IMyNativeRendererType.SAMPLE_TYPE_COLORS
+        )
+        addItem(
+            i++,
+            R.mipmap.color_light_view,
+            "冯氏光照效果",
+            "在视图空间中计算冯氏光照效果",
+            IMyNativeRendererType.SAMPLE_TYPE_COLORS_VIEW
         )
     }
 

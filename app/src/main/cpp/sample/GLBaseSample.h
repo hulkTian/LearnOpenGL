@@ -20,6 +20,7 @@
 #define SAMPLE_TYPE_CAMERA                                          SAMPLE_TYPE + 10
 #define SAMPLE_TYPE_CAMERA_AUTO_MOVE                                SAMPLE_TYPE + 11
 #define SAMPLE_TYPE_COLORS                                          SAMPLE_TYPE + 12
+#define SAMPLE_TYPE_COLORS_VIEW                                     SAMPLE_TYPE + 13
 
 #define KEY_W 1
 #define KEY_S 2

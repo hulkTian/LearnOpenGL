@@ -1,8 +1,12 @@
 //
-// Created by ts on 2024/9/5.
+// Created by ts on 2024/9/9.
 //
 
-#include "ColorsLight.h"
+/**
+ * 在观察空间（而不是世界空间）中计算风氏光照
+ */
+
+#include "ColorsAtView.h"
 #include "glm/ext/matrix_clip_space.hpp"
 #include "glm/ext/matrix_transform.hpp"
 
@@ -58,7 +62,7 @@ static unsigned int indices[] = {
         1, 2, 3  // second triangle
 };
 
-void ColorsLight::Create() {
+void ColorsAtView::Create() {
     GLUtils::printGLInfo();
 
     glGenVertexArrays(1, &VAO);
@@ -90,8 +94,8 @@ void ColorsLight::Create() {
     glEnableVertexAttribArray(0);
 
     //创建着色器程序,并编译着色器代码
-    m_ProgramObj = GLUtils::createProgram("shaders/vertex_shader_colors.glsl",
-                                          "shaders/fragment_shader_colors.glsl");
+    m_ProgramObj = GLUtils::createProgram("shaders/vertex_shader_colors_view.glsl",
+                                          "shaders/fragment_shader_colors_view.glsl");
 
     //创建光源的着色器程序
     m_ProgramObj_Light = GLUtils::createProgram("shaders/vertex_shader_colors.glsl",
@@ -109,7 +113,7 @@ void ColorsLight::Create() {
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 }
 
-void ColorsLight::Draw() {
+void ColorsAtView::Draw() {
     //清除屏幕
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -143,15 +147,6 @@ void ColorsLight::Draw() {
 
     // 模型矩阵，把局部空间坐标系中的顶点，变换到世界空间的坐标系中
     model = glm::mat4(1.0f);
-    /**
-     * 光照练习题：目前，我们的光源是静止的，你可以尝试使用sin或cos函数让光源在场景中来回移动。观察光照随时间的改变能让你更容易理解风氏光照模型。
-     * // 定义圆的半径
-     * float radius = 20.0f;
-     * // 随着时间的变化，遍历圆上的X和Y坐标
-     * float camX = sin(TimeUtils::currentTimeSeconds()) * radius;
-     * float camZ = cos(TimeUtils::currentTimeSeconds()) * radius;
-     * lightPos = glm::vec3 (camX,0.7f,camZ);
-     */
     model = glm::translate(model, lightPos);
     model = glm::scale(model, glm::vec3(0.3f));
     setMat4(m_ProgramObj_Light, "model", model);
@@ -165,7 +160,7 @@ void ColorsLight::Draw() {
     glDrawArrays(GL_TRIANGLES, 0, 36);
 }
 
-void ColorsLight::Shutdown() {
+void ColorsAtView::Shutdown() {
     //关闭顶点属性
     glDeleteVertexArrays(1, &VAO);
     glDeleteVertexArrays(1, &VAO_light);
