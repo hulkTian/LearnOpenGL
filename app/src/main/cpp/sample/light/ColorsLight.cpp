@@ -92,6 +92,13 @@ void ColorsLight::Create() {
     //创建着色器程序,并编译着色器代码
     m_ProgramObj = GLUtils::createProgram("shaders/vertex_shader_colors.glsl",
                                           "shaders/fragment_shader_colors.glsl");
+    /**
+     * 光照练习题：尝试实现一个Gouraud着色（而不是风氏着色）。
+     *
+     * m_ProgramObj = GLUtils::createProgram("shaders/vertex_shader_colors_gouraud.glsl",
+                                          "shaders/fragment_shader_colors_gouraud.glsl");
+     */
+
 
     //创建光源的着色器程序
     m_ProgramObj_Light = GLUtils::createProgram("shaders/vertex_shader_colors.glsl",
