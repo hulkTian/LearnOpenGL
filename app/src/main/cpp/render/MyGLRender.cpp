@@ -9,6 +9,7 @@
 #include "CameraAutoMove.h"
 #include "light/ColorsLight.h"
 #include "ColorsAtView.h"
+#include "Material.h"
 #include <NativeTriangle7.h>
 #include <NativeTriangle6.h>
 #include <NativeTriangle.h>
@@ -101,6 +102,9 @@ void MyGLRender::SetRenderType(int renderSampleType) {
         case SAMPLE_TYPE_COLORS_VIEW:
             m_curr_sample = new ColorsAtView();
             break;
+        case SAMPLE_TYPE_COLORS_MATERIAL:
+            m_curr_sample = new Material();
+            break;
         default:
             break;
     }
@@ -166,13 +170,13 @@ void MyGLRender::ProcessInput(int i) {
     }
 }
 
-void MyGLRender::MoveCallback(double x, double y, double z) {
-    LOGD("MyGLRender::MoveCallback x = %f，y = %f，z = %f", x, y, z)
+void MyGLRender::MoveCallback(double x, double y) {
+    LOGD("MyGLRender::MoveCallback x = %f，y = %f", x, y)
     if (m_curr_sample == nullptr) {
         throw MyGLException(
                 "MyGLRender::MoveCallback() 请注意：你应该忘记初始化你要展示的Sample类型 ，请补上初始化的代码，否则无法渲染");
     } else {
-        m_curr_sample->MoveCallback(x, y, z);
+        m_curr_sample->MoveCallback(x, y);
     }
 }
 

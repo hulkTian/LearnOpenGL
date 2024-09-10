@@ -149,6 +149,13 @@ class MainActivity : AppCompatActivity() {
             "在视图空间中计算冯氏光照效果",
             IMyNativeRendererType.SAMPLE_TYPE_COLORS_VIEW
         )
+        addItem(
+            i++,
+            R.mipmap.material,
+            "材质",
+            "通过材质和光源颜色细微控制物体表面颜色",
+            IMyNativeRendererType.SAMPLE_TYPE_COLORS_MATERIAL
+        )
     }
 
     private fun addItem(index: Int, redId: Int, title: String, subtitle: String, type: Int) {

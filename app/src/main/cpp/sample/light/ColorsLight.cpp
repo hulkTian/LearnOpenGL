@@ -116,7 +116,43 @@ void ColorsLight::Create() {
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 }
 
+void ColorsLight::MoveCallback(double xposIn, double yposIn) {
+    float xpos = static_cast<float>(xposIn);
+    float ypos = static_cast<float>(yposIn);
+    if (firstMouse)
+    {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+
+    float xoffset = xpos - lastX;
+    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+
+    lastX = xpos;
+    lastY = ypos;
+
+    camera.ProcessMouseMovement(xoffset, yoffset);
+}
+
+void ColorsLight::ProcessInput(int i) {
+    if (i == KEY_W)
+        camera.ProcessKeyboard(FORWARD, deltaTime);
+    if (i == KEY_S)
+        camera.ProcessKeyboard(BACKWARD, deltaTime);
+    if (i == KEY_A)
+        camera.ProcessKeyboard(LEFT, deltaTime);
+    if (i == KEY_D)
+        camera.ProcessKeyboard(RIGHT, deltaTime);
+}
+
 void ColorsLight::Draw() {
+    // per-frame time logic
+    // --------------------
+    float currentFrame = static_cast<float>(TimeUtils::currentTimeSeconds());
+    deltaTime = currentFrame - lastFrame;
+    lastFrame = currentFrame;
+
     //清除屏幕
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -138,7 +174,6 @@ void ColorsLight::Draw() {
                                             m_Width / m_Height,
                                             0.1f, 100.0f);
     glm::mat4 view = camera.GetViewMatrix();
-    view = glm::rotate(view, glm::radians(20.0f), glm::vec3(1.5f, -0.5f, 0.0f));
     setMat4(m_ProgramObj, "projection", projection);
     setMat4(m_ProgramObj, "view", view);
 
@@ -160,7 +195,7 @@ void ColorsLight::Draw() {
      * lightPos = glm::vec3 (camX,0.7f,camZ);
      */
     model = glm::translate(model, lightPos);
-    model = glm::scale(model, glm::vec3(0.3f));
+    model = glm::scale(model, glm::vec3(0.2f));
     setMat4(m_ProgramObj_Light, "model", model);
     setMat4(m_ProgramObj_Light, "view", view);
     setMat4(m_ProgramObj_Light, "projection", projection);

@@ -14,19 +14,6 @@ class MyGLSurfaceView : GLSurfaceView {
     private var mRatioWidth = 0
     private var mRatioHeight = 0
 
-    //滑动灵敏度
-    private var sensitivity = 0.05f
-
-    // 上次触摸事件的坐标
-    private var lastX = 0.0f
-    private var lastY = 0.0f
-
-    //欧拉角：pitch和yaw
-    private var pitch = 0.0
-    private var yaw = 0.0
-
-    private var isFirst = true;
-
     constructor(context: Context?) : super(context) {}
 
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {}
@@ -68,43 +55,13 @@ class MyGLSurfaceView : GLSurfaceView {
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         if (event?.action == MotionEvent.ACTION_MOVE) {
-            moveCallback(event.rawX, event.rawY)
-        } else if (event?.action == MotionEvent.ACTION_DOWN) {
-            lastX = event.rawX
-            lastY = event.rawY
+            moveCallback(event.x.toDouble(), event.y.toDouble())
         }
         return true
     }
 
-    private fun moveCallback(rawX: Float, rawY: Float) {
-        //计算偏移量
-        val offsetX = (rawX - lastX) * sensitivity
-        val offsetY = (rawY - lastY) * sensitivity
-        lastX = rawX
-        lastY = rawY
-
-        //保存偏移量
-        yaw += offsetX
-        pitch += offsetY
-
-        //设置 pitch 视角范围
-        if (pitch > 89.0)
-            pitch = 89.0
-        if (pitch < -89.0)
-            pitch = -89.0
-
-        // 方向向量的x分量
-        val x = cos(Math.toRadians(yaw)) * cos(Math.toRadians(pitch))
-        // 方向向量的y分量
-        val y = sin(Math.toRadians(pitch))
-        // 方向向量的z分量
-        val z = sin(Math.toRadians(yaw)) * cos(Math.toRadians(pitch))
-        if (isFirst) {
-            mRenderer.moveCallback(0.0,0.0,-1.0)
-            isFirst = false
-        } else {
-            mRenderer.moveCallback(x,y,z)
-        }
+    private fun moveCallback(x: Double, y: Double) {
+        mRenderer.moveCallback(x, y)
     }
 
     fun setAspectRatio(width: Int, height: Int) {

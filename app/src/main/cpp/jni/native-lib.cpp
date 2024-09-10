@@ -33,8 +33,8 @@ Java_com_example_learnopengl_MyNativeRenderer_nativeProcessInput(JNIEnv *env, jo
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_example_learnopengl_MyNativeRenderer_nativeMoveCallback(JNIEnv *env, jobject thiz,
-                                                                 jdouble x, jdouble y, jdouble z) {
-    MyGLRender::GetInstance()->MoveCallback(x, y, z);
+                                                                 jdouble x, jdouble y) {
+    MyGLRender::GetInstance()->MoveCallback(x, y);
 }
 extern "C"
 JNIEXPORT void JNICALL
