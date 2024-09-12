@@ -105,7 +105,8 @@ class NativeRenderActivity : Activity() {
         if (type == IMyNativeRendererType.SAMPLE_TYPE_CAMERA_AUTO_MOVE
             || type == IMyNativeRendererType.SAMPLE_TYPE_COLORS
             || type == IMyNativeRendererType.SAMPLE_TYPE_COLORS_VIEW
-            || type == IMyNativeRendererType.SAMPLE_TYPE_COLORS_MATERIAL) {
+            || type == IMyNativeRendererType.SAMPLE_TYPE_COLORS_MATERIAL
+            || type == IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_MAPS_DIFFUSE) {
             binding.llClick.visibility = View.VISIBLE
             binding.btW.setOnClickListener {
                 mRenderer?.processInput(Key.KEY_W)
@@ -183,6 +184,7 @@ class NativeRenderActivity : Activity() {
             || type == IMyNativeRendererType.SAMPLE_TYPE_COLORS
             || type == IMyNativeRendererType.SAMPLE_TYPE_COLORS_VIEW
             || type == IMyNativeRendererType.SAMPLE_TYPE_COLORS_MATERIAL
+            || type == IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_MAPS_DIFFUSE
         ) {
             glSurfaceView.renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY
         } else {

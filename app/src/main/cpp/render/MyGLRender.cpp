@@ -7,9 +7,10 @@
 #include "CoordinateSystems.h"
 #include "Camera.h"
 #include "CameraAutoMove.h"
-#include "light/ColorsLight.h"
+#include "ColorsLight.h"
 #include "ColorsAtView.h"
 #include "Material.h"
+#include "lighting_maps_diffuse.h"
 #include <NativeTriangle7.h>
 #include <NativeTriangle6.h>
 #include <NativeTriangle.h>
@@ -104,6 +105,9 @@ void MyGLRender::SetRenderType(int renderSampleType) {
             break;
         case SAMPLE_TYPE_COLORS_MATERIAL:
             m_curr_sample = new Material();
+            break;
+        case SAMPLE_TYPE_LIGHTING_MAPS_DIFFUSE:
+            m_curr_sample = new LightingMapsDiffuse();
             break;
         default:
             break;

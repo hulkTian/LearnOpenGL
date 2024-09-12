@@ -156,6 +156,13 @@ class MainActivity : AppCompatActivity() {
             "通过材质和光源颜色细微控制物体表面颜色",
             IMyNativeRendererType.SAMPLE_TYPE_COLORS_MATERIAL
         )
+        addItem(
+            i++,
+            R.mipmap.lighting_diffuse,
+            "光照贴图",
+            "使用纹理贴图代替材质中的单色分量",
+            IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_MAPS_DIFFUSE
+        )
     }
 
     private fun addItem(index: Int, redId: Int, title: String, subtitle: String, type: Int) {

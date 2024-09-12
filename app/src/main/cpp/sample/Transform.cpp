@@ -69,8 +69,8 @@ void Transform::Draw() {
     glUseProgram(m_ProgramObj);
 
     //指定纹理位置
-    glUniform1i(glGetUniformLocation(m_ProgramObj, "texture1"), 0);
-    glUniform1i(glGetUniformLocation(m_ProgramObj, "texture2"), 1);
+    setInt(m_ProgramObj, "texture1", 0);
+    setInt(m_ProgramObj, "texture2", 1);
 
     //激活纹理单元，给绑定的纹理设置一个位置标签，这时第一个纹理，纹理单元值是0
     glActiveTexture(GL_TEXTURE0);

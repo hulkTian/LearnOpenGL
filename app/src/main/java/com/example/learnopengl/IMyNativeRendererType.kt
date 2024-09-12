@@ -19,6 +19,7 @@ object IMyNativeRendererType {
     const val SAMPLE_TYPE_COLORS = SAMPLE_TYPE + 12
     const val SAMPLE_TYPE_COLORS_VIEW = SAMPLE_TYPE + 13
     const val SAMPLE_TYPE_COLORS_MATERIAL = SAMPLE_TYPE + 14
+    const val SAMPLE_TYPE_LIGHTING_MAPS_DIFFUSE = SAMPLE_TYPE + 15
 }
 
 object Key {

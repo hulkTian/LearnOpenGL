@@ -22,6 +22,7 @@
 #define SAMPLE_TYPE_COLORS                                          SAMPLE_TYPE + 12
 #define SAMPLE_TYPE_COLORS_VIEW                                     SAMPLE_TYPE + 13
 #define SAMPLE_TYPE_COLORS_MATERIAL                                 SAMPLE_TYPE + 14
+#define SAMPLE_TYPE_LIGHTING_MAPS_DIFFUSE                           SAMPLE_TYPE + 15
 
 #define KEY_W 1
 #define KEY_S 2
