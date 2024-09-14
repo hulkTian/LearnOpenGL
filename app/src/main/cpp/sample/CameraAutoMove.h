@@ -7,6 +7,7 @@
 
 
 #include "GLBaseSample.h"
+#include "CameraUtils.h"
 
 class CameraAutoMove : public GLBaseSample{
 public:
@@ -18,7 +19,7 @@ public:
 
     virtual void ProcessInput(int i);
 
-    virtual void MoveCallback(double x, double y, double z);
+    virtual void MoveCallback(double x, double y);
 
     virtual void Draw();
 
@@ -26,13 +27,14 @@ public:
 
 private:
     //声明顶点缓存对象和顶点数组对象
-    GLuint VBO, VAO, EBO;
+    GLuint VBO, VAO;
     GLuint texture1, texture2;
-    glm::vec3 cameraPos   = glm::vec3(0.0f, 0.0f,  3.0f);
-    glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-    glm::vec3 cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
+    CameraUtils cameraUtils = CameraUtils(glm::vec3(0.0f, 0.0f,  3.0f));
     float deltaTime = 0.0f; // 当前帧与上一帧的时间差
     float lastFrame = 0.0f; // 上一帧的时间
+    bool firstMouse = true;
+    float lastX = m_Width / 2.0f;
+    float lastY = m_Height / 2.0f;
 };
 
 

@@ -163,6 +163,13 @@ class MainActivity : AppCompatActivity() {
             "使用纹理贴图代替材质中的单色分量",
             IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_MAPS_DIFFUSE
         )
+        addItem(
+            i++,
+            R.mipmap.light_caster,
+            "投光物",
+            "在立方体箱子中使用平行光效果",
+            IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_CASTERS_DIRECTIONAL
+        )
     }
 
     private fun addItem(index: Int, redId: Int, title: String, subtitle: String, type: Int) {

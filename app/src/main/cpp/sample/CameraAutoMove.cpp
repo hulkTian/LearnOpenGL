@@ -70,7 +70,6 @@ void CameraAutoMove::Create() {
 
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
 
     glBindVertexArray(VAO);
 
@@ -108,30 +107,43 @@ void CameraAutoMove::Create() {
 }
 
 void CameraAutoMove::ProcessInput(int i) {
-    // 根据上一帧的绘制事件来平衡这一帧的移动速度
-    float cameraSpeed = 2.5f * deltaTime;
-    switch (i) {
-        case KEY_W:
-            cameraPos += cameraSpeed * cameraFront;
-            break;
-        case KEY_S:
-            cameraPos -= cameraSpeed * cameraFront;
-            break;
-        case KEY_A:
-            cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-            break;
-        case KEY_D:
-            cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-            break;
-    }
+    if (i == KEY_W)
+        cameraUtils.ProcessKeyboard(FORWARD, deltaTime);
+    if (i == KEY_S)
+        cameraUtils.ProcessKeyboard(BACKWARD, deltaTime);
+    if (i == KEY_A)
+        cameraUtils.ProcessKeyboard(LEFT, deltaTime);
+    if (i == KEY_D)
+        cameraUtils.ProcessKeyboard(RIGHT, deltaTime);
 }
 
-void CameraAutoMove::MoveCallback(double x, double y, double z) {
-    glm::vec3 front = glm::vec3(x, y, z);
-    cameraFront = glm::normalize(front);
+void CameraAutoMove::MoveCallback(double xposIn, double yposIn) {
+
+    float xpos = static_cast<float>(xposIn);
+    float ypos = static_cast<float>(yposIn);
+
+    if (firstMouse)
+    {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+
+    float xoffset = xpos - lastX;
+    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+
+    lastX = xpos;
+    lastY = ypos;
+
+    cameraUtils.ProcessMouseMovement(xoffset, yoffset);
 }
 
 void CameraAutoMove::Draw() {
+    //计算每一帧绘制的时间
+    float currentFrame = TimeUtils::currentTimeSeconds();
+    deltaTime = currentFrame - lastFrame;
+    lastFrame = currentFrame;
+
     //清除屏幕和深度缓冲
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -139,8 +151,8 @@ void CameraAutoMove::Draw() {
     glUseProgram(m_ProgramObj);
 
     //指定纹理位置
-    glUniform1i(glGetUniformLocation(m_ProgramObj, "texture1"), 0);
-    glUniform1i(glGetUniformLocation(m_ProgramObj, "texture2"), 1);
+    setInt(m_ProgramObj, "texture1", 0);
+    setInt(m_ProgramObj, "texture2", 1);
 
     //激活纹理单元，给绑定的纹理设置一个位置标签，这时第一个纹理，纹理单元值是0
     glActiveTexture(GL_TEXTURE0);
@@ -151,15 +163,14 @@ void CameraAutoMove::Draw() {
     glBindTexture(GL_TEXTURE_2D, texture2);
 
     // 使用gml提供的函数，构建一个移动的LookAt矩阵：
-    // 第一个参数：摄像机坐标，随时间变化，在圆上移动；第二个参数：摄像机观察目标的位置；第三个参数：世界空间中的上向量；
-    glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-    setMat4(m_ProgramObj, "view", view);
+    setMat4(m_ProgramObj, "view", cameraUtils.GetViewMatrix());
 
     // 透视投影矩阵
     glm::mat4 projection = glm::mat4(1.0f);
-    projection = glm::perspective(glm::radians(60.0f), m_Width / m_Height, 0.01f, 100.0f);
+    projection = glm::perspective(glm::radians(cameraUtils.Zoom), m_Width / m_Height, 0.01f, 100.0f);
     setMat4(m_ProgramObj, "projection", projection);
 
+    glBindVertexArray(VAO);
     for (unsigned int i = 0; i < 10; i++) {
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, cubePositions[i]);
@@ -170,16 +181,11 @@ void CameraAutoMove::Draw() {
         glDrawArrays(GL_TRIANGLES, 0, 36);
     }
 
-    //计算每一帧绘制的时间
-    float currentFrame = TimeUtils::currentTimeSeconds();
-    deltaTime = currentFrame - lastFrame;
-    lastFrame = currentFrame;
 }
 
 void CameraAutoMove::Shutdown() {
     //关闭顶点属性
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &EBO);
     GLBaseSample::Shutdown();
 }
