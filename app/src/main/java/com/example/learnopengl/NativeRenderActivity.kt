@@ -107,7 +107,9 @@ class NativeRenderActivity : Activity() {
             || type == IMyNativeRendererType.SAMPLE_TYPE_COLORS_VIEW
             || type == IMyNativeRendererType.SAMPLE_TYPE_COLORS_MATERIAL
             || type == IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_MAPS_DIFFUSE
-            || type == IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_CASTERS_DIRECTIONAL) {
+            || type == IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_CASTERS_DIRECTIONAL
+            || type == IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_MERGE
+        ) {
             binding.llClick.visibility = View.VISIBLE
             binding.btW.setOnClickListener {
                 mRenderer?.processInput(Key.KEY_W)
@@ -187,6 +189,7 @@ class NativeRenderActivity : Activity() {
             || type == IMyNativeRendererType.SAMPLE_TYPE_COLORS_MATERIAL
             || type == IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_MAPS_DIFFUSE
             || type == IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_CASTERS_DIRECTIONAL
+            || type == IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_MERGE
         ) {
             glSurfaceView.renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY
         } else {

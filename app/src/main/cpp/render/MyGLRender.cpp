@@ -12,6 +12,7 @@
 #include "Material.h"
 #include "lighting_maps_diffuse.h"
 #include "LightCastersDirectional.h"
+#include "multiple_lights.h"
 #include <NativeTriangle7.h>
 #include <NativeTriangle6.h>
 #include <NativeTriangle.h>
@@ -112,6 +113,9 @@ void MyGLRender::SetRenderType(int renderSampleType) {
             break;
         case SAMPLE_TYPE_LIGHTING_CASTERS_DIRECTIONAL:
             m_curr_sample = new LightCastersDirectional();
+            break;
+        case SAMPLE_TYPE_LIGHTING_MERGE:
+            m_curr_sample = new MultipleLights();
             break;
         default:
             break;

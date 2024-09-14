@@ -170,6 +170,13 @@ class MainActivity : AppCompatActivity() {
             "在立方体箱子中使用平行光效果",
             IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_CASTERS_DIRECTIONAL
         )
+        addItem(
+            i++,
+            R.mipmap.lights_merge,
+            "多光源",
+            "在立方体箱子中使用多种光源构建氛围效果",
+            IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_MERGE
+        )
     }
 
     private fun addItem(index: Int, redId: Int, title: String, subtitle: String, type: Int) {
