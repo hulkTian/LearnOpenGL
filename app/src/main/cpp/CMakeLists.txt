@@ -11,6 +11,8 @@ cmake_minimum_required(VERSION 3.22.1)
 # build script scope).
 project("learnopengl")
 
+set(libs "${CMAKE_SOURCE_DIR}/../jniLibs")
+
 include_directories(
         include
 
@@ -69,6 +71,10 @@ find_library( # Sets the name of the path variable.
         # you want CMake to locate.
         log)
 
+# =====  ASSIMP  =====
+add_library(libassimp SHARED IMPORTED )
+set_target_properties(libassimp PROPERTIES IMPORTED_LOCATION "${libs}/${ANDROID_ABI}/libassimp.so")
+
 # Specifies libraries CMake should link to your target library. You
 # can link libraries from various origins, such as libraries defined in this
 # build script, prebuilt third-party libraries, or Android system libraries.
@@ -77,4 +83,5 @@ target_link_libraries(learn-opengles-lib
         EGL
         GLESv3
         android
+        libassimp
         ${log-lib})
