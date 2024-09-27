@@ -23,7 +23,17 @@ public:
     /**
 	 * Set Environment parameter
 	 */
-    static void setEnvAndAssetManager(JNIEnv *env, jobject assetManager);
+    static void setEnvAndAssetManager(JNIEnv *env, jobject assetManager, jstring path);
+
+    /**
+     * get file name from path
+     */
+    static std::string GetFileName(std::string fileName);
+
+    /**
+     * Search for a file in assets, extract it, save it in internal storage, and return the new path
+     */
+    static bool ExtractAssetReturnFilename(std::string assetName, std::string & filename, bool checkIfFileIsAvailable);
 
     /**
      *  Loads a file from assets/path into a char array.
@@ -33,8 +43,6 @@ public:
     /**
      * Loads a texture from assets/texture/<name>
      */
-    static GLuint loadTexture(const char *name);
-
     static GLuint loadTgaTexture(const char *fileName);
 
     /**
@@ -42,8 +50,6 @@ public:
 	 * shader source code.
 	 */
     static GLuint createProgram(const char *vertexPath, const char *fragmentPath);
-
-    static void DeleteProgram(GLuint &program);
 
     static void checkGlError(const char *pGLOperation);
 
@@ -103,6 +109,8 @@ public:
 
         LOGI("===== Information end =====")
     }
+
+    static AAssetManager *getAAssetManager();
 };
 
 static void setBool(GLuint programId, const std::string &name, bool value) {

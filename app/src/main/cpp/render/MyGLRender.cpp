@@ -12,6 +12,7 @@
 #include "Material.h"
 #include "lighting_maps_diffuse.h"
 #include "LightCastersDirectional.h"
+#include "ModelLoading.h"
 #include "multiple_lights.h"
 #include <NativeTriangle7.h>
 #include <NativeTriangle6.h>
@@ -117,6 +118,9 @@ void MyGLRender::SetRenderType(int renderSampleType) {
         case SAMPLE_TYPE_LIGHTING_MERGE:
             m_curr_sample = new MultipleLights();
             break;
+        case SAMPLE_TYPE_MODEL_LOADING:
+            m_curr_sample = new ModelLoading();
+            break;
         default:
             break;
     }
@@ -128,11 +132,11 @@ void MyGLRender::SetRenderType(int renderSampleType) {
          m_before_sample, m_curr_sample)
 }
 
-void MyGLRender::OnSurfaceCreated(JNIEnv *env, jobject assetManager) {
+void MyGLRender::OnSurfaceCreated(JNIEnv *env, jobject assetManager, jstring pathToInternalDir) {
     LOGD("MyGLRender::OnSurfaceCreated")
 
     // 初始化设置assetManager  一定要记得初始化，否则会报空指针异常
-    GLUtils::setEnvAndAssetManager(env, assetManager);
+    GLUtils::setEnvAndAssetManager(env, assetManager, pathToInternalDir);
 
     if (m_before_sample) {
         m_before_sample->Shutdown();

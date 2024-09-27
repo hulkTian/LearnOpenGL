@@ -23,6 +23,7 @@ include_directories(
         sample
         sample/triangle
         sample/light
+        sample/mesh
 
         utils
         utils/log

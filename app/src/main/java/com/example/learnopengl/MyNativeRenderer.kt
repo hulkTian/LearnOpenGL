@@ -17,7 +17,7 @@ class MyNativeRenderer(activity: Activity) : GLSurfaceView.Renderer {
 
     override fun onSurfaceCreated(gl: GL10?, config: EGLConfig?) {
         val assetManager: AssetManager = mActivity.assets
-        nativeOnSurfaceCreated(assetManager)
+        nativeOnSurfaceCreated(assetManager, mActivity.filesDir.absolutePath)
     }
 
     override fun onSurfaceChanged(gl: GL10?, width: Int, height: Int) {
@@ -44,7 +44,7 @@ class MyNativeRenderer(activity: Activity) : GLSurfaceView.Renderer {
         nativeOnDestroy()
     }
 
-    private external fun nativeOnSurfaceCreated(assetManager: AssetManager)
+    private external fun nativeOnSurfaceCreated(assetManager: AssetManager, pathToInternalDir:String)
     private external fun nativeOnSurfaceChanged(width: Int, height: Int)
     private external fun nativeOnDrawFrame()
     private external fun nativeSetRenderType(renderSampleType: Int)

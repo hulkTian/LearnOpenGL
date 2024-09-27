@@ -177,6 +177,13 @@ class MainActivity : AppCompatActivity() {
             "在立方体箱子中使用多种光源构建氛围效果",
             IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_MERGE
         )
+        addItem(
+            i++,
+            R.mipmap.model_loading,
+            "模型",
+            "使用 Assimp 加载模型",
+            IMyNativeRendererType.SAMPLE_TYPE_MODEL_LOADING
+        )
     }
 
     private fun addItem(index: Int, redId: Int, title: String, subtitle: String, type: Int) {

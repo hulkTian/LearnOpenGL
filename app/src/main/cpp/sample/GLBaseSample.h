@@ -25,11 +25,14 @@
 #define SAMPLE_TYPE_LIGHTING_MAPS_DIFFUSE                           SAMPLE_TYPE + 15
 #define SAMPLE_TYPE_LIGHTING_CASTERS_DIRECTIONAL                    SAMPLE_TYPE + 16
 #define SAMPLE_TYPE_LIGHTING_MERGE                                  SAMPLE_TYPE + 17
+#define SAMPLE_TYPE_MODEL_LOADING                                   SAMPLE_TYPE + 18
 
 #define KEY_W 1
 #define KEY_S 2
 #define KEY_A 3
 #define KEY_D 4
+
+#define DEFAULT_OGL_ASSETS_DIR "/data/user/0/com.example.learnopengl/files"
 
 #include <GLUtils.h>
 

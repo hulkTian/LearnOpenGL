@@ -109,6 +109,7 @@ class NativeRenderActivity : Activity() {
             || type == IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_MAPS_DIFFUSE
             || type == IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_CASTERS_DIRECTIONAL
             || type == IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_MERGE
+            || type == IMyNativeRendererType.SAMPLE_TYPE_MODEL_LOADING
         ) {
             binding.llClick.visibility = View.VISIBLE
             binding.btW.setOnClickListener {
@@ -190,6 +191,7 @@ class NativeRenderActivity : Activity() {
             || type == IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_MAPS_DIFFUSE
             || type == IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_CASTERS_DIRECTIONAL
             || type == IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_MERGE
+            || type == IMyNativeRendererType.SAMPLE_TYPE_MODEL_LOADING
         ) {
             glSurfaceView.renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY
         } else {

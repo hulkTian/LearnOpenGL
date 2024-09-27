@@ -4,8 +4,9 @@
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_example_learnopengl_MyNativeRenderer_nativeOnSurfaceCreated(JNIEnv *env, jobject thiz,
-                                                                     jobject asset_manager) {
-    MyGLRender::GetInstance()->OnSurfaceCreated(env, asset_manager);
+                                                                     jobject asset_manager,
+                                                                     jstring pathToInternalDir) {
+    MyGLRender::GetInstance()->OnSurfaceCreated(env, asset_manager, pathToInternalDir);
 }
 extern "C"
 JNIEXPORT void JNICALL

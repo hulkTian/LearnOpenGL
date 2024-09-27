@@ -4,7 +4,9 @@
 
 #include "GLUtils.h"
 #include <cstdlib>
+
 #define STB_IMAGE_IMPLEMENTATION
+
 #include "stb_image.h"
 
 static JNIEnv *sEnv = nullptr;
@@ -74,7 +76,7 @@ static GLuint loadShader(GLenum shaderType, const char **source) {
     return shader;
 }
 
-void GLUtils::setEnvAndAssetManager(JNIEnv *env, jobject assetManager) {
+void GLUtils::setEnvAndAssetManager(JNIEnv *env, jobject assetManager, jstring pathToInternalDir) {
     sEnv = env;
     sAssetManager = assetManager;
 }
@@ -199,49 +201,108 @@ void GLUtils::checkGlError(const char *pGLOperation) {
 GLuint GLUtils::loadTgaTexture(const char *fileName) {
     GLuint textureId;
     FUN_BEGIN_TIME("GLUtils::loadTgaTexture")
-    glGenTextures(1, &textureId);
-    glBindTexture(GL_TEXTURE_2D, textureId);
+        glGenTextures(1, &textureId);
+        glBindTexture(GL_TEXTURE_2D, textureId);
 
-    // 打开assets中的文件
-    AAsset* asset = loadAsset(fileName);
+        // 打开assets中的文件
+        AAsset *asset = loadAsset(fileName);
 
-    // 获取文件大小
-    off_t assetLength = AAsset_getLength(asset);
-    void* assetBuffer = malloc(assetLength);
-    AAsset_read(asset, assetBuffer, assetLength);
-    AAsset_close(asset);
+        // 获取文件大小
+        off_t assetLength = AAsset_getLength(asset);
+        void *assetBuffer = malloc(assetLength);
+        AAsset_read(asset, assetBuffer, assetLength);
+        AAsset_close(asset);
 
-    stbi_set_flip_vertically_on_load(true);
+        // 翻转y轴，使纹理坐标从底部开始
+        stbi_set_flip_vertically_on_load(true);
 
-    // 使用stb_image解码图片数据
-    int width, height, channels;
-    unsigned char* imageData = stbi_load_from_memory(static_cast<stbi_uc*>(assetBuffer),
-                                                     static_cast<int>(assetLength),
-                                                     &width, &height,
-                                                     &channels, 4);
+        // 使用stb_image解码图片数据
+        int width, height, channels;
+        unsigned char *imageData = stbi_load_from_memory(static_cast<stbi_uc *>(assetBuffer),
+                                                         static_cast<int>(assetLength),
+                                                         &width, &height,
+                                                         &channels, 4);
 
-    free(assetBuffer);
+        free(assetBuffer);
 
-    if (imageData == nullptr) {
-        // 图片解码失败的处理逻辑
-        LOGD("Image data is null")
-        return 0;
-    }
+        if (imageData == nullptr) {
+            // 图片解码失败的处理逻辑
+            LOGD("Image data is null")
+            return 0;
+        }
 
-    //加载纹理数据
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height,
-                 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
-    // 生成多级渐远纹理
-    glGenerateMipmap(GL_TEXTURE_2D);
-    // 为当前绑定的纹理对象设置环绕、过滤方式
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        //加载纹理数据
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height,
+                     0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
+        // 生成多级渐远纹理
+        glGenerateMipmap(GL_TEXTURE_2D);
+        // 为当前绑定的纹理对象设置环绕、过滤方式
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-    // 释放图片数据
-    stbi_image_free(imageData);
+        // 释放图片数据
+        stbi_image_free(imageData);
 
     FUN_END_TIME("GLUtils::loadTgaTexture")
     return textureId;
+}
+
+bool GLUtils::ExtractAssetReturnFilename(std::string assetName, std::string &filename,
+                                         bool checkIfFileIsAvailable) {
+    // let us look for the file in assets
+    bool result = false;
+
+    FUN_BEGIN_TIME("GLUtils::ExtractAssetReturnFilename")
+        // construct the filename in internal storage by concatenating with path to internal storage
+        filename = "/data/user/0/com.example.learnopengl/files/" + GetFileName(assetName);
+
+        // check if the file was previously extracted and is available in app's internal dir
+        FILE *file = fopen(filename.c_str(), "rb");
+        if (file && checkIfFileIsAvailable) {
+            LOGV("Found extracted file in assets: %s", filename.c_str())
+            fclose(file);
+            return true;
+        }
+
+        // Open file
+        AAsset *asset = loadAsset(assetName.c_str());
+
+        char buf[BUFSIZ];
+        int nb_read = 0;
+        if (asset != NULL) {
+            FILE *out = fopen(filename.c_str(), "w");
+            while ((nb_read = AAsset_read(asset, buf, BUFSIZ)) > 0) {
+                fwrite(buf, nb_read, 1, out);
+            }
+            fclose(out);
+            AAsset_close(asset);
+            result = true;
+
+            LOGV("Asset extracted: %s", filename.c_str());
+        } else {
+            LOGV("Asset not found: %s", assetName.c_str());
+        }
+
+    FUN_END_TIME("GLUtils::ExtractAssetReturnFilename")
+
+    return result;
+}
+
+/**
+ * Strip out the path and return just the filename
+ */
+std::string GLUtils::GetFileName(std::string fileName) {
+    // assume filename is of the form "<path>/<name>.<type>"
+    std::string::size_type slashIndex = fileName.find_last_of("/");
+
+    std::string onlyName;
+    if (slashIndex == std::string::npos) {
+        onlyName = fileName.substr(0, std::string::npos);
+    } else {
+        onlyName = fileName.substr(slashIndex + 1, std::string::npos);
+    }
+
+    return onlyName;
 }
