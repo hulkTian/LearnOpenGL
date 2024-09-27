@@ -5,6 +5,14 @@
 #include "ModelLoading.h"
 #include "Model.h"
 
+// positions of the point lights
+static glm::vec3 pointLightPositions[] = {
+        glm::vec3(0.7f, 0.2f, 2.0f),
+        glm::vec3(2.3f, -3.3f, -4.0f),
+        glm::vec3(-4.0f, 2.0f, -12.0f),
+        glm::vec3(0.0f, 0.0f, -3.0f)
+};
+
 void ModelLoading::Create() {
     GLUtils::printGLInfo();
 
@@ -71,6 +79,27 @@ void ModelLoading::Draw() {
 
     //激活着色器程序
     glUseProgram(m_ProgramObj);
+
+    setVec3(m_ProgramObj, "viewPos", cameraUtils.Position);
+    setFloat(m_ProgramObj, "material.shininess", 32.0f);
+
+    // point light 1
+    setVec3(m_ProgramObj, "pointLights[0].position", pointLightPositions[0]);
+    setVec3(m_ProgramObj, "pointLights[0].ambient", 1.0f, 1.0f, 1.0f);
+    setVec3(m_ProgramObj, "pointLights[0].diffuse", 1.0f, 1.0f, 1.0f);
+    setVec3(m_ProgramObj, "pointLights[0].specular", 1.0f, 1.0f, 1.0f);
+    setFloat(m_ProgramObj, "pointLights[0].constant", 1.0f);
+    setFloat(m_ProgramObj, "pointLights[0].linear", 0.09f);
+    setFloat(m_ProgramObj, "pointLights[0].quadratic", 0.032f);
+
+    // point light 2
+    setVec3(m_ProgramObj, "pointLights[1].position", pointLightPositions[1]);
+    setVec3(m_ProgramObj, "pointLights[1].ambient", 1.0f, 1.0f, 1.0f);
+    setVec3(m_ProgramObj, "pointLights[1].diffuse", 1.0f, 1.0f, 1.0f);
+    setVec3(m_ProgramObj, "pointLights[1].specular", 1.0f, 1.0f, 1.0f);
+    setFloat(m_ProgramObj, "pointLights[1].constant", 1.0f);
+    setFloat(m_ProgramObj, "pointLights[1].linear", 0.09f);
+    setFloat(m_ProgramObj, "pointLights[1].quadratic", 0.032f);
 
     // view/projection transformations
     glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom), m_Width / m_Height, 0.1f, 100.0f);
