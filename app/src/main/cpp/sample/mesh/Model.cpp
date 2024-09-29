@@ -14,14 +14,6 @@ void Model::Draw(GLuint programId) {
 }
 
 void Model::loadModel(string const &path) {
-    //std::string objFilename;
-    //bool isFilesPresent = GLUtils::ExtractAssetReturnFilename(path, objFilename, true);
-
-    /*if (!isFilesPresent) {
-        LOGE("Model %s does not exist!", objFilename.c_str());
-        return;
-    }*/
-
     Assimp::Importer importer;
     // 后期处理指令：aiProcess_Triangulate 将不是三角形图元的形状转为三角形；aiProcess_FlipUVs 反转纹理y轴；
     const aiScene *scene = importer.ReadFile(path,

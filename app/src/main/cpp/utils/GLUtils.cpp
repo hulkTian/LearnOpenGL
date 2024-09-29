@@ -76,7 +76,7 @@ static GLuint loadShader(GLenum shaderType, const char **source) {
     return shader;
 }
 
-void GLUtils::setEnvAndAssetManager(JNIEnv *env, jobject assetManager, jstring pathToInternalDir) {
+void GLUtils::setEnvAndAssetManager(JNIEnv *env, jobject assetManager) {
     sEnv = env;
     sAssetManager = assetManager;
 }
@@ -198,7 +198,9 @@ void GLUtils::checkGlError(const char *pGLOperation) {
 }
 
 //从图片中加载纹理
-GLuint GLUtils::loadTgaTexture(const char *fileName) {
+GLuint GLUtils::loadTgaTexture(const char *fileName, unsigned int texture_warp_s,
+                               unsigned int texture_warp_t, unsigned int texture_min_filter,
+                               unsigned int texture_max_filter) {
     GLuint textureId;
     FUN_BEGIN_TIME("GLUtils::loadTgaTexture")
         glGenTextures(1, &textureId);
@@ -237,72 +239,14 @@ GLuint GLUtils::loadTgaTexture(const char *fileName) {
         // 生成多级渐远纹理
         glGenerateMipmap(GL_TEXTURE_2D);
         // 为当前绑定的纹理对象设置环绕、过滤方式
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, texture_warp_s);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, texture_warp_t);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texture_min_filter);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texture_max_filter);
 
         // 释放图片数据
         stbi_image_free(imageData);
 
     FUN_END_TIME("GLUtils::loadTgaTexture")
     return textureId;
-}
-
-bool GLUtils::ExtractAssetReturnFilename(std::string assetName, std::string &filename,
-                                         bool checkIfFileIsAvailable) {
-    // let us look for the file in assets
-    bool result = false;
-
-    FUN_BEGIN_TIME("GLUtils::ExtractAssetReturnFilename")
-        // construct the filename in internal storage by concatenating with path to internal storage
-        filename = "/data/user/0/com.example.learnopengl/files/" + GetFileName(assetName);
-
-        // check if the file was previously extracted and is available in app's internal dir
-        FILE *file = fopen(filename.c_str(), "rb");
-        if (file && checkIfFileIsAvailable) {
-            LOGV("Found extracted file in assets: %s", filename.c_str())
-            fclose(file);
-            return true;
-        }
-
-        // Open file
-        AAsset *asset = loadAsset(assetName.c_str());
-
-        char buf[BUFSIZ];
-        int nb_read = 0;
-        if (asset != NULL) {
-            FILE *out = fopen(filename.c_str(), "w");
-            while ((nb_read = AAsset_read(asset, buf, BUFSIZ)) > 0) {
-                fwrite(buf, nb_read, 1, out);
-            }
-            fclose(out);
-            AAsset_close(asset);
-            result = true;
-
-            LOGV("Asset extracted: %s", filename.c_str());
-        } else {
-            LOGV("Asset not found: %s", assetName.c_str());
-        }
-
-    FUN_END_TIME("GLUtils::ExtractAssetReturnFilename")
-
-    return result;
-}
-
-/**
- * Strip out the path and return just the filename
- */
-std::string GLUtils::GetFileName(std::string fileName) {
-    // assume filename is of the form "<path>/<name>.<type>"
-    std::string::size_type slashIndex = fileName.find_last_of("/");
-
-    std::string onlyName;
-    if (slashIndex == std::string::npos) {
-        onlyName = fileName.substr(0, std::string::npos);
-    } else {
-        onlyName = fileName.substr(slashIndex + 1, std::string::npos);
-    }
-
-    return onlyName;
 }

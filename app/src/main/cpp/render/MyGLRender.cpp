@@ -14,6 +14,7 @@
 #include "LightCastersDirectional.h"
 #include "ModelLoading.h"
 #include "multiple_lights.h"
+#include "DepthTesting.h"
 #include <NativeTriangle7.h>
 #include <NativeTriangle6.h>
 #include <NativeTriangle.h>
@@ -121,6 +122,9 @@ void MyGLRender::SetRenderType(int renderSampleType) {
         case SAMPLE_TYPE_MODEL_LOADING:
             m_curr_sample = new ModelLoading();
             break;
+        case SAMPLE_TYPE_DEPTH_TESTING:
+            m_curr_sample = new DepthTesting();
+            break;
         default:
             break;
     }
@@ -132,11 +136,11 @@ void MyGLRender::SetRenderType(int renderSampleType) {
          m_before_sample, m_curr_sample)
 }
 
-void MyGLRender::OnSurfaceCreated(JNIEnv *env, jobject assetManager, jstring pathToInternalDir) {
+void MyGLRender::OnSurfaceCreated(JNIEnv *env, jobject assetManager) {
     LOGD("MyGLRender::OnSurfaceCreated")
 
     // 初始化设置assetManager  一定要记得初始化，否则会报空指针异常
-    GLUtils::setEnvAndAssetManager(env, assetManager, pathToInternalDir);
+    GLUtils::setEnvAndAssetManager(env, assetManager);
 
     if (m_before_sample) {
         m_before_sample->Shutdown();

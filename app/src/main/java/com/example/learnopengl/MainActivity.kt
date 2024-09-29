@@ -184,6 +184,13 @@ class MainActivity : AppCompatActivity() {
             "使用 Assimp 加载模型",
             IMyNativeRendererType.SAMPLE_TYPE_MODEL_LOADING
         )
+        addItem(
+            i++,
+            R.mipmap.depth_testing,
+            "深度测试",
+            "验证深度测试配置参数效果",
+            IMyNativeRendererType.SAMPLE_TYPE_DEPTH_TESTING
+        )
     }
 
     private fun addItem(index: Int, redId: Int, title: String, subtitle: String, type: Int) {

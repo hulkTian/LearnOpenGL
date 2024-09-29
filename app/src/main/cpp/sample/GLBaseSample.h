@@ -26,6 +26,7 @@
 #define SAMPLE_TYPE_LIGHTING_CASTERS_DIRECTIONAL                    SAMPLE_TYPE + 16
 #define SAMPLE_TYPE_LIGHTING_MERGE                                  SAMPLE_TYPE + 17
 #define SAMPLE_TYPE_MODEL_LOADING                                   SAMPLE_TYPE + 18
+#define SAMPLE_TYPE_DEPTH_TESTING                                   SAMPLE_TYPE + 19
 
 #define KEY_W 1
 #define KEY_S 2

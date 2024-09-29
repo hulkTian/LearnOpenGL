@@ -110,6 +110,7 @@ class NativeRenderActivity : Activity() {
             || type == IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_CASTERS_DIRECTIONAL
             || type == IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_MERGE
             || type == IMyNativeRendererType.SAMPLE_TYPE_MODEL_LOADING
+            || type == IMyNativeRendererType.SAMPLE_TYPE_DEPTH_TESTING
         ) {
             binding.llClick.visibility = View.VISIBLE
             binding.btW.setOnClickListener {

@@ -23,7 +23,7 @@ public:
 
     void MoveCallback(float x, float y);
 
-    void OnSurfaceCreated(JNIEnv *env, jobject assetManager, jstring pathToInternalDir);
+    void OnSurfaceCreated(JNIEnv *env, jobject assetManager);
 
     void OnSurfaceChanged(int width, int height);
 

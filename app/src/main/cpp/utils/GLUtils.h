@@ -23,17 +23,7 @@ public:
     /**
 	 * Set Environment parameter
 	 */
-    static void setEnvAndAssetManager(JNIEnv *env, jobject assetManager, jstring path);
-
-    /**
-     * get file name from path
-     */
-    static std::string GetFileName(std::string fileName);
-
-    /**
-     * Search for a file in assets, extract it, save it in internal storage, and return the new path
-     */
-    static bool ExtractAssetReturnFilename(std::string assetName, std::string & filename, bool checkIfFileIsAvailable);
+    static void setEnvAndAssetManager(JNIEnv *env, jobject assetManager);
 
     /**
      *  Loads a file from assets/path into a char array.
@@ -43,7 +33,10 @@ public:
     /**
      * Loads a texture from assets/texture/<name>
      */
-    static GLuint loadTgaTexture(const char *fileName);
+    static GLuint loadTgaTexture(const char *fileName, unsigned int texture_warp_s = GL_CLAMP_TO_EDGE,
+                                 unsigned int texture_warp_t = GL_CLAMP_TO_EDGE,
+                                 unsigned int texture_min_filter = GL_NEAREST,
+                                 unsigned int texture_max_filter = GL_NEAREST);
 
     /**
 	 * Create a program with the given vertex and framgent
@@ -110,7 +103,6 @@ public:
         LOGI("===== Information end =====")
     }
 
-    static AAssetManager *getAAssetManager();
 };
 
 static void setBool(GLuint programId, const std::string &name, bool value) {
