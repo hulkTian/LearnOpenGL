@@ -25,6 +25,7 @@ include_directories(
         sample/light
         sample/mesh
         sample/depth_testing
+        sample/stencil_testing
 
         utils
         utils/log

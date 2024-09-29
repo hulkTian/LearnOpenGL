@@ -2,36 +2,34 @@
 // Created by ts on 2024/9/29.
 //
 /**
- * 深度缓冲：
- * 深度缓冲是由窗口系统自动创建的，它会以16、24或32位float的形式储存它的深度值。在大部分的系统中，深度缓冲的精度都是24位的。
+ * 模板测试：
+ * 当片段着色器处理完一个片段之后模板测试(Stencil Test)会开始执行，和深度测试一样，它也可能会丢弃片段。
  *
- * 深度测试：
- * 当深度测试(Depth Testing)被启用的时候，OpenGL会将一个片段的深度值与深度缓冲的内容进行对比。
- * OpenGL会执行一个深度测试，如果这个测试通过了的话，深度缓冲将会更新为新的深度值。如果深度测试失败了，片段将会被丢弃。
+ * 模板缓冲：
+ * 一个模板缓冲中，（通常）每个模板值(Stencil Value)是8位的。所以每个像素/片段一共能有256种不同的模板值。
  *
- * 在某些情况下你会需要对所有片段都执行深度测试并丢弃相应的片段，但不希望更新深度缓冲。
- * OpenGL允许我们禁用深度缓冲的写入，只需要设置它的深度掩码(Depth Mask)设置为GL_FALSE就可以了：
- * glDepthMask(GL_FALSE);
+ * 模板函数
+ * glStencilFunc(GLenum func, GLint ref, GLuint mask)：模板缓冲存值内容配置。
+ * func：设置模板测试函数。可用的选项有：GL_NEVER、GL_LESS、GL_LEQUAL、GL_GREATER、GL_GEQUAL、GL_EQUAL、GL_NOTEQUAL和GL_ALWAYS。它们的语义和深度缓冲的函数类似。
+ * ref：设置了模板测试的参考值(Reference Value)。模板缓冲的内容将会与这个值进行比较。
+ * mask：设置一个掩码，它将会与参考值和储存的模板值在测试比较它们之前进行与(AND)运算。初始情况下所有位都为1。
  *
- * 深度测试函数:
- * OpenGL允许我们修改深度测试中使用的比较运算符。
- * 我们可以调用glDepthFunc函数来设置比较运算符:
- * GL_ALWAYS	永远通过深度测试（相当于不使用深度测试）
- * GL_NEVER	    永远不通过深度测试（丢弃所有片段）
- * GL_LESS	    在片段深度值小于缓冲的深度值时通过测试（丢弃深度值大于等于缓冲深度的片段）
- * GL_EQUAL	    在片段深度值等于缓冲区的深度值时通过测试（丢弃深度值不等于缓冲深度的片段）
- * GL_LEQUAL	在片段深度值小于等于缓冲区的深度值时通过测试（丢弃深度值大于缓冲深度的片段）
- * GL_GREATER	在片段深度值大于缓冲区的深度值时通过测试（丢弃深度值小于等于缓冲深度的片段）
- * GL_NOTEQUAL	在片段深度值不等于缓冲区的深度值时通过测试（丢弃深度值等于缓冲深度的片段）
- * GL_GEQUAL	在片段深度值大于等于缓冲区的深度值时通过测试（丢弃深度值小于缓冲深度的片段）
+ * glStencilOp(GLenum sfail, GLenum dpfail, GLenum dppass)：模板缓冲更新规则配置。
+ * sfail：模板测试失败时采取的行为。
+ * dpfail：模板测试通过，但深度测试失败时采取的行为。
+ * dppass：模板测试和深度测试都通过时采取的行为。
  *
- * 深度冲突：
- * 一个很常见的视觉错误会在两个平面或者三角形非常紧密地平行排列在一起时会发生，深度缓冲没有足够的精度来决定两个形状哪个在前面。
- * 结果就是这两个形状不断地在切换前后顺序，这会导致很奇怪的花纹。
- *
+ * 每个选项都可以选用以下的其中一种行为：
+ * GL_KEEP	    保持当前储存的模板值
+ * GL_ZERO	    将模板值设置为0
+ * GL_REPLACE	将模板值设置为glStencilFunc函数设置的ref值
+ * GL_INCR	    如果模板值小于最大值则将模板值加1
+ * GL_INCR_WRAP	与GL_INCR一样，但如果模板值超过了最大值则归零
+ * GL_DECR	     如果模板值大于最小值则将模板值减1
+ * GL_DECR_WRAP	与GL_DECR一样，但如果模板值小于0则将其设置为最大值
+ * GL_INVERT	按位翻转当前的模板缓冲值
  */
-
-#include "DepthTesting.h"
+#include "StencilTesting.h"
 
 static float cubeVertices[] = {
         // positions          // texture Coords
@@ -88,7 +86,7 @@ static float planeVertices[] = {
         5.0f, -0.5f, -5.0f, 2.0f, 2.0f
 };
 
-void DepthTesting::Create() {
+void StencilTesting::Create() {
     GLUtils::printGLInfo();
 
     // cube
@@ -123,11 +121,14 @@ void DepthTesting::Create() {
     floorTexture = GLUtils::loadTgaTexture("textures/metal.png", GL_REPEAT, GL_REPEAT,
                                            GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
 
-    //创建着色器程序,并编译着色器代码
+    //加载深度测试中的着色器，绘制正常的地面和箱子
     m_ProgramObj = GLUtils::createProgram("shaders/vertex_shader_depth_testing.glsl",
                                           "shaders/fragment_shader_depth_testing.glsl");
+    //加载边框着色器，绘制箱子的边框部分,其实就是按照箱子的轮廓绘制一个纯色的区域
+    m_ProgramObj_border = GLUtils::createProgram("shaders/vertex_shader_depth_testing.glsl",
+                                                "shaders/fragment_shader_stencil_testing_color.glsl");
 
-    if (!m_ProgramObj) {
+    if (!m_ProgramObj || !m_ProgramObj_border) {
         LOGD("Could not create program")
         return;
     }
@@ -136,31 +137,46 @@ void DepthTesting::Create() {
     glUseProgram(m_ProgramObj);
     setInt(m_ProgramObj, "texture1", 0);
 
-    //todo 开启深度测试
+    // configure global opengl state
+    // -----------------------------
     glEnable(GL_DEPTH_TEST);
-    //glDepthFunc(GL_ALWAYS); // 永远通过深度测试 (效果等同关闭深度测试 glDisable(GL_DEPTH_TEST))
+    glDepthFunc(GL_LESS);
+    glEnable(GL_STENCIL_TEST);
+    glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
-    //设置清屏颜色
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 }
 
-void DepthTesting::Draw() {
+void StencilTesting::Draw() {
     //计算每一帧绘制的时间：先记录当前在开始时间
     float currentFrame = TimeUtils::currentTimeSeconds();
 
-    //清除屏幕和深度缓冲
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //清除屏幕和深度缓冲，还有模板缓冲
+    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
     //激活着色器程序
     glUseProgram(m_ProgramObj);
 
     glm::mat4 model = glm::mat4(1.0f);
     glm::mat4 view = cameraUtils.GetViewMatrix();
-    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom), m_Width / m_Width, 0.1f,
-                                            100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom),
+                                            m_Width / m_Width, 0.1f,100.0f);
     setMat4(m_ProgramObj, "view", view);
     setMat4(m_ProgramObj, "projection", projection);
 
+    // 绘制地面不保存模板测试缓冲
+    glStencilMask(0x00);
+    // floor
+    glBindVertexArray(planeVAO);
+    glBindTexture(GL_TEXTURE_2D, floorTexture);
+    setMat4(m_ProgramObj, "model", glm::mat4(1.0f));
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glBindVertexArray(0);
+
+    // 第一步：绘制箱子，保存模板测试缓冲
+    glStencilFunc(GL_ALWAYS, 1, 0xFF);
+    glStencilMask(0xFF);
     // cubes
     glBindVertexArray(cubeVAO);
     glActiveTexture(GL_TEXTURE0);
@@ -172,21 +188,42 @@ void DepthTesting::Draw() {
     model = glm::translate(model, glm::vec3(2.0f, 0.0f, 0.0f));
     setMat4(m_ProgramObj, "model", model);
     glDrawArrays(GL_TRIANGLES, 0, 36);
-    // floor
-    glBindVertexArray(planeVAO);
-    glBindTexture(GL_TEXTURE_2D, floorTexture);
-    setMat4(m_ProgramObj, "model", glm::mat4(1.0f));
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    // 第二步：绘制纯色区域。GL_NOTEQUAL,只保留模板缓冲不相等的片段，即比箱子大的区域缓冲值为0的片段就保留。
+    glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+    glStencilMask(0x00); // 每一位在写入模板缓冲时都会变成0（禁用写入）
+    glDisable(GL_DEPTH_TEST);
+    glUseProgram(m_ProgramObj_border);
+    setMat4(m_ProgramObj_border, "view", view);
+    setMat4(m_ProgramObj_border, "projection", projection);
+    float scale = 1.01f;//放大一点纯色区域
+    // cubes
+    glBindVertexArray(cubeVAO);
+    model = glm::mat4(1.0f);
+    model = glm::translate(model, glm::vec3(-1.0f, 0.0f, -1.0f));
+    model = glm::scale(model, glm::vec3(scale, scale, scale));
+    setMat4(m_ProgramObj_border, "model", model);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+    model = glm::mat4(1.0f);
+    model = glm::translate(model, glm::vec3(2.0f, 0.0f, 0.0f));
+    model = glm::scale(model, glm::vec3(scale, scale, scale));
+    setMat4(m_ProgramObj_border, "model", model);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+    //恢复配置
     glBindVertexArray(0);
+    glStencilMask(0xFF);
+    glStencilFunc(GL_ALWAYS, 0, 0xFF);
+    glEnable(GL_DEPTH_TEST);
 
     // 计算每一帧绘制的时间，再计算当前帧结束时间
     deltaTime = TimeUtils::currentTimeSeconds() - currentFrame;
 }
 
-void DepthTesting::Shutdown() {
+void StencilTesting::Shutdown() {
     glDeleteVertexArrays(1, &cubeVAO);
     glDeleteVertexArrays(1, &planeVAO);
     glDeleteBuffers(1, &cubeVBO);
     glDeleteBuffers(1, &planeVBO);
+    glDeleteProgram(m_ProgramObj_border);
     GLBaseSample::Shutdown();
 }

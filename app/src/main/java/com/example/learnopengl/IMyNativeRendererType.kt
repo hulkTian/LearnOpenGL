@@ -24,6 +24,7 @@ object IMyNativeRendererType {
     const val SAMPLE_TYPE_LIGHTING_MERGE = SAMPLE_TYPE + 17
     const val SAMPLE_TYPE_MODEL_LOADING = SAMPLE_TYPE + 18
     const val SAMPLE_TYPE_DEPTH_TESTING = SAMPLE_TYPE + 19
+    const val SAMPLE_TYPE_STENCIL_TESTING = SAMPLE_TYPE + 20
 }
 
 object Key {

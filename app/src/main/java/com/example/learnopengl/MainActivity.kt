@@ -191,6 +191,13 @@ class MainActivity : AppCompatActivity() {
             "验证深度测试配置参数效果",
             IMyNativeRendererType.SAMPLE_TYPE_DEPTH_TESTING
         )
+        addItem(
+            i++,
+            R.mipmap.depth_testing,
+            "模板测试",
+            "使用模板测试实现边框效果",
+            IMyNativeRendererType.SAMPLE_TYPE_STENCIL_TESTING
+        )
     }
 
     private fun addItem(index: Int, redId: Int, title: String, subtitle: String, type: Int) {
