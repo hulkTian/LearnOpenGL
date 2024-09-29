@@ -21,7 +21,7 @@ public:
 
     void ProcessInput(int i);
 
-    void MoveCallback(double x, double y);
+    void MoveCallback(float x, float y);
 
     void OnSurfaceCreated(JNIEnv *env, jobject assetManager, jstring pathToInternalDir);
 

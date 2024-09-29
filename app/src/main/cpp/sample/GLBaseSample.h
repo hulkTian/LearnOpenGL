@@ -35,6 +35,7 @@
 #define DEFAULT_OGL_ASSETS_DIR "/data/user/0/com.example.learnopengl/files"
 
 #include <GLUtils.h>
+#include "CameraUtils.h"
 
 class GLBaseSample {
 public:
@@ -60,11 +61,21 @@ public:
     virtual void Draw() = 0;
 
     virtual void ProcessInput(int i) {
-
+        if (i == KEY_W)
+            cameraUtils.ProcessKeyboard(FORWARD, deltaTime);
+        if (i == KEY_S)
+            cameraUtils.ProcessKeyboard(BACKWARD, deltaTime);
+        if (i == KEY_A)
+            cameraUtils.ProcessKeyboard(LEFT, deltaTime);
+        if (i == KEY_D)
+            cameraUtils.ProcessKeyboard(RIGHT, deltaTime);
     }
 
-    virtual void MoveCallback(double x, double y) {
+    virtual void MoveCallback(float x, float y) {
+        float xpos = static_cast<float>(x);
+        float ypos = static_cast<float>(y);
 
+        cameraUtils.ProcessMouseMovement(xpos, ypos);
     }
 
     virtual void Shutdown() {
@@ -86,7 +97,8 @@ protected:
      */
     float m_Width;
     float m_Height;
-
+    CameraUtils cameraUtils = CameraUtils(glm::vec3(0.0f, 0.0f,  3.0f));
+    float deltaTime = 0.0f; // 当前帧花费的时间
 };
 
 #endif //LEARNOPENGL_GLBASESAMPLE_H

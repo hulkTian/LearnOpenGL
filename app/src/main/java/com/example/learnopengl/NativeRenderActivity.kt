@@ -114,15 +114,19 @@ class NativeRenderActivity : Activity() {
             binding.llClick.visibility = View.VISIBLE
             binding.btW.setOnClickListener {
                 mRenderer?.processInput(Key.KEY_W)
+                mGLSurfaceView?.requestRender()
             }
             binding.btS.setOnClickListener {
                 mRenderer?.processInput(Key.KEY_S)
+                mGLSurfaceView?.requestRender()
             }
             binding.btA.setOnClickListener {
                 mRenderer?.processInput(Key.KEY_A)
+                mGLSurfaceView?.requestRender()
             }
             binding.btD.setOnClickListener {
                 mRenderer?.processInput(Key.KEY_D)
+                mGLSurfaceView?.requestRender()
             }
         } else {
             binding.llClick.visibility = View.GONE
@@ -184,14 +188,14 @@ class NativeRenderActivity : Activity() {
             || type == IMyNativeRendererType.SAMPLE_TYPE_MAT
             || type == IMyNativeRendererType.SAMPLE_TYPE_COORDINATE
             || type == IMyNativeRendererType.SAMPLE_TYPE_CAMERA
-            || type == IMyNativeRendererType.SAMPLE_TYPE_CAMERA_AUTO_MOVE
-            || type == IMyNativeRendererType.SAMPLE_TYPE_COLORS
-            || type == IMyNativeRendererType.SAMPLE_TYPE_COLORS_VIEW
             || type == IMyNativeRendererType.SAMPLE_TYPE_COLORS_MATERIAL
-            || type == IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_MAPS_DIFFUSE
-            || type == IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_CASTERS_DIRECTIONAL
-            || type == IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_MERGE
-            || type == IMyNativeRendererType.SAMPLE_TYPE_MODEL_LOADING
+        /*|| type == IMyNativeRendererType.SAMPLE_TYPE_CAMERA_AUTO_MOVE
+        || type == IMyNativeRendererType.SAMPLE_TYPE_COLORS
+        || type == IMyNativeRendererType.SAMPLE_TYPE_COLORS_VIEW
+        || type == IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_MAPS_DIFFUSE
+        || type == IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_CASTERS_DIRECTIONAL
+        || type == IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_MERGE
+        || type == IMyNativeRendererType.SAMPLE_TYPE_MODEL_LOADING*/
         ) {
             glSurfaceView.renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY
         } else {

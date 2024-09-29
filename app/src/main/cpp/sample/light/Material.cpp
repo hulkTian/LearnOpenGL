@@ -94,49 +94,11 @@ void Material::Create() {
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 }
 
-void Material::ProcessInput(int i) {
-    switch (i) {
-        case KEY_W:
-            camera.ProcessKeyboard(FORWARD, deltaTime);
-            break;
-        case KEY_S:
-            camera.ProcessKeyboard(BACKWARD, deltaTime);
-            break;
-        case KEY_A:
-            camera.ProcessKeyboard(LEFT, deltaTime);
-            break;
-        case KEY_D:
-            camera.ProcessKeyboard(RIGHT, deltaTime);
-            break;
-    }
-}
-
-void Material::MoveCallback(double xposIn, double yposIn) {
-    float xpos = static_cast<float>(xposIn);
-    float ypos = static_cast<float>(yposIn);
-
-    if (firstMouse)
-    {
-        lastX = xpos;
-        lastY = ypos;
-        firstMouse = false;
-    }
-
-    float xoffset = xpos - lastX;
-    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
-
-    lastX = xpos;
-    lastY = ypos;
-
-    camera.ProcessMouseMovement(xoffset, yoffset);
-}
-
 void Material::Draw() {
     // per-frame time logic
     // --------------------
-    float currentFrame = static_cast<float>(TimeUtils::currentTimeSeconds());
-    deltaTime = currentFrame - lastFrame;
-    lastFrame = currentFrame;
+    //计算每一帧绘制的时间：先记录当前在开始时间
+    float currentFrame = TimeUtils::currentTimeSeconds();
 
     //清除屏幕
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -144,7 +106,7 @@ void Material::Draw() {
     // be sure to activate shader when setting uniforms/drawing objects
     glUseProgram(m_ProgramObj);
     setVec3(m_ProgramObj, "light.position", lightPos);
-    setVec3(m_ProgramObj, "viewPos", camera.Position);
+    setVec3(m_ProgramObj, "viewPos", cameraUtils.Position);
 
     // light properties
     glm::vec3 lightColor;
@@ -164,8 +126,8 @@ void Material::Draw() {
     setFloat(m_ProgramObj,"material.shininess", 32.0f);
 
     // view/projection transformations
-    glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), m_Width / m_Height, 0.1f, 100.0f);
-    glm::mat4 view = camera.GetViewMatrix();
+    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom), m_Width / m_Height, 0.1f, 100.0f);
+    glm::mat4 view = cameraUtils.GetViewMatrix();
     setMat4(m_ProgramObj,"projection", projection);
     setMat4(m_ProgramObj,"view", view);
 
@@ -195,6 +157,9 @@ void Material::Draw() {
 
     glBindVertexArray(VAO_light);
     glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    // 计算每一帧绘制的时间，再计算当前帧结束时间
+    deltaTime = TimeUtils::currentTimeSeconds() - currentFrame;
 }
 
 void Material::Shutdown() {

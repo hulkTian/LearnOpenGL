@@ -172,41 +172,10 @@ void MultipleLights::Create() {
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 }
 
-void MultipleLights::ProcessInput(int i) {
-    if (i == KEY_W)
-        camera.ProcessKeyboard(FORWARD, deltaTime);
-    if (i == KEY_S)
-        camera.ProcessKeyboard(BACKWARD, deltaTime);
-    if (i == KEY_A)
-        camera.ProcessKeyboard(LEFT, deltaTime);
-    if (i == KEY_D)
-        camera.ProcessKeyboard(RIGHT, deltaTime);
-}
-
-void MultipleLights::MoveCallback(double xposIn, double yposIn) {
-    float xpos = static_cast<float>(xposIn);
-    float ypos = static_cast<float>(yposIn);
-
-    if (firstMouse) {
-        lastX = xpos;
-        lastY = ypos;
-        firstMouse = false;
-    }
-
-    float xoffset = xpos - lastX;
-    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
-
-    lastX = xpos;
-    lastY = ypos;
-
-    camera.ProcessMouseMovement(xoffset, yoffset);
-}
-
 void MultipleLights::Draw() {
     //计算每一帧绘制的时间
     float currentFrame = TimeUtils::currentTimeSeconds();
-    deltaTime = currentFrame - lastFrame;
-    lastFrame = currentFrame;
+
     if (type == 0)
     {
         DrawDefault();
@@ -231,6 +200,9 @@ void MultipleLights::Draw() {
     {
         DrawBiochemicalLab();
     }
+
+    // 计算每一帧绘制的时间，再计算当前帧结束时间
+    deltaTime = TimeUtils::currentTimeSeconds() - currentFrame;
 }
 
 void MultipleLights::DrawDefault() {
@@ -280,8 +252,8 @@ void MultipleLights::DrawDefault() {
     setFloat(m_ProgramObj, "pointLights[3].linear", 0.09f);
     setFloat(m_ProgramObj, "pointLights[3].quadratic", 0.032f);
     // spotLight
-    setVec3(m_ProgramObj, "spotLight.position", camera.Position);
-    setVec3(m_ProgramObj, "spotLight.direction", camera.Front);
+    setVec3(m_ProgramObj, "spotLight.position", cameraUtils.Position);
+    setVec3(m_ProgramObj, "spotLight.direction", cameraUtils.Front);
     setVec3(m_ProgramObj, "spotLight.ambient", 0.0f, 0.0f, 0.0f);
     setVec3(m_ProgramObj, "spotLight.diffuse", 1.0f, 1.0f, 1.0f);
     setVec3(m_ProgramObj, "spotLight.specular", 1.0f, 1.0f, 1.0f);
@@ -291,7 +263,7 @@ void MultipleLights::DrawDefault() {
     setFloat(m_ProgramObj, "spotLight.cutOff", glm::cos(glm::radians(12.5f)));
     setFloat(m_ProgramObj, "spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
 
-    setVec3(m_ProgramObj, "viewPos", camera.Position);
+    setVec3(m_ProgramObj, "viewPos", cameraUtils.Position);
     setFloat(m_ProgramObj, "material.shininess", 32.0f);
 
     glActiveTexture(GL_TEXTURE0);
@@ -299,8 +271,8 @@ void MultipleLights::DrawDefault() {
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, specularMap);
 
-    glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom),m_Width / m_Height, 0.1f,100.0f);
-    glm::mat4 view = camera.GetViewMatrix();
+    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom),m_Width / m_Height, 0.1f,100.0f);
+    glm::mat4 view = cameraUtils.GetViewMatrix();
     setMat4(m_ProgramObj, "projection", projection);
     setMat4(m_ProgramObj, "view", view);
 
@@ -387,8 +359,8 @@ void MultipleLights::DrawDesert() {
     setFloat(m_ProgramObj, "pointLights[3].linear", 0.09);
     setFloat(m_ProgramObj, "pointLights[3].quadratic", 0.032);
     // SpotLight
-    setVec3(m_ProgramObj,"spotLight.position" ,camera.Position.x, camera.Position.y, camera.Position.z);
-    setVec3(m_ProgramObj,"spotLight.direction", camera.Front.x, camera.Front.y, camera.Front.z);
+    setVec3(m_ProgramObj,"spotLight.position" ,cameraUtils.Position.x, cameraUtils.Position.y, cameraUtils.Position.z);
+    setVec3(m_ProgramObj,"spotLight.direction", cameraUtils.Front.x, cameraUtils.Front.y, cameraUtils.Front.z);
     setVec3(m_ProgramObj,"spotLight.ambient", 0.0f, 0.0f, 0.0f);
     setVec3(m_ProgramObj,"spotLight.diffuse", 0.8f, 0.8f, 0.0f);
     setVec3(m_ProgramObj,"spotLight.specular", 0.8f, 0.8f, 0.0f);
@@ -398,7 +370,7 @@ void MultipleLights::DrawDesert() {
     setFloat(m_ProgramObj, "spotLight.cutOff", glm::cos(glm::radians(12.5f)));
     setFloat(m_ProgramObj, "spotLight.outerCutOff", glm::cos(glm::radians(13.0f)));
 
-    setVec3(m_ProgramObj, "viewPos", camera.Position);
+    setVec3(m_ProgramObj, "viewPos", cameraUtils.Position);
     setFloat(m_ProgramObj, "material.shininess", 32.0f);
 
     glActiveTexture(GL_TEXTURE0);
@@ -406,8 +378,8 @@ void MultipleLights::DrawDesert() {
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, specularMap);
 
-    glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom),m_Width / m_Height, 0.1f,100.0f);
-    glm::mat4 view = camera.GetViewMatrix();
+    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom),m_Width / m_Height, 0.1f,100.0f);
+    glm::mat4 view = cameraUtils.GetViewMatrix();
     setMat4(m_ProgramObj, "projection", projection);
     setMat4(m_ProgramObj, "view", view);
 
@@ -498,8 +470,8 @@ void MultipleLights::DrawFactory() {
     setFloat(m_ProgramObj, "pointLights[3].linear", 0.09f);
     setFloat(m_ProgramObj, "pointLights[3].quadratic", 0.032f);
     // SpotLight
-    setVec3(m_ProgramObj,"spotLight.position" ,camera.Position.x, camera.Position.y, camera.Position.z);
-    setVec3(m_ProgramObj,"spotLight.direction", camera.Front.x, camera.Front.y, camera.Front.z);
+    setVec3(m_ProgramObj,"spotLight.position" ,cameraUtils.Position.x, cameraUtils.Position.y, cameraUtils.Position.z);
+    setVec3(m_ProgramObj,"spotLight.direction", cameraUtils.Front.x, cameraUtils.Front.y, cameraUtils.Front.z);
     setVec3(m_ProgramObj,"spotLight.ambient", 0.0f, 0.0f, 0.0f);
     setVec3(m_ProgramObj,"spotLight.diffuse", 1.0f, 1.0f, 1.0f);
     setVec3(m_ProgramObj,"spotLight.specular", 1.0f, 1.0f, 1.0f);
@@ -509,7 +481,7 @@ void MultipleLights::DrawFactory() {
     setFloat(m_ProgramObj, "spotLight.cutOff", glm::cos(glm::radians(10.0f)));
     setFloat(m_ProgramObj, "spotLight.outerCutOff", glm::cos(glm::radians(12.5f)));
 
-    setVec3(m_ProgramObj, "viewPos", camera.Position);
+    setVec3(m_ProgramObj, "viewPos", cameraUtils.Position);
     setFloat(m_ProgramObj, "material.shininess", 32.0f);
 
     glActiveTexture(GL_TEXTURE0);
@@ -517,8 +489,8 @@ void MultipleLights::DrawFactory() {
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, specularMap);
 
-    glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom),m_Width / m_Height, 0.1f,100.0f);
-    glm::mat4 view = camera.GetViewMatrix();
+    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom),m_Width / m_Height, 0.1f,100.0f);
+    glm::mat4 view = cameraUtils.GetViewMatrix();
     setMat4(m_ProgramObj, "projection", projection);
     setMat4(m_ProgramObj, "view", view);
 
@@ -610,8 +582,8 @@ void MultipleLights::DrawHorror() {
     setFloat(m_ProgramObj, "pointLights[3].linear", 0.14f);
     setFloat(m_ProgramObj, "pointLights[3].quadratic", 0.07f);
     // SpotLight
-    setVec3(m_ProgramObj,"spotLight.position" ,camera.Position.x, camera.Position.y, camera.Position.z);
-    setVec3(m_ProgramObj,"spotLight.direction", camera.Front.x, camera.Front.y, camera.Front.z);
+    setVec3(m_ProgramObj,"spotLight.position" ,cameraUtils.Position.x, cameraUtils.Position.y, cameraUtils.Position.z);
+    setVec3(m_ProgramObj,"spotLight.direction", cameraUtils.Front.x, cameraUtils.Front.y, cameraUtils.Front.z);
     setVec3(m_ProgramObj,"spotLight.ambient", 0.0f, 0.0f, 0.0f);
     setVec3(m_ProgramObj,"spotLight.diffuse", 1.0f, 1.0f, 1.0f);
     setVec3(m_ProgramObj,"spotLight.specular", 1.0f, 1.0f, 1.0f);
@@ -621,7 +593,7 @@ void MultipleLights::DrawHorror() {
     setFloat(m_ProgramObj, "spotLight.cutOff", glm::cos(glm::radians(10.0f)));
     setFloat(m_ProgramObj, "spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
 
-    setVec3(m_ProgramObj, "viewPos", camera.Position);
+    setVec3(m_ProgramObj, "viewPos", cameraUtils.Position);
     setFloat(m_ProgramObj, "material.shininess", 32.0f);
 
     glActiveTexture(GL_TEXTURE0);
@@ -629,8 +601,8 @@ void MultipleLights::DrawHorror() {
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, specularMap);
 
-    glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom),m_Width / m_Height, 0.1f,100.0f);
-    glm::mat4 view = camera.GetViewMatrix();
+    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom),m_Width / m_Height, 0.1f,100.0f);
+    glm::mat4 view = cameraUtils.GetViewMatrix();
     setMat4(m_ProgramObj, "projection", projection);
     setMat4(m_ProgramObj, "view", view);
 
@@ -721,8 +693,8 @@ void MultipleLights::DrawBiochemicalLab() {
     setFloat(m_ProgramObj, "pointLights[3].linear", 0.07f);
     setFloat(m_ProgramObj, "pointLights[3].quadratic", 0.017f);
     // SpotLight
-    setVec3(m_ProgramObj,"spotLight.position" ,camera.Position.x, camera.Position.y, camera.Position.z);
-    setVec3(m_ProgramObj,"spotLight.direction", camera.Front.x, camera.Front.y, camera.Front.z);
+    setVec3(m_ProgramObj,"spotLight.position" ,cameraUtils.Position.x, cameraUtils.Position.y, cameraUtils.Position.z);
+    setVec3(m_ProgramObj,"spotLight.direction", cameraUtils.Front.x, cameraUtils.Front.y, cameraUtils.Front.z);
     setVec3(m_ProgramObj,"spotLight.ambient", 0.0f, 0.0f, 0.0f);
     setVec3(m_ProgramObj,"spotLight.diffuse", 0.0f, 1.0f, 0.0f);
     setVec3(m_ProgramObj,"spotLight.specular", 0.0f, 1.0f, 0.0f);
@@ -732,7 +704,7 @@ void MultipleLights::DrawBiochemicalLab() {
     setFloat(m_ProgramObj, "spotLight.cutOff", glm::cos(glm::radians(7.0f)));
     setFloat(m_ProgramObj, "spotLight.outerCutOff", glm::cos(glm::radians(10.0f)));
 
-    setVec3(m_ProgramObj, "viewPos", camera.Position);
+    setVec3(m_ProgramObj, "viewPos", cameraUtils.Position);
     setFloat(m_ProgramObj, "material.shininess", 32.0f);
 
     glActiveTexture(GL_TEXTURE0);
@@ -740,8 +712,8 @@ void MultipleLights::DrawBiochemicalLab() {
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, specularMap);
 
-    glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom),m_Width / m_Height, 0.1f,100.0f);
-    glm::mat4 view = camera.GetViewMatrix();
+    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom),m_Width / m_Height, 0.1f,100.0f);
+    glm::mat4 view = cameraUtils.GetViewMatrix();
     setMat4(m_ProgramObj, "projection", projection);
     setMat4(m_ProgramObj, "view", view);
 

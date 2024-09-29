@@ -153,41 +153,9 @@ void LightCastersDirectional::Create() {
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 }
 
-void LightCastersDirectional::ProcessInput(int i) {
-    if (i == KEY_W)
-        camera.ProcessKeyboard(FORWARD, deltaTime);
-    if (i == KEY_S)
-        camera.ProcessKeyboard(BACKWARD, deltaTime);
-    if (i == KEY_A)
-        camera.ProcessKeyboard(LEFT, deltaTime);
-    if (i == KEY_D)
-        camera.ProcessKeyboard(RIGHT, deltaTime);
-}
-
-void LightCastersDirectional::MoveCallback(double xposIn, double yposIn) {
-    float xpos = static_cast<float>(xposIn);
-    float ypos = static_cast<float>(yposIn);
-
-    if (firstMouse) {
-        lastX = xpos;
-        lastY = ypos;
-        firstMouse = false;
-    }
-
-    float xoffset = xpos - lastX;
-    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
-
-    lastX = xpos;
-    lastY = ypos;
-
-    camera.ProcessMouseMovement(xoffset, yoffset);
-}
-
 void LightCastersDirectional::Draw() {
-    //计算每一帧绘制的时间
+    //计算每一帧绘制的时间：先记录当前在开始时间
     float currentFrame = TimeUtils::currentTimeSeconds();
-    deltaTime = currentFrame - lastFrame;
-    lastFrame = currentFrame;
 
     //清除屏幕
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -211,13 +179,13 @@ void LightCastersDirectional::Draw() {
 
     // 聚光源
     // 手电筒的位置与观察位置相同
-    setVec3(m_ProgramObj, "light.direction", camera.Front);//聚光的指向向量
+    setVec3(m_ProgramObj, "light.direction", cameraUtils.Front);//聚光的指向向量
     // 聚光的方向向量需要光的位置和片段位置相减计算得出
-    setVec3(m_ProgramObj, "light.position", camera.Position);
+    setVec3(m_ProgramObj, "light.position", cameraUtils.Position);
     //设置切光角的余玄值和θ（光源方向和光的指向的夹角）进行比较可以节省GPU的计算消耗
     setFloat(m_ProgramObj, "light.cutOff", glm::cos(glm::radians(12.5f)));
     setFloat(m_ProgramObj, "light.outerCutOff", glm::cos(glm::radians(25.0f)));
-    setVec3(m_ProgramObj, "viewPos", camera.Position);
+    setVec3(m_ProgramObj, "viewPos", cameraUtils.Position);
 
     // light properties
     setVec3(m_ProgramObj, "light.ambient", 0.1f, 0.1f, 0.1f);
@@ -233,10 +201,10 @@ void LightCastersDirectional::Draw() {
     setFloat(m_ProgramObj, "material.shininess", 32.0f);
 
     // view/projection transformations
-    glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), m_Width / m_Height, 0.1f,
+    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom), m_Width / m_Height, 0.1f,
                                             100.0f);
     setMat4(m_ProgramObj, "projection", projection);
-    setMat4(m_ProgramObj, "view", camera.GetViewMatrix());
+    setMat4(m_ProgramObj, "view", cameraUtils.GetViewMatrix());
 
     // world transformation
     glm::mat4 model = glm::mat4(1.0f);
@@ -265,7 +233,7 @@ void LightCastersDirectional::Draw() {
     // also draw the lamp object
     glUseProgram(m_ProgramObj_Light);
     setMat4(m_ProgramObj_Light, "projection", projection);
-    setMat4(m_ProgramObj_Light, "view", camera.GetViewMatrix());
+    setMat4(m_ProgramObj_Light, "view", cameraUtils.GetViewMatrix());
     model = glm::mat4(1.0f);
     model = glm::translate(model, lightPos);
     model = glm::scale(model, glm::vec3(0.2f)); // a smaller cube
@@ -273,6 +241,8 @@ void LightCastersDirectional::Draw() {
 
     glBindVertexArray(lightCubeVAO);
     glDrawArrays(GL_TRIANGLES, 0, 36);
+    // 计算每一帧绘制的时间，再计算当前帧结束时间
+    deltaTime = TimeUtils::currentTimeSeconds() - currentFrame;
 }
 
 void LightCastersDirectional::Shutdown() {

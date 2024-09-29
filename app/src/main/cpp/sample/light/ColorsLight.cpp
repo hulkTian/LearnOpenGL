@@ -116,42 +116,11 @@ void ColorsLight::Create() {
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 }
 
-void ColorsLight::MoveCallback(double xposIn, double yposIn) {
-    float xpos = static_cast<float>(xposIn);
-    float ypos = static_cast<float>(yposIn);
-    if (firstMouse)
-    {
-        lastX = xpos;
-        lastY = ypos;
-        firstMouse = false;
-    }
-
-    float xoffset = xpos - lastX;
-    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
-
-    lastX = xpos;
-    lastY = ypos;
-
-    camera.ProcessMouseMovement(xoffset, yoffset);
-}
-
-void ColorsLight::ProcessInput(int i) {
-    if (i == KEY_W)
-        camera.ProcessKeyboard(FORWARD, deltaTime);
-    if (i == KEY_S)
-        camera.ProcessKeyboard(BACKWARD, deltaTime);
-    if (i == KEY_A)
-        camera.ProcessKeyboard(LEFT, deltaTime);
-    if (i == KEY_D)
-        camera.ProcessKeyboard(RIGHT, deltaTime);
-}
 
 void ColorsLight::Draw() {
     // per-frame time logic
     // --------------------
-    float currentFrame = static_cast<float>(TimeUtils::currentTimeSeconds());
-    deltaTime = currentFrame - lastFrame;
-    lastFrame = currentFrame;
+    float currentFrame = TimeUtils::currentTimeSeconds();
 
     //清除屏幕
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -165,15 +134,15 @@ void ColorsLight::Draw() {
     //设置光源位置，用户计算漫反射光
     setVec3(m_ProgramObj, "lightPos", lightPos);
     //设置摄像机位置，用于计算镜面光
-    setVec3(m_ProgramObj, "viewPos", camera.Position);
+    setVec3(m_ProgramObj, "viewPos", cameraUtils.Position);
 
     glm::mat4 model = glm::mat4(1.0f);
     setMat4(m_ProgramObj, "model", model);
 
-    glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom),
+    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom),
                                             m_Width / m_Height,
                                             0.1f, 100.0f);
-    glm::mat4 view = camera.GetViewMatrix();
+    glm::mat4 view = cameraUtils.GetViewMatrix();
     setMat4(m_ProgramObj, "projection", projection);
     setMat4(m_ProgramObj, "view", view);
 
@@ -205,6 +174,9 @@ void ColorsLight::Draw() {
 
     //绘制形状
     glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    // 计算每一帧绘制的时间，再计算当前帧结束时间
+    deltaTime = TimeUtils::currentTimeSeconds() - currentFrame;
 }
 
 void ColorsLight::Shutdown() {

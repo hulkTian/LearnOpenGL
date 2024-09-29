@@ -186,7 +186,7 @@ void MyGLRender::ProcessInput(int i) {
     }
 }
 
-void MyGLRender::MoveCallback(double x, double y) {
+void MyGLRender::MoveCallback(float x, float y) {
     LOGD("MyGLRender::MoveCallback x = %f，y = %f", x, y)
     if (m_curr_sample == nullptr) {
         throw MyGLException(

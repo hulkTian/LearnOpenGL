@@ -36,7 +36,7 @@ class MyNativeRenderer(activity: Activity) : GLSurfaceView.Renderer {
         nativeProcessInput(key)
     }
 
-    fun moveCallback(x: Double, y: Double) {
+    fun moveCallback(x: Float, y: Float) {
         nativeMoveCallback(x, y)
     }
 
@@ -55,6 +55,6 @@ class MyNativeRenderer(activity: Activity) : GLSurfaceView.Renderer {
      */
     private external fun nativeProcessInput(key: Int)
 
-    private external fun nativeMoveCallback(x: Double, y: Double)
+    private external fun nativeMoveCallback(x: Float, y: Float)
 
 }

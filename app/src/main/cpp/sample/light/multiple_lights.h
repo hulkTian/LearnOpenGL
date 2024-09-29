@@ -16,10 +16,6 @@ public:
 
     virtual void Create();
 
-    virtual void MoveCallback(double xposIn, double yposIn);
-
-    virtual void ProcessInput(int i);
-
     virtual void Draw();
 
     virtual void Shutdown();
@@ -40,15 +36,6 @@ private:
     GLuint m_ProgramObj_Light;
     //光源立方体位置
     glm::vec3 lightPos = glm::vec3(1.2f, 0.0f, 0.0f);
-    // camera
-    CameraUtils camera = CameraUtils(glm::vec3(0.0f, 0.0f, 3.0f));
-    float lastX = m_Width / 2.0f;
-    float lastY = m_Height / 2.0f;
-    bool firstMouse = true;
-
-    // timing
-    float deltaTime = 0.0f;
-    float lastFrame = 0.0f;
 
     //漫反射贴图
     GLuint diffuseMap;

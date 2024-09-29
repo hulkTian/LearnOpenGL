@@ -5,14 +5,16 @@ import android.opengl.GLSurfaceView
 import android.util.AttributeSet
 import android.util.Log
 import android.view.MotionEvent
-import kotlin.math.cos
-import kotlin.math.sin
 
 class MyGLSurfaceView : GLSurfaceView {
     private lateinit var mRenderer: MyNativeRenderer
 
     private var mRatioWidth = 0
     private var mRatioHeight = 0
+
+    private var mLastTouchTime = 0
+    private var mPreviousX = 0.0.toFloat()
+    private var mPreviousY = 0.0.toFloat()
 
     constructor(context: Context?) : super(context) {}
 
@@ -54,13 +56,23 @@ class MyGLSurfaceView : GLSurfaceView {
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        if (event?.action == MotionEvent.ACTION_MOVE) {
-            moveCallback(event.x.toDouble(), event.y.toDouble())
+        val currentTimeMillis = System.currentTimeMillis()
+        if (currentTimeMillis - mLastTouchTime > 200) {
+            val y: Float = event!!.y
+            val x: Float = event.x
+            if (event.action == MotionEvent.ACTION_MOVE) {
+                val dy: Float = y - mPreviousY
+                val dx: Float = x - mPreviousX
+                moveCallback(dx, dy)
+                requestRender()
+            }
+            mPreviousY = y
+            mPreviousX = x
         }
         return true
     }
 
-    private fun moveCallback(x: Double, y: Double) {
+    private fun moveCallback(x: Float, y: Float) {
         mRenderer.moveCallback(x, y)
     }
 

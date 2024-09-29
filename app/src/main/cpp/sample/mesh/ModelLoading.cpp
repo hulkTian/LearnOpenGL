@@ -36,43 +36,9 @@ void ModelLoading::Create() {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 }
 
-void ModelLoading::ProcessInput(int i) {
-    if (i == KEY_W)
-        cameraUtils.ProcessKeyboard(FORWARD, deltaTime);
-    if (i == KEY_S)
-        cameraUtils.ProcessKeyboard(BACKWARD, deltaTime);
-    if (i == KEY_A)
-        cameraUtils.ProcessKeyboard(LEFT, deltaTime);
-    if (i == KEY_D)
-        cameraUtils.ProcessKeyboard(RIGHT, deltaTime);
-}
-
-void ModelLoading::MoveCallback(double xposIn, double yposIn) {
-
-    float xpos = static_cast<float>(xposIn);
-    float ypos = static_cast<float>(yposIn);
-
-    if (firstMouse)
-    {
-        lastX = xpos;
-        lastY = ypos;
-        firstMouse = false;
-    }
-
-    float xoffset = xpos - lastX;
-    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
-
-    lastX = xpos;
-    lastY = ypos;
-
-    cameraUtils.ProcessMouseMovement(xoffset, yoffset);
-}
-
 void ModelLoading::Draw() {
-    //计算每一帧绘制的时间
+    //计算每一帧绘制的时间：先记录当前在开始时间
     float currentFrame = TimeUtils::currentTimeSeconds();
-    deltaTime = currentFrame - lastFrame;
-    lastFrame = currentFrame;
 
     //清除屏幕和深度缓冲
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -113,8 +79,10 @@ void ModelLoading::Draw() {
     model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));	// it's a bit too big for our scene, so scale it down
     setMat4(m_ProgramObj, "model", model);
     ourModel.Draw(m_ProgramObj);
-}
 
+    // 计算每一帧绘制的时间，再计算当前帧结束时间
+    deltaTime = TimeUtils::currentTimeSeconds() - currentFrame;
+}
 
 void ModelLoading::Shutdown() {
     GLBaseSample::Shutdown();
