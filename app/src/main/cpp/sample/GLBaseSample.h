@@ -28,6 +28,7 @@
 #define SAMPLE_TYPE_MODEL_LOADING                                   SAMPLE_TYPE + 18
 #define SAMPLE_TYPE_DEPTH_TESTING                                   SAMPLE_TYPE + 19
 #define SAMPLE_TYPE_STENCIL_TESTING                                 SAMPLE_TYPE + 20
+#define SAMPLE_TYPE_BLENDING_DISCARD                                SAMPLE_TYPE + 21
 
 #define KEY_W 1
 #define KEY_S 2

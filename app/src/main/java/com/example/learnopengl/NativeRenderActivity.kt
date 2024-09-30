@@ -112,6 +112,7 @@ class NativeRenderActivity : Activity() {
             || type == IMyNativeRendererType.SAMPLE_TYPE_MODEL_LOADING
             || type == IMyNativeRendererType.SAMPLE_TYPE_DEPTH_TESTING
             || type == IMyNativeRendererType.SAMPLE_TYPE_STENCIL_TESTING
+            || type == IMyNativeRendererType.SAMPLE_TYPE_BLENDING_DISCARD
         ) {
             binding.llClick.visibility = View.VISIBLE
             binding.btW.setOnClickListener {

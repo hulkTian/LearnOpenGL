@@ -118,9 +118,11 @@ void DepthTesting::Create() {
 
     // load textures
     // 纹理过滤和环绕参数需要单独设置，地面纹理要使用GL_REPEAT
-    cubeTexture = GLUtils::loadTgaTexture("textures/marble.png", GL_REPEAT, GL_REPEAT,
+    cubeTexture = GLUtils::loadTgaTexture("textures/marble.png", false,
+                                          GL_REPEAT, GL_REPEAT,
                                           GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
-    floorTexture = GLUtils::loadTgaTexture("textures/metal.png", GL_REPEAT, GL_REPEAT,
+    floorTexture = GLUtils::loadTgaTexture("textures/metal.png", false,
+                                           GL_REPEAT, GL_REPEAT,
                                            GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
 
     //创建着色器程序,并编译着色器代码

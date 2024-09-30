@@ -198,9 +198,9 @@ void GLUtils::checkGlError(const char *pGLOperation) {
 }
 
 //从图片中加载纹理
-GLuint GLUtils::loadTgaTexture(const char *fileName, unsigned int texture_warp_s,
-                               unsigned int texture_warp_t, unsigned int texture_min_filter,
-                               unsigned int texture_max_filter) {
+GLuint GLUtils::loadTgaTexture(const char *fileName, const bool flip,
+                               unsigned int texture_warp_s, unsigned int texture_warp_t,
+                               unsigned int texture_min_filter, unsigned int texture_max_filter) {
     GLuint textureId;
     FUN_BEGIN_TIME("GLUtils::loadTgaTexture")
         glGenTextures(1, &textureId);
@@ -216,7 +216,7 @@ GLuint GLUtils::loadTgaTexture(const char *fileName, unsigned int texture_warp_s
         AAsset_close(asset);
 
         // 翻转y轴，使纹理坐标从底部开始
-        stbi_set_flip_vertically_on_load(true);
+        stbi_set_flip_vertically_on_load(flip);
 
         // 使用stb_image解码图片数据
         int width, height, channels;

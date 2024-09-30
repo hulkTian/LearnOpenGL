@@ -198,6 +198,13 @@ class MainActivity : AppCompatActivity() {
             "使用模板测试实现边框效果",
             IMyNativeRendererType.SAMPLE_TYPE_STENCIL_TESTING
         )
+        addItem(
+            i++,
+            R.mipmap.blending_discard,
+            "混合",
+            "使用带透明度通道的图片,丢弃透明的片段",
+            IMyNativeRendererType.SAMPLE_TYPE_BLENDING_DISCARD
+        )
     }
 
     private fun addItem(index: Int, redId: Int, title: String, subtitle: String, type: Int) {

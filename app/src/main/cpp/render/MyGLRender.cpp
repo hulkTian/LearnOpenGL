@@ -16,6 +16,7 @@
 #include "multiple_lights.h"
 #include "DepthTesting.h"
 #include "StencilTesting.h"
+#include "blending_discard/BlendingDiscard.h"
 #include <NativeTriangle7.h>
 #include <NativeTriangle6.h>
 #include <NativeTriangle.h>
@@ -128,6 +129,9 @@ void MyGLRender::SetRenderType(int renderSampleType) {
             break;
         case SAMPLE_TYPE_STENCIL_TESTING:
             m_curr_sample = new StencilTesting();
+            break;
+        case SAMPLE_TYPE_BLENDING_DISCARD:
+            m_curr_sample = new BlendingDiscard();
             break;
         default:
             break;

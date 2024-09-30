@@ -33,7 +33,8 @@ public:
     /**
      * Loads a texture from assets/texture/<name>
      */
-    static GLuint loadTgaTexture(const char *fileName, unsigned int texture_warp_s = GL_CLAMP_TO_EDGE,
+    static GLuint loadTgaTexture(const char *fileName, const bool flip = true,
+                                 unsigned int texture_warp_s = GL_CLAMP_TO_EDGE,
                                  unsigned int texture_warp_t = GL_CLAMP_TO_EDGE,
                                  unsigned int texture_min_filter = GL_NEAREST,
                                  unsigned int texture_max_filter = GL_NEAREST);
