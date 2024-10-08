@@ -17,6 +17,7 @@
 #include "DepthTesting.h"
 #include "StencilTesting.h"
 #include "blending_discard/BlendingDiscard.h"
+#include "cull_face/CullFace.h"
 #include <NativeTriangle7.h>
 #include <NativeTriangle6.h>
 #include <NativeTriangle.h>
@@ -132,6 +133,9 @@ void MyGLRender::SetRenderType(int renderSampleType) {
             break;
         case SAMPLE_TYPE_BLENDING_DISCARD:
             m_curr_sample = new BlendingDiscard();
+            break;
+        case SAMPLE_TYPE_CULL_FACE:
+            m_curr_sample = new CullFace();
             break;
         default:
             break;

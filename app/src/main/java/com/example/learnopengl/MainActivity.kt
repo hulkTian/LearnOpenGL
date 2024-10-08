@@ -205,6 +205,13 @@ class MainActivity : AppCompatActivity() {
             "使用带透明度通道的图片,丢弃透明的片段",
             IMyNativeRendererType.SAMPLE_TYPE_BLENDING_DISCARD
         )
+        addItem(
+            i++,
+            R.mipmap.blending_discard,
+            "面剔除",
+            "启用面剔除功能，提升渲染立方体的性能",
+            IMyNativeRendererType.SAMPLE_TYPE_CULL_FACE
+        )
     }
 
     private fun addItem(index: Int, redId: Int, title: String, subtitle: String, type: Int) {

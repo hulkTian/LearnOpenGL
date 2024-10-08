@@ -26,6 +26,7 @@ object IMyNativeRendererType {
     const val SAMPLE_TYPE_DEPTH_TESTING = SAMPLE_TYPE + 19
     const val SAMPLE_TYPE_STENCIL_TESTING = SAMPLE_TYPE + 20
     const val SAMPLE_TYPE_BLENDING_DISCARD = SAMPLE_TYPE + 21
+    const val SAMPLE_TYPE_CULL_FACE = SAMPLE_TYPE + 22
 }
 
 object Key {
