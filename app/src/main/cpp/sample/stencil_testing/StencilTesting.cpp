@@ -226,6 +226,8 @@ void StencilTesting::Shutdown() {
     glDeleteVertexArrays(1, &planeVAO);
     glDeleteBuffers(1, &cubeVBO);
     glDeleteBuffers(1, &planeVBO);
+    glDeleteTextures(1, &cubeTexture);
+    glDeleteTextures(1, &floorTexture);
     glDeleteProgram(m_ProgramObj_border);
     GLBaseSample::Shutdown();
 }

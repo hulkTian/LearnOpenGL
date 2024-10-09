@@ -114,6 +114,8 @@ class NativeRenderActivity : Activity() {
             || type == IMyNativeRendererType.SAMPLE_TYPE_STENCIL_TESTING
             || type == IMyNativeRendererType.SAMPLE_TYPE_BLENDING_DISCARD
             || type == IMyNativeRendererType.SAMPLE_TYPE_CULL_FACE
+            || type == IMyNativeRendererType.SAMPLE_TYPE_FRAME_BUFFERS
+            || type == IMyNativeRendererType.SAMPLE_TYPE_FRAME_BUFFERS_EXERCISE
         ) {
             binding.llClick.visibility = View.VISIBLE
             binding.btW.setOnClickListener {

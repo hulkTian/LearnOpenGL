@@ -212,6 +212,20 @@ class MainActivity : AppCompatActivity() {
             "启用面剔除功能，提升渲染立方体的性能",
             IMyNativeRendererType.SAMPLE_TYPE_CULL_FACE
         )
+        addItem(
+            i++,
+            R.mipmap.frame_buffers,
+            "帧缓冲",
+            "将颜色缓冲、深度缓冲、模板缓冲结合存放到帧缓冲中，并作为一张纹理进行渲染，方便进行后期处理",
+            IMyNativeRendererType.SAMPLE_TYPE_FRAME_BUFFERS
+        )
+        addItem(
+            i++,
+            R.mipmap.frame_buffers_exercise,
+            "帧缓冲练习：后视镜效果",
+            "使用帧缓冲实现后视镜效果",
+            IMyNativeRendererType.SAMPLE_TYPE_FRAME_BUFFERS_EXERCISE
+        )
     }
 
     private fun addItem(index: Int, redId: Int, title: String, subtitle: String, type: Int) {
