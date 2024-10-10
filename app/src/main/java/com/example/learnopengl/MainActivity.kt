@@ -207,6 +207,12 @@ class MainActivity : AppCompatActivity() {
             "使用立方体贴图实现天空盒子效果",
             IMyNativeRendererType.SAMPLE_TYPE_FRAME_CUBE_MAPS
         )
+        addItem(
+            i++, R.mipmap.cube_map,
+            "环境映射——反射",
+            "反射天空盒子的颜色",
+            IMyNativeRendererType.SAMPLE_TYPE_FRAME_CUBE_MAPS_REFLECTION
+        )
     }
 
     private fun addItem(index: Int, redId: Int, title: String, subtitle: String, type: Int) {

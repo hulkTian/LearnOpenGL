@@ -117,6 +117,7 @@ class NativeRenderActivity : Activity() {
             || type == IMyNativeRendererType.SAMPLE_TYPE_FRAME_BUFFERS
             || type == IMyNativeRendererType.SAMPLE_TYPE_FRAME_BUFFERS_EXERCISE
             || type == IMyNativeRendererType.SAMPLE_TYPE_FRAME_CUBE_MAPS
+            || type == IMyNativeRendererType.SAMPLE_TYPE_FRAME_CUBE_MAPS_REFLECTION
         ) {
             binding.llClick.visibility = View.VISIBLE
             binding.btW.setOnClickListener {
