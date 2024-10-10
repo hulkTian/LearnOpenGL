@@ -11,6 +11,7 @@
 #include <LogUtils.h>
 #include <TimeUtils.h>
 #include <string>
+#include <vector>
 #include <android/asset_manager_jni.h>
 #include <glm/detail/type_mat4x4.hpp>
 
@@ -38,6 +39,14 @@ public:
                                  unsigned int texture_warp_t = GL_CLAMP_TO_EDGE,
                                  unsigned int texture_min_filter = GL_NEAREST,
                                  unsigned int texture_max_filter = GL_NEAREST);
+
+    /**
+     * 加载立方体贴图
+     * @param faces 纹理地址
+     * @param flip 是否翻转
+     * @return cube map 纹理id
+     */
+    static GLuint loadCubemap(const std::vector<std::string> faces, const bool flip);
 
     /**
 	 * Create a program with the given vertex and framgent

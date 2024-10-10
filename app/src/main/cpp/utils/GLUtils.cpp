@@ -250,3 +250,58 @@ GLuint GLUtils::loadTgaTexture(const char *fileName, const bool flip,
     FUN_END_TIME("GLUtils::loadTgaTexture")
     return textureId;
 }
+
+/**
+ * 加载立方体盒子贴图纹理
+ */
+GLuint GLUtils::loadCubemap(const std::vector<std::string> faces, const bool flip) {
+    GLuint textureId;
+    FUN_BEGIN_TIME("GLUtils::loadCubemap")
+        glGenTextures(1, &textureId);
+        // 绑定立方体贴图纹理目标
+        glBindTexture(GL_TEXTURE_CUBE_MAP, textureId);
+
+        for (unsigned int i = 0; i < faces.size(); i++) {
+
+            // 打开assets中的文件
+            AAsset *asset = loadAsset(faces[i].c_str());
+
+            // 获取文件大小
+            off_t assetLength = AAsset_getLength(asset);
+            void *assetBuffer = malloc(assetLength);
+            AAsset_read(asset, assetBuffer, assetLength);
+            AAsset_close(asset);
+
+            // 翻转y轴，使纹理坐标从底部开始
+            stbi_set_flip_vertically_on_load(flip);
+
+            // 使用stb_image解码图片数据
+            int width, height, channels;
+            unsigned char *imageData = stbi_load_from_memory(static_cast<stbi_uc *>(assetBuffer),
+                                                             static_cast<int>(assetLength),
+                                                             &width, &height,
+                                                             &channels, 0);
+
+            free(assetBuffer);
+
+            if (imageData == nullptr) {
+                // 图片解码失败的处理逻辑
+                LOGD("Image data is null")
+                return 0;
+            }
+
+            // 为每个面加载纹理数据
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB,
+                         GL_UNSIGNED_BYTE, imageData);
+            // 为当前绑定的纹理对象设置环绕、过滤方式
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+            // 释放图片数据
+            stbi_image_free(imageData);
+        }
+    FUN_END_TIME("GLUtils::loadCubemap")
+    return textureId;
+}

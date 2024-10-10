@@ -20,6 +20,7 @@
 #include "cull_face/CullFace.h"
 #include "frame_buffer/FrameBuffers.h"
 #include "frame_buffer/FrameBuffersExercise.h"
+#include "cube_maps/CubeMaps.h"
 #include <NativeTriangle7.h>
 #include <NativeTriangle6.h>
 #include <NativeTriangle.h>
@@ -144,6 +145,9 @@ void MyGLRender::SetRenderType(int renderSampleType) {
             break;
         case SAMPLE_TYPE_FRAME_BUFFERS_EXERCISE:
             m_curr_sample = new FrameBuffersExercise();
+            break;
+        case SAMPLE_TYPE_FRAME_CUBE_MAPS:
+            m_curr_sample = new CubeMaps();
             break;
         default:
             break;

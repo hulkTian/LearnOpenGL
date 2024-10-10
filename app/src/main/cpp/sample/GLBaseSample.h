@@ -32,6 +32,7 @@
 #define SAMPLE_TYPE_CULL_FACE                                       SAMPLE_TYPE + 22
 #define SAMPLE_TYPE_FRAME_BUFFERS                                   SAMPLE_TYPE + 23
 #define SAMPLE_TYPE_FRAME_BUFFERS_EXERCISE                          SAMPLE_TYPE + 24
+#define SAMPLE_TYPE_FRAME_CUBE_MAPS                                 SAMPLE_TYPE + 25
 
 #define KEY_W 1
 #define KEY_S 2
