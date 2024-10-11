@@ -219,5 +219,6 @@ void CubeMaps::Shutdown() {
     glDeleteBuffers(1, &skyboxVBO);
     glDeleteBuffers(1, &cubeVAO);
     glDeleteBuffers(1, &cubeVBO);
+    glDeleteProgram(m_ProgramObj_cube);
     GLBaseSample::Shutdown();
 }

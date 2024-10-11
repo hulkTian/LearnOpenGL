@@ -117,7 +117,10 @@ class NativeRenderActivity : Activity() {
             || type == IMyNativeRendererType.SAMPLE_TYPE_FRAME_BUFFERS
             || type == IMyNativeRendererType.SAMPLE_TYPE_FRAME_BUFFERS_EXERCISE
             || type == IMyNativeRendererType.SAMPLE_TYPE_FRAME_CUBE_MAPS
-            || type == IMyNativeRendererType.SAMPLE_TYPE_FRAME_CUBE_MAPS_REFLECTION
+            || type == IMyNativeRendererType.SAMPLE_TYPE_FRAME_CUBE_MAPS_REFLECTION1
+            || type == IMyNativeRendererType.SAMPLE_TYPE_FRAME_CUBE_MAPS_REFLECTION2
+            || type == IMyNativeRendererType.SAMPLE_TYPE_FRAME_CUBE_MAPS_REFRACTION
+            || type == IMyNativeRendererType.SAMPLE_TYPE_FRAME_CUBE_MAPS_EXERCISE
         ) {
             binding.llClick.visibility = View.VISIBLE
             binding.btW.setOnClickListener {

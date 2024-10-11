@@ -208,10 +208,28 @@ class MainActivity : AppCompatActivity() {
             IMyNativeRendererType.SAMPLE_TYPE_FRAME_CUBE_MAPS
         )
         addItem(
-            i++, R.mipmap.cube_map,
-            "环境映射——反射",
+            i++, R.mipmap.cube_map_reflection_box,
+            "环境映射——反射箱子",
             "反射天空盒子的颜色",
-            IMyNativeRendererType.SAMPLE_TYPE_FRAME_CUBE_MAPS_REFLECTION
+            IMyNativeRendererType.SAMPLE_TYPE_FRAME_CUBE_MAPS_REFLECTION1
+        )
+        addItem(
+            i++, R.mipmap.cube_map_reflection_mode,
+            "环境映射——反射模型",
+            "使用模型反射天空盒子颜色",
+            IMyNativeRendererType.SAMPLE_TYPE_FRAME_CUBE_MAPS_REFLECTION2
+        )
+        addItem(
+            i++, R.mipmap.cube_map_refraction,
+            "环境映射——折射",
+            "折射天空盒子颜色",
+            IMyNativeRendererType.SAMPLE_TYPE_FRAME_CUBE_MAPS_REFRACTION
+        )
+        addItem(
+            i++, R.mipmap.cube_map_reflection_exercise,
+            "环境映射——练习",
+            "天空盒子中展示有反射贴图的模型",
+            IMyNativeRendererType.SAMPLE_TYPE_FRAME_CUBE_MAPS_EXERCISE
         )
     }
 

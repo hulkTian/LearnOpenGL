@@ -31,7 +31,7 @@ void Model::loadModel(string const &path) {
 
 //递归处理所有节点
 void Model::processNode(aiNode *node, const aiScene *scene) {
-    LOGE("Model::processNode start node->mNumMeshes = %d node->mNumChildren = %d", node->mNumMeshes, node->mNumChildren)
+    LOGI("Model::processNode start node->mNumMeshes = %d node->mNumChildren = %d", node->mNumMeshes, node->mNumChildren)
     // 处理节点所有的网格（如果有的话）
     for (unsigned int i = 0; i < node->mNumMeshes; i++) {
         aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
@@ -45,7 +45,7 @@ void Model::processNode(aiNode *node, const aiScene *scene) {
 }
 
 Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
-    LOGE("Model::processMesh start %d", mesh->mNumVertices)
+    LOGI("Model::processMesh start %d", mesh->mNumVertices)
     vector<Vertex> vertices;
     vector<unsigned int> indices;
     vector<Texture> textures;
@@ -118,8 +118,8 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
         std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_NORMALS,
                                                                "texture_normal");
         textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
-        // 4. height maps
-        std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_HEIGHT,
+        // 4. height maps，反射贴图放在这里
+        std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT,
                                                                "texture_height");
         textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
     }
@@ -129,7 +129,7 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
 
 // 一个材质对象的内部对每种纹理类型都存储了一个纹理位置数组。不同的纹理类型都以 aiTextureType_ 为前缀。
 vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type, string typeName) {
-    LOGE("Model::loadMaterialTextures type = %s count = %d", typeName.c_str(), mat->GetTextureCount(type))
+    LOGI("Model::loadMaterialTextures type = %s count = %d", typeName.c_str(), mat->GetTextureCount(type))
     vector<Texture> textures;
     // 优化：加载纹理时判断纹理路径是否与已经加载的纹理路径相同，如果相同，则跳过纹理的加载，直接使用定位到的纹理结构体为网格的纹理。
     for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {

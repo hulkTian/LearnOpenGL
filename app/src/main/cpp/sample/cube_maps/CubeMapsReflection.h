@@ -23,7 +23,7 @@ public:
 private:
     GLuint skyboxVAO, skyboxVBO;
     GLuint cubeVAO, cubeVBO;
-    GLuint cubemapTexture, cubeTexture;
+    GLuint cubemapTexture;
     GLuint m_ProgramObj_cube;
 };
 

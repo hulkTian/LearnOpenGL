@@ -22,6 +22,9 @@
 #include "frame_buffer/FrameBuffersExercise.h"
 #include "cube_maps/CubeMaps.h"
 #include "cube_maps/CubeMapsReflection.h"
+#include "cube_maps/ReflectionMode.h"
+#include "cube_maps/CubeMapsRefraction.h"
+#include "cube_maps/CubeMapsReflectionExercise.h"
 #include <NativeTriangle7.h>
 #include <NativeTriangle6.h>
 #include <NativeTriangle.h>
@@ -150,8 +153,17 @@ void MyGLRender::SetRenderType(int renderSampleType) {
         case SAMPLE_TYPE_FRAME_CUBE_MAPS:
             m_curr_sample = new CubeMaps();
             break;
-        case SAMPLE_TYPE_FRAME_CUBE_MAPS_REFLECTION:
+        case SAMPLE_TYPE_FRAME_CUBE_MAPS_REFLECTION1:
             m_curr_sample = new CubeMapsReflection();
+            break;
+        case SAMPLE_TYPE_FRAME_CUBE_MAPS_REFLECTION2:
+            m_curr_sample = new ReflectionMode();
+            break;
+        case SAMPLE_TYPE_FRAME_CUBE_MAPS_REFRACTION:
+            m_curr_sample = new CubeMapsRefraction();
+            break;
+        case SAMPLE_TYPE_FRAME_CUBE_MAPS_EXERCISE:
+            m_curr_sample = new CubeMapsReflectionExercise();
             break;
         default:
             break;
