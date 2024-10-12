@@ -231,6 +231,12 @@ class MainActivity : AppCompatActivity() {
             "天空盒子中展示有反射贴图的模型",
             IMyNativeRendererType.SAMPLE_TYPE_FRAME_CUBE_MAPS_EXERCISE
         )
+        addItem(
+            i++, R.mipmap.ubo,
+            "Uniform Buffer Object",
+            "在多个着色器中使用Uniform 缓冲对象存储的顶点数据",
+            IMyNativeRendererType.SAMPLE_TYPE_FRAME_CUBE_UNIFORM_BUFFER
+        )
     }
 
     private fun addItem(index: Int, redId: Int, title: String, subtitle: String, type: Int) {

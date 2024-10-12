@@ -25,6 +25,7 @@
 #include "cube_maps/ReflectionMode.h"
 #include "cube_maps/CubeMapsRefraction.h"
 #include "cube_maps/CubeMapsReflectionExercise.h"
+#include "advanced_opengl/AdvancedUbo.h"
 #include <NativeTriangle7.h>
 #include <NativeTriangle6.h>
 #include <NativeTriangle.h>
@@ -164,6 +165,9 @@ void MyGLRender::SetRenderType(int renderSampleType) {
             break;
         case SAMPLE_TYPE_FRAME_CUBE_MAPS_EXERCISE:
             m_curr_sample = new CubeMapsReflectionExercise();
+            break;
+        case SAMPLE_TYPE_FRAME_CUBE_UNIFORM_BUFFER:
+            m_curr_sample = new AdvancedUbo();
             break;
         default:
             break;
