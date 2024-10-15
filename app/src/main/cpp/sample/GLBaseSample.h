@@ -32,13 +32,15 @@
 #define SAMPLE_TYPE_CULL_FACE                                       SAMPLE_TYPE + 22
 #define SAMPLE_TYPE_FRAME_BUFFERS                                   SAMPLE_TYPE + 23
 #define SAMPLE_TYPE_FRAME_BUFFERS_EXERCISE                          SAMPLE_TYPE + 24
-#define SAMPLE_TYPE_FRAME_CUBE_MAPS                                 SAMPLE_TYPE + 25
-#define SAMPLE_TYPE_FRAME_CUBE_MAPS_REFLECTION1                     SAMPLE_TYPE + 26
-#define SAMPLE_TYPE_FRAME_CUBE_MAPS_REFLECTION2                     SAMPLE_TYPE + 27
-#define SAMPLE_TYPE_FRAME_CUBE_MAPS_REFRACTION                      SAMPLE_TYPE + 28
-#define SAMPLE_TYPE_FRAME_CUBE_MAPS_EXERCISE                        SAMPLE_TYPE + 29
-#define SAMPLE_TYPE_FRAME_CUBE_UNIFORM_BUFFER                       SAMPLE_TYPE + 30
-#define SAMPLE_TYPE_FRAME_GEOMETRY_SHADER                           SAMPLE_TYPE + 31
+#define SAMPLE_TYPE_CUBE_MAPS                                       SAMPLE_TYPE + 25
+#define SAMPLE_TYPE_CUBE_MAPS_REFLECTION1                           SAMPLE_TYPE + 26
+#define SAMPLE_TYPE_CUBE_MAPS_REFLECTION2                           SAMPLE_TYPE + 27
+#define SAMPLE_TYPE_CUBE_MAPS_REFRACTION                            SAMPLE_TYPE + 28
+#define SAMPLE_TYPE_CUBE_MAPS_EXERCISE                              SAMPLE_TYPE + 29
+#define SAMPLE_TYPE_CUBE_UNIFORM_BUFFER                             SAMPLE_TYPE + 30
+#define SAMPLE_TYPE_GEOMETRY_SHADER                                 SAMPLE_TYPE + 31
+#define SAMPLE_TYPE_INSTANCING                                      SAMPLE_TYPE + 32
+#define SAMPLE_TYPE_INSTANCING_ASTEROIDS                            SAMPLE_TYPE + 33
 
 #define KEY_W 1
 #define KEY_S 2

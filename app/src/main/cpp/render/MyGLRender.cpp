@@ -27,6 +27,8 @@
 #include "cube_maps/CubeMapsReflectionExercise.h"
 #include "advanced_opengl/AdvancedUbo.h"
 #include "geometry_shader/GeometryShaderPoint.h"
+#include "instancing/Instancing.h"
+#include "instancing/Asteroids.h"
 #include <NativeTriangle7.h>
 #include <NativeTriangle6.h>
 #include <NativeTriangle.h>
@@ -152,26 +154,32 @@ void MyGLRender::SetRenderType(int renderSampleType) {
         case SAMPLE_TYPE_FRAME_BUFFERS_EXERCISE:
             m_curr_sample = new FrameBuffersExercise();
             break;
-        case SAMPLE_TYPE_FRAME_CUBE_MAPS:
+        case SAMPLE_TYPE_CUBE_MAPS:
             m_curr_sample = new CubeMaps();
             break;
-        case SAMPLE_TYPE_FRAME_CUBE_MAPS_REFLECTION1:
+        case SAMPLE_TYPE_CUBE_MAPS_REFLECTION1:
             m_curr_sample = new CubeMapsReflection();
             break;
-        case SAMPLE_TYPE_FRAME_CUBE_MAPS_REFLECTION2:
+        case SAMPLE_TYPE_CUBE_MAPS_REFLECTION2:
             m_curr_sample = new ReflectionMode();
             break;
-        case SAMPLE_TYPE_FRAME_CUBE_MAPS_REFRACTION:
+        case SAMPLE_TYPE_CUBE_MAPS_REFRACTION:
             m_curr_sample = new CubeMapsRefraction();
             break;
-        case SAMPLE_TYPE_FRAME_CUBE_MAPS_EXERCISE:
+        case SAMPLE_TYPE_CUBE_MAPS_EXERCISE:
             m_curr_sample = new CubeMapsReflectionExercise();
             break;
-        case SAMPLE_TYPE_FRAME_CUBE_UNIFORM_BUFFER:
+        case SAMPLE_TYPE_CUBE_UNIFORM_BUFFER:
             m_curr_sample = new AdvancedUbo();
             break;
-        case SAMPLE_TYPE_FRAME_GEOMETRY_SHADER:
+        case SAMPLE_TYPE_GEOMETRY_SHADER:
             m_curr_sample = new GeometryShaderPoint();
+            break;
+        case SAMPLE_TYPE_INSTANCING:
+            m_curr_sample = new Instancing();
+            break;
+        case SAMPLE_TYPE_INSTANCING_ASTEROIDS:
+            m_curr_sample = new Asteroids();
             break;
         default:
             break;

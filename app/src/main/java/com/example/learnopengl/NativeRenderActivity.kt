@@ -116,11 +116,12 @@ class NativeRenderActivity : Activity() {
             || type == IMyNativeRendererType.SAMPLE_TYPE_CULL_FACE
             || type == IMyNativeRendererType.SAMPLE_TYPE_FRAME_BUFFERS
             || type == IMyNativeRendererType.SAMPLE_TYPE_FRAME_BUFFERS_EXERCISE
-            || type == IMyNativeRendererType.SAMPLE_TYPE_FRAME_CUBE_MAPS
-            || type == IMyNativeRendererType.SAMPLE_TYPE_FRAME_CUBE_MAPS_REFLECTION1
-            || type == IMyNativeRendererType.SAMPLE_TYPE_FRAME_CUBE_MAPS_REFLECTION2
-            || type == IMyNativeRendererType.SAMPLE_TYPE_FRAME_CUBE_MAPS_REFRACTION
-            || type == IMyNativeRendererType.SAMPLE_TYPE_FRAME_CUBE_MAPS_EXERCISE
+            || type == IMyNativeRendererType.SAMPLE_TYPE_CUBE_MAPS
+            || type == IMyNativeRendererType.SAMPLE_TYPE_CUBE_MAPS_REFLECTION1
+            || type == IMyNativeRendererType.SAMPLE_TYPE_CUBE_MAPS_REFLECTION2
+            || type == IMyNativeRendererType.SAMPLE_TYPE_CUBE_MAPS_REFRACTION
+            || type == IMyNativeRendererType.SAMPLE_TYPE_CUBE_MAPS_EXERCISE
+            || type == IMyNativeRendererType.SAMPLE_TYPE_INSTANCING_ASTEROIDS
         ) {
             binding.llClick.visibility = View.VISIBLE
             binding.btW.setOnClickListener {

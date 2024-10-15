@@ -205,43 +205,55 @@ class MainActivity : AppCompatActivity() {
             i++, R.mipmap.cube_map,
             "立方体贴图",
             "使用立方体贴图实现天空盒子效果",
-            IMyNativeRendererType.SAMPLE_TYPE_FRAME_CUBE_MAPS
+            IMyNativeRendererType.SAMPLE_TYPE_CUBE_MAPS
         )
         addItem(
             i++, R.mipmap.cube_map_reflection_box,
             "环境映射——反射箱子",
             "反射天空盒子的颜色",
-            IMyNativeRendererType.SAMPLE_TYPE_FRAME_CUBE_MAPS_REFLECTION1
+            IMyNativeRendererType.SAMPLE_TYPE_CUBE_MAPS_REFLECTION1
         )
         addItem(
             i++, R.mipmap.cube_map_reflection_mode,
             "环境映射——反射模型",
             "使用模型反射天空盒子颜色",
-            IMyNativeRendererType.SAMPLE_TYPE_FRAME_CUBE_MAPS_REFLECTION2
+            IMyNativeRendererType.SAMPLE_TYPE_CUBE_MAPS_REFLECTION2
         )
         addItem(
             i++, R.mipmap.cube_map_refraction,
             "环境映射——折射",
             "折射天空盒子颜色",
-            IMyNativeRendererType.SAMPLE_TYPE_FRAME_CUBE_MAPS_REFRACTION
+            IMyNativeRendererType.SAMPLE_TYPE_CUBE_MAPS_REFRACTION
         )
         addItem(
             i++, R.mipmap.cube_map_reflection_exercise,
             "环境映射——练习",
             "天空盒子中展示有反射贴图的模型",
-            IMyNativeRendererType.SAMPLE_TYPE_FRAME_CUBE_MAPS_EXERCISE
+            IMyNativeRendererType.SAMPLE_TYPE_CUBE_MAPS_EXERCISE
         )
         addItem(
             i++, R.mipmap.ubo,
             "Uniform Buffer Object",
             "在多个着色器中使用Uniform 缓冲对象存储的顶点数据",
-            IMyNativeRendererType.SAMPLE_TYPE_FRAME_CUBE_UNIFORM_BUFFER
+            IMyNativeRendererType.SAMPLE_TYPE_CUBE_UNIFORM_BUFFER
         )
         addItem(
             i++, R.mipmap.ubo,
             "几何着色器",
             "几何着色器的基本使用方式",
-            IMyNativeRendererType.SAMPLE_TYPE_FRAME_GEOMETRY_SHADER
+            IMyNativeRendererType.SAMPLE_TYPE_GEOMETRY_SHADER
+        )
+        addItem(
+            i++, R.mipmap.instancing,
+            "实例化",
+            "使用实例化将数据一次传递给GPU",
+            IMyNativeRendererType.SAMPLE_TYPE_INSTANCING
+        )
+        addItem(
+            i++, R.mipmap.instancing_asteroids,
+            "实例化-行星带",
+            "使用实例化实现行星带效果",
+            IMyNativeRendererType.SAMPLE_TYPE_INSTANCING_ASTEROIDS
         )
     }
 
