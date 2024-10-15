@@ -200,13 +200,6 @@ class NativeRenderActivity : Activity() {
             || type == IMyNativeRendererType.SAMPLE_TYPE_COORDINATE
             || type == IMyNativeRendererType.SAMPLE_TYPE_CAMERA
             || type == IMyNativeRendererType.SAMPLE_TYPE_COLORS_MATERIAL
-        /*|| type == IMyNativeRendererType.SAMPLE_TYPE_CAMERA_AUTO_MOVE
-        || type == IMyNativeRendererType.SAMPLE_TYPE_COLORS
-        || type == IMyNativeRendererType.SAMPLE_TYPE_COLORS_VIEW
-        || type == IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_MAPS_DIFFUSE
-        || type == IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_CASTERS_DIRECTIONAL
-        || type == IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_MERGE
-        || type == IMyNativeRendererType.SAMPLE_TYPE_MODEL_LOADING*/
         ) {
             glSurfaceView.renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY
         } else {

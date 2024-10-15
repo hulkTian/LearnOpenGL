@@ -237,6 +237,12 @@ class MainActivity : AppCompatActivity() {
             "在多个着色器中使用Uniform 缓冲对象存储的顶点数据",
             IMyNativeRendererType.SAMPLE_TYPE_FRAME_CUBE_UNIFORM_BUFFER
         )
+        addItem(
+            i++, R.mipmap.ubo,
+            "几何着色器",
+            "几何着色器的基本使用方式",
+            IMyNativeRendererType.SAMPLE_TYPE_FRAME_GEOMETRY_SHADER
+        )
     }
 
     private fun addItem(index: Int, redId: Int, title: String, subtitle: String, type: Int) {

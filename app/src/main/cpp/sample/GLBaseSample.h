@@ -38,6 +38,7 @@
 #define SAMPLE_TYPE_FRAME_CUBE_MAPS_REFRACTION                      SAMPLE_TYPE + 28
 #define SAMPLE_TYPE_FRAME_CUBE_MAPS_EXERCISE                        SAMPLE_TYPE + 29
 #define SAMPLE_TYPE_FRAME_CUBE_UNIFORM_BUFFER                       SAMPLE_TYPE + 30
+#define SAMPLE_TYPE_FRAME_GEOMETRY_SHADER                           SAMPLE_TYPE + 31
 
 #define KEY_W 1
 #define KEY_S 2

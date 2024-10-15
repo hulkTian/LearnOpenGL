@@ -116,12 +116,21 @@ char *GLUtils::openTextFile(const char *path) {
  * @param fragmentSource 片段着色器代码字符串
  * @return 着色器程序id
  */
-GLuint GLUtils::createProgram(const char *vertexPath, const char *fragmentPath) {
+GLuint GLUtils::createProgram(const char *vertexPath, const char *fragmentPath, const char *geometryPath) {
     //加载顶点着色器代码
     const char *vertexCode = openTextFile(vertexPath);
 
     //加载片段着色器代码
     const char *fragmentCode = openTextFile(fragmentPath);
+
+    //加载几何着色器代码
+    const char *geometryCode = nullptr;
+    if (geometryPath) {
+        geometryCode = openTextFile(geometryPath);
+    } else {
+        LOGV("geometry shader path is null")
+    }
+
 
     //声明着色器程序id
     GLuint programId;
@@ -131,6 +140,17 @@ GLuint GLUtils::createProgram(const char *vertexPath, const char *fragmentPath) 
         GLuint vertexShader = loadShader(GL_VERTEX_SHADER, &vertexCode);
         if (vertexShader == 0) {
             return 0;
+        }
+
+        //加载几何着色器代码并创建shader对象
+        GLuint geometryShader = 0;
+        if (geometryCode) {
+            geometryShader = loadShader(GL_GEOMETRY_SHADER, &geometryCode);
+            if (geometryShader == 0) {
+                return 0;
+            }
+        } else {
+            LOGV("geometry shader code is null")
         }
 
         //加载片段着色器代码并创建shader对象
@@ -149,7 +169,15 @@ GLuint GLUtils::createProgram(const char *vertexPath, const char *fragmentPath) 
         glAttachShader(programId, vertexShader);
         checkGlError("glAttachShader");
 
-        //绑定片段着色器对象到着色器程序
+        //绑定几何着色器对象到着色器程序
+        if (geometryShader) {
+            glAttachShader(programId, geometryShader);
+            checkGlError("glAttachShader");
+        } else {
+            LOGV("geometry shader object is null")
+        }
+
+        //绑定顶点着色器对象到着色器程序
         glAttachShader(programId, fragmentShader);
         checkGlError("glAttachShader");
 
