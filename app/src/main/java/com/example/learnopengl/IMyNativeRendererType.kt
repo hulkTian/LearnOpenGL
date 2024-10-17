@@ -38,6 +38,7 @@ object IMyNativeRendererType {
     const val SAMPLE_TYPE_GEOMETRY_SHADER = SAMPLE_TYPE + 31
     const val SAMPLE_TYPE_INSTANCING = SAMPLE_TYPE + 32
     const val SAMPLE_TYPE_INSTANCING_ASTEROIDS = SAMPLE_TYPE + 33
+    const val SAMPLE_TYPE_ANIT_ALIASING = SAMPLE_TYPE + 34
 }
 
 object Key {

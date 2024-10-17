@@ -255,6 +255,12 @@ class MainActivity : AppCompatActivity() {
             "使用实例化实现行星带效果",
             IMyNativeRendererType.SAMPLE_TYPE_INSTANCING_ASTEROIDS
         )
+        addItem(
+            i++, R.mipmap.instancing_asteroids,
+            "抗锯齿-MSAA",
+            "使用多重采样缓冲帧实现抗锯齿",
+            IMyNativeRendererType.SAMPLE_TYPE_ANIT_ALIASING
+        )
     }
 
     private fun addItem(index: Int, redId: Int, title: String, subtitle: String, type: Int) {

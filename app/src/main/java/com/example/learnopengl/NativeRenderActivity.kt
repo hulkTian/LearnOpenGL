@@ -122,6 +122,7 @@ class NativeRenderActivity : Activity() {
             || type == IMyNativeRendererType.SAMPLE_TYPE_CUBE_MAPS_REFRACTION
             || type == IMyNativeRendererType.SAMPLE_TYPE_CUBE_MAPS_EXERCISE
             || type == IMyNativeRendererType.SAMPLE_TYPE_INSTANCING_ASTEROIDS
+            || type == IMyNativeRendererType.SAMPLE_TYPE_ANIT_ALIASING
         ) {
             binding.llClick.visibility = View.VISIBLE
             binding.btW.setOnClickListener {

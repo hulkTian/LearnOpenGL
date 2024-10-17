@@ -41,6 +41,7 @@
 #define SAMPLE_TYPE_GEOMETRY_SHADER                                 SAMPLE_TYPE + 31
 #define SAMPLE_TYPE_INSTANCING                                      SAMPLE_TYPE + 32
 #define SAMPLE_TYPE_INSTANCING_ASTEROIDS                            SAMPLE_TYPE + 33
+#define SAMPLE_TYPE_ANIT_ALIASING                                   SAMPLE_TYPE + 34
 
 #define KEY_W 1
 #define KEY_S 2

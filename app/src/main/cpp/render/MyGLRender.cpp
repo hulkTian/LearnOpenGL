@@ -29,6 +29,7 @@
 #include "geometry_shader/GeometryShaderPoint.h"
 #include "instancing/Instancing.h"
 #include "instancing/Asteroids.h"
+#include "anti_aliasing/AnitAliasing.h"
 #include <NativeTriangle7.h>
 #include <NativeTriangle6.h>
 #include <NativeTriangle.h>
@@ -180,6 +181,9 @@ void MyGLRender::SetRenderType(int renderSampleType) {
             break;
         case SAMPLE_TYPE_INSTANCING_ASTEROIDS:
             m_curr_sample = new Asteroids();
+            break;
+        case SAMPLE_TYPE_ANIT_ALIASING:
+            m_curr_sample = new AnitAliasing();
             break;
         default:
             break;
