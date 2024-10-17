@@ -5,7 +5,7 @@
 #ifndef LEARNOPENGL_TRANSFORM_H
 #define LEARNOPENGL_TRANSFORM_H
 
-#include <GLBaseSample.h>
+#include "GLBaseSample.h"
 
 class Transform : public GLBaseSample {
 public:
