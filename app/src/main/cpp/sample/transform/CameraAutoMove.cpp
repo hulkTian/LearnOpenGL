@@ -91,8 +91,8 @@ void CameraAutoMove::Create() {
     texture2 = GLUtils::loadTgaTexture("textures/awesomeface.png");
 
     //创建着色器程序,并编译着色器代码
-    m_ProgramObj = GLUtils::createProgram("shaders/vertex_shader_coordinate.glsl",
-                                          "shaders/fragment_shader_coordinate.glsl");
+    m_ProgramObj = GLUtils::createProgram("shaders/vs_coordinate.glsl",
+                                          "shaders/fs_coordinate.glsl");
 
     if (!m_ProgramObj) {
         LOGD("Could not create program")

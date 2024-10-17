@@ -26,8 +26,8 @@ void NativeTriangle5::Create() {
     glEnableVertexAttribArray(0);
 
     //创建着色器程序,并编译着色器代码
-    m_ProgramObj = GLUtils::createProgram("shaders/vertex_shader_triangle5.glsl",
-                                          "shaders/fragment_shader_triangle5.glsl");
+    m_ProgramObj = GLUtils::createProgram("shaders/vs_triangle5.glsl",
+                                          "shaders/fs_triangle5.glsl");
 
     if (!m_ProgramObj) {
         LOGD("Could not create program")

@@ -99,10 +99,10 @@ void AnitAliasing::Create() {
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float),
                           (void *) (2 * sizeof(float)));
 
-    m_ProgramObj = GLUtils::createProgram("shaders/vertex_shader_anit_aliasing.glsl",
-                                          "shaders/fragment_shader_anit_aliasing.glsl");
-    m_ProgramObj_screen = GLUtils::createProgram("shaders/vertex_shader_msaa_frame_buffers.glsl",
-                                                 "shaders/fragment_shader_msaa_frame_buffers.glsl");
+    m_ProgramObj = GLUtils::createProgram("shaders/vs_anit_aliasing.glsl",
+                                          "shaders/fs_anit_aliasing.glsl");
+    m_ProgramObj_screen = GLUtils::createProgram("shaders/vs_msaa_frame_buffers.glsl",
+                                                 "shaders/fs_msaa_frame_buffers.glsl");
 
     if (!m_ProgramObj || !m_ProgramObj_screen) {
         LOGD("Could not create program")

@@ -185,8 +185,8 @@ void BlendingDiscard::Create() {
                                                  GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
 
     //创建着色器程序,并编译着色器代码
-    m_ProgramObj = GLUtils::createProgram("shaders/vertex_shader_blending.glsl",
-                                          "shaders/fragment_shader_blending.glsl");
+    m_ProgramObj = GLUtils::createProgram("shaders/vs_blending.glsl",
+                                          "shaders/fs_blending.glsl");
 
     if (!m_ProgramObj) {
         LOGD("Could not create program")

@@ -124,11 +124,11 @@ void StencilTesting::Create() {
                                            GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
 
     //加载深度测试中的着色器，绘制正常的地面和箱子
-    m_ProgramObj = GLUtils::createProgram("shaders/vertex_shader_depth_testing.glsl",
-                                          "shaders/fragment_shader_depth_testing.glsl");
+    m_ProgramObj = GLUtils::createProgram("shaders/vs_depth_testing.glsl",
+                                          "shaders/fs_depth_testing.glsl");
     //加载边框着色器，绘制箱子的边框部分,其实就是按照箱子的轮廓绘制一个纯色的区域
-    m_ProgramObj_border = GLUtils::createProgram("shaders/vertex_shader_depth_testing.glsl",
-                                                "shaders/fragment_shader_stencil_testing_color.glsl");
+    m_ProgramObj_border = GLUtils::createProgram("shaders/vs_depth_testing.glsl",
+                                                "shaders/fs_stencil_testing_color.glsl");
 
     if (!m_ProgramObj || !m_ProgramObj_border) {
         LOGD("Could not create program")

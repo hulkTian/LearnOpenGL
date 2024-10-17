@@ -21,8 +21,8 @@ void ModelLoading::Create() {
     ourModel = Model(path + "/nanosuit/nanosuit.obj");
 
     //创建着色器程序,并编译着色器代码
-    m_ProgramObj = GLUtils::createProgram("shaders/vertex_shader_model_loading.glsl",
-                                          "shaders/fragment_shader_model_loading.glsl");
+    m_ProgramObj = GLUtils::createProgram("shaders/vs_model_loading.glsl",
+                                          "shaders/fs_model_loading.glsl");
 
     if (!m_ProgramObj) {
         LOGD("Could not create program")

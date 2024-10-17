@@ -72,8 +72,8 @@ void Instancing::Create() {
     glVertexAttribDivisor(2, 1); // tell OpenGL this is an instanced vertex attribute.
 
     //创建着色器程序,并编译着色器代码
-    m_ProgramObj = GLUtils::createProgram("shaders/vertex_shader_instancing.glsl",
-                                          "shaders/fragment_shader_instancing.glsl");
+    m_ProgramObj = GLUtils::createProgram("shaders/vs_instancing.glsl",
+                                          "shaders/fs_instancing.glsl");
 
     if (!m_ProgramObj) {
         LOGD("Could not create program")

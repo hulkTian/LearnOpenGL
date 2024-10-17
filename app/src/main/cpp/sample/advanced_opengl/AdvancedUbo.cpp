@@ -97,14 +97,14 @@ void AdvancedUbo::Create() {
 
     // build and compile shaders
     // -------------------------
-    m_program_red = GLUtils::createProgram("shaders/vertex_shader_advanced_glsl_ubo.glsl",
-                                           "shaders/fragment_shader_advanced_glsl_red.glsl");
-    m_program_green = GLUtils::createProgram("shaders/vertex_shader_advanced_glsl_ubo.glsl",
-                                             "shaders/fragment_shader_advanced_glsl_green.glsl");
-    m_program_blue = GLUtils::createProgram("shaders/vertex_shader_advanced_glsl_ubo.glsl",
-                                            "shaders/fragment_shader_advanced_glsl_blue.glsl");
-    m_program_yellow = GLUtils::createProgram("shaders/vertex_shader_advanced_glsl_ubo.glsl",
-                                              "shaders/fragment_shader_advanced_glsl_yellow.glsl");
+    m_program_red = GLUtils::createProgram("shaders/vs_advanced_glsl_ubo.glsl",
+                                           "shaders/fs_advanced_glsl_red.glsl");
+    m_program_green = GLUtils::createProgram("shaders/vs_advanced_glsl_ubo.glsl",
+                                             "shaders/fs_advanced_glsl_green.glsl");
+    m_program_blue = GLUtils::createProgram("shaders/vs_advanced_glsl_ubo.glsl",
+                                            "shaders/fs_advanced_glsl_blue.glsl");
+    m_program_yellow = GLUtils::createProgram("shaders/vs_advanced_glsl_ubo.glsl",
+                                              "shaders/fs_advanced_glsl_yellow.glsl");
 
     if (!m_program_red) {
         LOGD("Could not create program")

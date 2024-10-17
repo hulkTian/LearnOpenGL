@@ -130,12 +130,12 @@ void CubeMapsRefraction::Create() {
     std::string path(DEFAULT_OGL_ASSETS_DIR);
     ourModel = Model(path + "/nanosuit/nanosuit.obj");
 
-    m_ProgramObj = GLUtils::createProgram("shaders/vertex_shader_cube_map.glsl",
-                                          "shaders/fragment_shader_cube_map.glsl");
-    m_ProgramObj_cube  = GLUtils::createProgram("shaders/vertex_shader_refraction.glsl",
-                                                "shaders/fragment_shader_refraction.glsl");
-    m_ProgramObj_mode = GLUtils::createProgram("shaders/vertex_shader_refraction.glsl",
-                                               "shaders/fragment_shader_refraction.glsl");
+    m_ProgramObj = GLUtils::createProgram("shaders/vs_cube_map.glsl",
+                                          "shaders/fs_cube_map.glsl");
+    m_ProgramObj_cube  = GLUtils::createProgram("shaders/vs_refraction.glsl",
+                                                "shaders/fs_refraction.glsl");
+    m_ProgramObj_mode = GLUtils::createProgram("shaders/vs_refraction.glsl",
+                                               "shaders/fs_refraction.glsl");
 
     if (!m_ProgramObj || !m_ProgramObj_cube || !m_ProgramObj_mode) {
         LOGD("Could not create program")

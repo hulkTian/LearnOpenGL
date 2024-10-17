@@ -49,8 +49,8 @@ void Transform::Create() {
     texture2 = GLUtils::loadTgaTexture("textures/awesomeface.png");
 
     //创建着色器程序,并编译着色器代码
-    m_ProgramObj = GLUtils::createProgram("shaders/vertex_shader_transform.glsl",
-                                          "shaders/fragment_shader_transform.glsl");
+    m_ProgramObj = GLUtils::createProgram("shaders/vs_transform.glsl",
+                                          "shaders/fs_transform.glsl");
 
     if (!m_ProgramObj) {
         LOGD("Could not create program")

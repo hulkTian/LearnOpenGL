@@ -76,10 +76,10 @@ void CubeMapsReflectionExercise::Create() {
     std::string path(DEFAULT_OGL_ASSETS_DIR);
     ourModel = Model(path + "/nanosuit/nanosuit.obj");
 
-    m_ProgramObj = GLUtils::createProgram("shaders/vertex_shader_cube_map.glsl",
-                                          "shaders/fragment_shader_cube_map.glsl");
-    m_ProgramObj_mode = GLUtils::createProgram("shaders/vertex_shader_reflection_model_exercise.glsl",
-                                               "shaders/fragment_shader_reflection_model_exercise.glsl");
+    m_ProgramObj = GLUtils::createProgram("shaders/vs_cube_map.glsl",
+                                          "shaders/fs_cube_map.glsl");
+    m_ProgramObj_mode = GLUtils::createProgram("shaders/vs_reflection_model_exercise.glsl",
+                                               "shaders/fs_reflection_model_exercise.glsl");
 
     if (!m_ProgramObj || !m_ProgramObj_mode) {
         LOGD("Could not create program")

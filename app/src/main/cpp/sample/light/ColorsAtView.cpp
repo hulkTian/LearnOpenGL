@@ -94,12 +94,12 @@ void ColorsAtView::Create() {
     glEnableVertexAttribArray(0);
 
     //创建着色器程序,并编译着色器代码
-    m_ProgramObj = GLUtils::createProgram("shaders/vertex_shader_colors_view.glsl",
-                                          "shaders/fragment_shader_colors_view.glsl");
+    m_ProgramObj = GLUtils::createProgram("shaders/vs_colors_view.glsl",
+                                          "shaders/fs_colors_view.glsl");
 
     //创建光源的着色器程序
-    m_ProgramObj_Light = GLUtils::createProgram("shaders/vertex_shader_colors.glsl",
-                                                "shaders/fragment_shader_colors_light.glsl");
+    m_ProgramObj_Light = GLUtils::createProgram("shaders/vs_colors.glsl",
+                                                "shaders/fs_colors_light.glsl");
 
     if (!m_ProgramObj || !m_ProgramObj_Light) {
         LOGD("Could not create program")

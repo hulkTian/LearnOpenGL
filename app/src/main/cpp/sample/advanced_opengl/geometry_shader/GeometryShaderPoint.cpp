@@ -27,9 +27,9 @@ void GeometryShaderPoint::Create() {
     glEnableVertexAttribArray(0);
 
     //创建着色器程序,并编译着色器代码
-    m_ProgramObj = GLUtils::createProgram("shaders/vertex_shader_geometry_shader_point.glsl",
-                                          "shaders/fragment_shader_geometry_shader_point.glsl",
-                                          "shaders/geometry_shader_geometry_shader_point.glsl");
+    m_ProgramObj = GLUtils::createProgram("shaders/vs_geometry_shader_point.glsl",
+                                          "shaders/fs_geometry_shader_point.glsl",
+                                          "shaders/gs_geometry_shader_point.glsl");
 
     if (!m_ProgramObj) {
         LOGD("Could not create program")

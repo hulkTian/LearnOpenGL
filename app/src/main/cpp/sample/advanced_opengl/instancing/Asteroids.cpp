@@ -15,8 +15,8 @@ void Asteroids::Create() {
 
     // build and compile shaders
     // -------------------------
-    m_ProgramObj = GLUtils::createProgram("shaders/vertex_shader_asteroids.glsl",
-                                          "shaders/fragment_shader_asteroids.glsl");
+    m_ProgramObj = GLUtils::createProgram("shaders/vs_asteroids.glsl",
+                                          "shaders/fs_asteroids.glsl");
 
     // load models
     // -----------

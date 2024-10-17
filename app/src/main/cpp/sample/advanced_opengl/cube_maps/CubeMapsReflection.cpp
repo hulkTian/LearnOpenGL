@@ -127,10 +127,10 @@ void CubeMapsReflection::Create() {
     // load textures
     cubemapTexture = GLUtils::loadCubemap(faces, false);
 
-    m_ProgramObj = GLUtils::createProgram("shaders/vertex_shader_cube_map.glsl",
-                                          "shaders/fragment_shader_cube_map.glsl");
-    m_ProgramObj_cube  = GLUtils::createProgram("shaders/vertex_shader_reflection.glsl",
-                                                "shaders/fragment_shader_reflection.glsl");
+    m_ProgramObj = GLUtils::createProgram("shaders/vs_cube_map.glsl",
+                                          "shaders/fs_cube_map.glsl");
+    m_ProgramObj_cube  = GLUtils::createProgram("shaders/vs_reflection.glsl",
+                                                "shaders/fs_reflection.glsl");
 
     if (!m_ProgramObj || !m_ProgramObj_cube) {
         LOGD("Could not create program")

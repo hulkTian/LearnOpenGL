@@ -35,8 +35,8 @@ void NativeTriangle3::Create() {
     glEnableVertexAttribArray(0);
 
     //创建着色器程序,并编译着色器代码
-    m_ProgramObj = GLUtils::createProgram("shaders/vertex_shader_triangle.glsl",
-                                          "shaders/fragment_shader_triangle.glsl");
+    m_ProgramObj = GLUtils::createProgram("shaders/vs_triangle.glsl",
+                                          "shaders/fs_triangle.glsl");
 
     if (!m_ProgramObj) {
         LOGD("Could not create program")

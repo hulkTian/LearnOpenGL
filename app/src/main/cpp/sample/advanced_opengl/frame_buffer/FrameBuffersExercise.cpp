@@ -123,10 +123,10 @@ void FrameBuffersExercise::Create() {
                                            GL_REPEAT, GL_REPEAT,
                                            GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
 
-    m_ProgramObj = GLUtils::createProgram("shaders/vertex_shader_depth_testing.glsl",
-                                          "shaders/fragment_shader_depth_testing.glsl");
-    m_ProgramObj_screen = GLUtils::createProgram("shaders/vertex_shader_frame_buffers.glsl",
-                                                 "shaders/fragment_shader_frame_buffers.glsl");
+    m_ProgramObj = GLUtils::createProgram("shaders/vs_depth_testing.glsl",
+                                          "shaders/fs_depth_testing.glsl");
+    m_ProgramObj_screen = GLUtils::createProgram("shaders/vs_frame_buffers.glsl",
+                                                 "shaders/fs_frame_buffers.glsl");
 
     if (!m_ProgramObj || !m_ProgramObj_screen) {
         LOGD("Could not create program")

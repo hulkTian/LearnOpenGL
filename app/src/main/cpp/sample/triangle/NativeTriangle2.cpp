@@ -34,8 +34,8 @@ void NativeTriangle2::Create() {
 
 
     //创建着色器程序,并编译着色器代码
-    m_ProgramObj = GLUtils::createProgram("shaders/vertex_shader_triangle2.glsl",
-                                          "shaders/fragment_shader_triangle2.glsl");
+    m_ProgramObj = GLUtils::createProgram("shaders/vs_triangle2.glsl",
+                                          "shaders/fs_triangle2.glsl");
 
     if (!m_ProgramObj) {
         LOGD("Could not create program")

@@ -126,8 +126,8 @@ void DepthTesting::Create() {
                                            GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
 
     //创建着色器程序,并编译着色器代码
-    m_ProgramObj = GLUtils::createProgram("shaders/vertex_shader_depth_testing.glsl",
-                                          "shaders/fragment_shader_depth_testing.glsl");
+    m_ProgramObj = GLUtils::createProgram("shaders/vs_depth_testing.glsl",
+                                          "shaders/fs_depth_testing.glsl");
 
     if (!m_ProgramObj) {
         LOGD("Could not create program")

@@ -152,10 +152,10 @@ void CubeMaps::Create() {
                                           GL_REPEAT, GL_REPEAT,
                                           GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
 
-    m_ProgramObj = GLUtils::createProgram("shaders/vertex_shader_cube_map.glsl",
-                                          "shaders/fragment_shader_cube_map.glsl");
-    m_ProgramObj_cube  = GLUtils::createProgram("shaders/vertex_shader_depth_testing.glsl",
-                                                "shaders/fragment_shader_depth_testing.glsl");
+    m_ProgramObj = GLUtils::createProgram("shaders/vs_cube_map.glsl",
+                                          "shaders/fs_cube_map.glsl");
+    m_ProgramObj_cube  = GLUtils::createProgram("shaders/vs_depth_testing.glsl",
+                                                "shaders/fs_depth_testing.glsl");
 
     if (!m_ProgramObj) {
         LOGD("Could not create program")

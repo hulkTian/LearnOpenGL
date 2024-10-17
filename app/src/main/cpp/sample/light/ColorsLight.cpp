@@ -90,19 +90,19 @@ void ColorsLight::Create() {
     glEnableVertexAttribArray(0);
 
     //创建着色器程序,并编译着色器代码
-    m_ProgramObj = GLUtils::createProgram("shaders/vertex_shader_colors.glsl",
-                                          "shaders/fragment_shader_colors.glsl");
+    m_ProgramObj = GLUtils::createProgram("shaders/vs_colors.glsl",
+                                          "shaders/fs_colors.glsl");
     /**
      * 光照练习题：尝试实现一个Gouraud着色（而不是风氏着色）。
      *
-     * m_ProgramObj = GLUtils::createProgram("shaders/vertex_shader_colors_gouraud.glsl",
-                                          "shaders/fragment_shader_colors_gouraud.glsl");
+     * m_ProgramObj = GLUtils::createProgram("shaders/vs_colors_gouraud.glsl",
+                                          "shaders/fs_colors_gouraud.glsl");
      */
 
 
     //创建光源的着色器程序
-    m_ProgramObj_Light = GLUtils::createProgram("shaders/vertex_shader_colors.glsl",
-                                                "shaders/fragment_shader_colors_light.glsl");
+    m_ProgramObj_Light = GLUtils::createProgram("shaders/vs_colors.glsl",
+                                                "shaders/fs_colors_light.glsl");
 
     if (!m_ProgramObj || !m_ProgramObj_Light) {
         LOGD("Could not create program")
