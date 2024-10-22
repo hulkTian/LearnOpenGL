@@ -261,6 +261,12 @@ class MainActivity : AppCompatActivity() {
             "使用多重采样缓冲帧实现抗锯齿",
             IMyNativeRendererType.SAMPLE_TYPE_ANIT_ALIASING
         )
+        addItem(
+            i++, R.mipmap.advanced_lighting,
+            "高级光照-Blinn-Phong",
+            "使用Blinn-Phong 优化镜面反射",
+            IMyNativeRendererType.SAMPLE_TYPE_ADVANCED_LIGHTING
+        )
     }
 
     private fun addItem(index: Int, redId: Int, title: String, subtitle: String, type: Int) {

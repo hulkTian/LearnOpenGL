@@ -30,6 +30,7 @@
 #include "advanced_opengl/instancing/Instancing.h"
 #include "advanced_opengl/instancing/Asteroids.h"
 #include "advanced_opengl/anti_aliasing/AnitAliasing.h"
+#include "advanced_light/AdvancedLighting.h"
 #include <NativeTriangle7.h>
 #include <NativeTriangle6.h>
 #include <NativeTriangle.h>
@@ -184,6 +185,9 @@ void MyGLRender::SetRenderType(int renderSampleType) {
             break;
         case SAMPLE_TYPE_ANIT_ALIASING:
             m_curr_sample = new AnitAliasing();
+            break;
+        case SAMPLE_TYPE_ADVANCED_LIGHTING:
+            m_curr_sample = new AdvancedLighting();
             break;
         default:
             break;

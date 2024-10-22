@@ -20,7 +20,9 @@ public:
     virtual void Shutdown();
 
 private:
-
+    unsigned int planeVAO, planeVBO;
+    unsigned int floorTexture;
+    glm::vec3 lightPos = glm::vec3 (0.0f, 0.0f, 0.0f);
 };
 
 
