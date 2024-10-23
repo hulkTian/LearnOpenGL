@@ -43,11 +43,13 @@
 #define SAMPLE_TYPE_INSTANCING_ASTEROIDS                            SAMPLE_TYPE + 33
 #define SAMPLE_TYPE_ANIT_ALIASING                                   SAMPLE_TYPE + 34
 #define SAMPLE_TYPE_ADVANCED_LIGHTING                               SAMPLE_TYPE + 35
+#define SAMPLE_TYPE_ADVANCED_LIGHTING_GAMMA_CORRECTED               SAMPLE_TYPE + 36
 
 #define KEY_W 1
 #define KEY_S 2
 #define KEY_A 3
 #define KEY_D 4
+#define KEY_B 5
 
 #define DEFAULT_OGL_ASSETS_DIR "/data/user/0/com.example.learnopengl/files"
 
@@ -86,6 +88,8 @@ public:
             cameraUtils.ProcessKeyboard(LEFT, deltaTime);
         if (i == KEY_D)
             cameraUtils.ProcessKeyboard(RIGHT, deltaTime);
+        if (i == KEY_B)
+            cameraUtils.ProcessKeyboard(BOOLEAN, deltaTime);
     }
 
     virtual void MoveCallback(float x, float y) {

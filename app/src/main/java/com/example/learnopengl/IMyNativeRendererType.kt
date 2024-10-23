@@ -40,6 +40,7 @@ object IMyNativeRendererType {
     const val SAMPLE_TYPE_INSTANCING_ASTEROIDS = SAMPLE_TYPE + 33
     const val SAMPLE_TYPE_ANIT_ALIASING = SAMPLE_TYPE + 34
     const val SAMPLE_TYPE_ADVANCED_LIGHTING = SAMPLE_TYPE + 35
+    const val SAMPLE_TYPE_ADVANCED_LIGHTING_GAMMA_CORRECTED = SAMPLE_TYPE + 36
 }
 
 object Key {
@@ -47,4 +48,5 @@ object Key {
     const val KEY_S = 2
     const val KEY_A = 3
     const val KEY_D = 4
+    const val KEY_B = 5
 }

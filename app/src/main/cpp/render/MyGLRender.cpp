@@ -30,7 +30,8 @@
 #include "advanced_opengl/instancing/Instancing.h"
 #include "advanced_opengl/instancing/Asteroids.h"
 #include "advanced_opengl/anti_aliasing/AnitAliasing.h"
-#include "advanced_light/AdvancedLighting.h"
+#include "5_advanced_lighting/1_blinn_phong/AdvancedLighting.h"
+#include "5_advanced_lighting/2_gamma_correction/gamma_correction.h"
 #include <NativeTriangle7.h>
 #include <NativeTriangle6.h>
 #include <NativeTriangle.h>
@@ -188,6 +189,9 @@ void MyGLRender::SetRenderType(int renderSampleType) {
             break;
         case SAMPLE_TYPE_ADVANCED_LIGHTING:
             m_curr_sample = new AdvancedLighting();
+            break;
+        case SAMPLE_TYPE_ADVANCED_LIGHTING_GAMMA_CORRECTED:
+            m_curr_sample = new gamma_correction();
             break;
         default:
             break;

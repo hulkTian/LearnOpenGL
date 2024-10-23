@@ -124,6 +124,8 @@ class NativeRenderActivity : Activity() {
             || type == IMyNativeRendererType.SAMPLE_TYPE_INSTANCING_ASTEROIDS
             || type == IMyNativeRendererType.SAMPLE_TYPE_ANIT_ALIASING
             || type == IMyNativeRendererType.SAMPLE_TYPE_ADVANCED_LIGHTING
+            || type == IMyNativeRendererType.SAMPLE_TYPE_ADVANCED_LIGHTING_GAMMA_CORRECTED
+
         ) {
             binding.llClick.visibility = View.VISIBLE
             binding.btW.setOnClickListener {
@@ -142,9 +144,19 @@ class NativeRenderActivity : Activity() {
                 mRenderer?.processInput(Key.KEY_D)
                 mGLSurfaceView?.requestRender()
             }
+            if (type == IMyNativeRendererType.SAMPLE_TYPE_ADVANCED_LIGHTING_GAMMA_CORRECTED) {
+                binding.btB.visibility = View.VISIBLE
+                binding.btB.setOnClickListener {
+                    mRenderer?.processInput(Key.KEY_B)
+                    mGLSurfaceView?.requestRender()
+                }
+            } else {
+                binding.btB.visibility = View.GONE
+            }
         } else {
             binding.llClick.visibility = View.GONE
         }
+
     }
 
     override fun onResume() {

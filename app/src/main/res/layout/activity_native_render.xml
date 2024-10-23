@@ -48,6 +48,13 @@
             android:layout_marginStart="10dp"
             android:layout_toEndOf="@+id/bt_A"
             android:text="D" />
+        <Button
+            android:id="@+id/bt_B"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/bt_D"
+            android:text="B" />
     </LinearLayout>
 
 

@@ -267,6 +267,12 @@ class MainActivity : AppCompatActivity() {
             "使用Blinn-Phong 优化镜面反射",
             IMyNativeRendererType.SAMPLE_TYPE_ADVANCED_LIGHTING
         )
+        addItem(
+            i++, R.mipmap.advanced_lighting_gamma_correction,
+            "高级光照-Gamma Correction",
+            "Gamma 校正使光照颜色更自然",
+            IMyNativeRendererType.SAMPLE_TYPE_ADVANCED_LIGHTING_GAMMA_CORRECTED
+        )
     }
 
     private fun addItem(index: Int, redId: Int, title: String, subtitle: String, type: Int) {

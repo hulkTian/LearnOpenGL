@@ -34,6 +34,11 @@ public:
     /**
      * Loads a texture from assets/texture/<name>
      */
+    static GLuint loadTexture(char const * path, bool gammaCorrection);
+
+    /**
+     * Loads a texture from assets/texture/<name>
+     */
     static GLuint loadTgaTexture(const char *fileName, const bool flip = true,
                                  unsigned int texture_warp_s = GL_CLAMP_TO_EDGE,
                                  unsigned int texture_warp_t = GL_CLAMP_TO_EDGE,

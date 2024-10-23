@@ -116,7 +116,8 @@ char *GLUtils::openTextFile(const char *path) {
  * @param fragmentSource 片段着色器代码字符串
  * @return 着色器程序id
  */
-GLuint GLUtils::createProgram(const char *vertexPath, const char *fragmentPath, const char *geometryPath) {
+GLuint
+GLUtils::createProgram(const char *vertexPath, const char *fragmentPath, const char *geometryPath) {
     //加载顶点着色器代码
     const char *vertexCode = openTextFile(vertexPath);
 
@@ -332,4 +333,61 @@ GLuint GLUtils::loadCubemap(const std::vector<std::string> faces, const bool fli
         }
     FUN_END_TIME("GLUtils::loadCubemap")
     return textureId;
+}
+
+/**
+ * 加载纹理图片
+ * @param path 图片路径
+ * @param gammaCorrection 纹理是否需要从非线性颜色空间转到线性颜色空间
+ * @return
+ */
+GLuint GLUtils::loadTexture(const char *path, bool gammaCorrection) {
+    GLuint textureID;
+    FUN_BEGIN_TIME("GLUtils::loadTexture")
+        glGenTextures(1, &textureID);
+
+        // 打开assets中的文件
+        AAsset *asset = loadAsset(path);
+
+        // 获取文件大小
+        off_t assetLength = AAsset_getLength(asset);
+        void *assetBuffer = malloc(assetLength);
+        AAsset_read(asset, assetBuffer, assetLength);
+        AAsset_close(asset);
+
+        int width, height, nrComponents;
+        unsigned char *data = stbi_load_from_memory(static_cast<stbi_uc *>(assetBuffer),
+                                                    static_cast<int>(assetLength),
+                                                    &width, &height,
+                                                    &nrComponents, 0);
+        if (data) {
+            GLenum internalFormat;
+            GLenum dataFormat;
+            if (nrComponents == 1) {
+                internalFormat = dataFormat = GL_RED;
+            } else if (nrComponents == 3) {
+                internalFormat = gammaCorrection ? GL_SRGB8 : GL_RGB;
+                dataFormat = GL_RGB;
+            } else if (nrComponents == 4) {
+                internalFormat = gammaCorrection ? GL_SRGB8_ALPHA8 : GL_RGBA;
+                dataFormat = GL_RGBA;
+            }
+
+            glBindTexture(GL_TEXTURE_2D, textureID);
+            glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, dataFormat, GL_UNSIGNED_BYTE, data);
+            // todo 需要判断设备是否支持 GL_SRGB8纹理生成多级渐远纹理
+            glGenerateMipmap(GL_TEXTURE_2D);
+
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+            stbi_image_free(data);
+        } else {
+            LOGE("Texture failed to load at path: %s", path)
+            stbi_image_free(data);
+        }
+    FUN_END_TIME("GLUtils::loadTexture")
+    return textureID;
 }
