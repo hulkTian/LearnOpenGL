@@ -201,7 +201,7 @@ void LightCastersDirectional::Draw() {
     setFloat(m_ProgramObj, "material.shininess", 32.0f);
 
     // view/projection transformations
-    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom), m_Width / m_Height, 0.1f,
+    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom), SCR_WIDTH / SCR_HEIGHT, 0.1f,
                                             100.0f);
     setMat4(m_ProgramObj, "projection", projection);
     setMat4(m_ProgramObj, "view", cameraUtils.GetViewMatrix());

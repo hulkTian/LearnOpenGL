@@ -271,7 +271,7 @@ void MultipleLights::DrawDefault() {
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, specularMap);
 
-    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom),m_Width / m_Height, 0.1f,100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom), SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
     glm::mat4 view = cameraUtils.GetViewMatrix();
     setMat4(m_ProgramObj, "projection", projection);
     setMat4(m_ProgramObj, "view", view);
@@ -378,7 +378,7 @@ void MultipleLights::DrawDesert() {
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, specularMap);
 
-    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom),m_Width / m_Height, 0.1f,100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom), SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
     glm::mat4 view = cameraUtils.GetViewMatrix();
     setMat4(m_ProgramObj, "projection", projection);
     setMat4(m_ProgramObj, "view", view);
@@ -489,7 +489,7 @@ void MultipleLights::DrawFactory() {
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, specularMap);
 
-    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom),m_Width / m_Height, 0.1f,100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom), SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
     glm::mat4 view = cameraUtils.GetViewMatrix();
     setMat4(m_ProgramObj, "projection", projection);
     setMat4(m_ProgramObj, "view", view);
@@ -601,7 +601,7 @@ void MultipleLights::DrawHorror() {
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, specularMap);
 
-    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom),m_Width / m_Height, 0.1f,100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom), SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
     glm::mat4 view = cameraUtils.GetViewMatrix();
     setMat4(m_ProgramObj, "projection", projection);
     setMat4(m_ProgramObj, "view", view);
@@ -712,7 +712,7 @@ void MultipleLights::DrawBiochemicalLab() {
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, specularMap);
 
-    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom),m_Width / m_Height, 0.1f,100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom), SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
     glm::mat4 view = cameraUtils.GetViewMatrix();
     setMat4(m_ProgramObj, "projection", projection);
     setMat4(m_ProgramObj, "view", view);

@@ -115,7 +115,7 @@ void ReflectionMode::Draw() {
     // 摄像机位置，和法向量一起计算出反射方向，作为获取天空纹理的方向向量
     setVec3(m_ProgramObj_mode, "cameraPos", cameraUtils.Position);
 
-    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom), m_Width / m_Height, 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom), SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
     glm::mat4 view = cameraUtils.GetViewMatrix();
     setMat4(m_ProgramObj_mode, "projection", projection);
     setMat4(m_ProgramObj_mode, "view", view);

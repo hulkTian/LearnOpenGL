@@ -133,7 +133,7 @@ void CameraAutoMove::Draw() {
 
     // 透视投影矩阵
     glm::mat4 projection = glm::mat4(1.0f);
-    projection = glm::perspective(glm::radians(cameraUtils.Zoom), m_Width / m_Height, 0.01f, 100.0f);
+    projection = glm::perspective(glm::radians(cameraUtils.Zoom), SCR_WIDTH / SCR_HEIGHT, 0.01f, 100.0f);
     setMat4(m_ProgramObj, "projection", projection);
 
     glBindVertexArray(VAO);

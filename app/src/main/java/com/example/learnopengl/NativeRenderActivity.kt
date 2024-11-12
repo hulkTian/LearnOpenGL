@@ -125,7 +125,7 @@ class NativeRenderActivity : Activity() {
             || type == IMyNativeRendererType.SAMPLE_TYPE_ANIT_ALIASING
             || type == IMyNativeRendererType.SAMPLE_TYPE_ADVANCED_LIGHTING
             || type == IMyNativeRendererType.SAMPLE_TYPE_ADVANCED_LIGHTING_GAMMA_CORRECTED
-
+            || type == IMyNativeRendererType.SAMPLE_TYPE_SHADOW_MAPPING_BASE
         ) {
             binding.llClick.visibility = View.VISIBLE
             binding.btW.setOnClickListener {

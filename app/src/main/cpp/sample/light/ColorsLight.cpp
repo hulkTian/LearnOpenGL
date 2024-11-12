@@ -140,7 +140,7 @@ void ColorsLight::Draw() {
     setMat4(m_ProgramObj, "model", model);
 
     glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom),
-                                            m_Width / m_Height,
+                                            SCR_WIDTH / SCR_HEIGHT,
                                             0.1f, 100.0f);
     glm::mat4 view = cameraUtils.GetViewMatrix();
     setMat4(m_ProgramObj, "projection", projection);

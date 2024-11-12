@@ -174,7 +174,7 @@ void AnitAliasing::Draw() {
     glUseProgram(m_ProgramObj);
     glm::mat4 model = glm::mat4(1.0f);
     glm::mat4 view = cameraUtils.GetViewMatrix();
-    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom), m_Width / m_Height, 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom), SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
     setMat4(m_ProgramObj, "view", view);
     setMat4(m_ProgramObj, "projection", projection);
     setMat4(m_ProgramObj, "model", model);
@@ -186,7 +186,7 @@ void AnitAliasing::Draw() {
     // 2. now blit multisampled buffer(s) to normal colorbuffer of intermediate FBO. Image is stored in screenTexture
     glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer); // 多重采样帧缓冲作为源帧缓冲
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, intermediateFBO); // 中间层帧缓冲作为目标帧缓冲
-    glBlitFramebuffer(0, 0, m_Width, m_Height, 0, 0, m_Width, m_Height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    glBlitFramebuffer(0, 0, SCR_WIDTH, SCR_HEIGHT, 0, 0, SCR_WIDTH, SCR_HEIGHT, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
     // 3. now render quad with scene's visuals as its texture image
     glBindFramebuffer(GL_FRAMEBUFFER, 0);

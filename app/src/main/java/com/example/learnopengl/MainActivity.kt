@@ -273,6 +273,18 @@ class MainActivity : AppCompatActivity() {
             "Gamma 校正使光照颜色更自然",
             IMyNativeRendererType.SAMPLE_TYPE_ADVANCED_LIGHTING_GAMMA_CORRECTED
         )
+        addItem(
+            i++, R.mipmap.shadow_mapping_depth,
+            "高级光照-深度贴图",
+            "使用帧缓冲获取场景深度贴图",
+            IMyNativeRendererType.SAMPLE_TYPE_SHADOW_MAPPING_DEPTH
+        )
+        addItem(
+            i++, R.mipmap.shadow_mapping_base,
+            "高级光照-渲染阴影",
+            "使用帧缓冲获取场景深度贴图，在正常的场景中使用深度值渲染阴影",
+            IMyNativeRendererType.SAMPLE_TYPE_SHADOW_MAPPING_BASE
+        )
     }
 
     private fun addItem(index: Int, redId: Int, title: String, subtitle: String, type: Int) {

@@ -158,7 +158,7 @@ void CubeMapsReflection::Draw() {
     glUseProgram(m_ProgramObj_cube);
     glm::mat4 model = glm::mat4(1.0f);
     glm::mat4 view = cameraUtils.GetViewMatrix();
-    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom), m_Width / m_Height, 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom), SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
     setMat4(m_ProgramObj_cube, "model", model);
     setMat4(m_ProgramObj_cube, "view", view);
     setMat4(m_ProgramObj_cube, "projection", projection);

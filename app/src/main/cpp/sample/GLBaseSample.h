@@ -44,6 +44,8 @@
 #define SAMPLE_TYPE_ANIT_ALIASING                                   SAMPLE_TYPE + 34
 #define SAMPLE_TYPE_ADVANCED_LIGHTING                               SAMPLE_TYPE + 35
 #define SAMPLE_TYPE_ADVANCED_LIGHTING_GAMMA_CORRECTED               SAMPLE_TYPE + 36
+#define SAMPLE_TYPE_SHADOW_MAPPING_DEPTH                            SAMPLE_TYPE + 37
+#define SAMPLE_TYPE_SHADOW_MAPPING_BASE                             SAMPLE_TYPE + 38
 
 #define KEY_W 1
 #define KEY_S 2
@@ -68,13 +70,13 @@ public:
 
     virtual void Change(float width, float height) {
         LOGD("Change() width = %f , height = %f\n", width, height)
-        m_Width = width;
-        m_Height = height;
+        SCR_WIDTH = width;
+        SCR_HEIGHT = height;
         // Set the viewport
         // 通知OpenGL ES 用于绘制的2D渲染表面的原点、宽度和高度。
         // 在OpenGL ES 中，视口(Viewport) 定义所有OpenGL ES 渲染操作最终显示的2D矩形
         // 视口(Viewport) 由原点坐标(x,y)和宽度(width) 、高度(height)定义。
-        glViewport(0, 0, m_Width, m_Height);
+        glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
     }
 
     virtual void Draw() = 0;
@@ -116,8 +118,8 @@ protected:
     /**
      * 屏幕宽高
      */
-    float m_Width;
-    float m_Height;
+    float SCR_WIDTH;
+    float SCR_HEIGHT;
     CameraUtils cameraUtils = CameraUtils(glm::vec3(0.0f, 0.0f,  3.0f));
     float deltaTime = 0.0f; // 当前帧花费的时间
 };

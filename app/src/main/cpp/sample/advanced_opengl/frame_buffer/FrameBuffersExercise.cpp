@@ -194,7 +194,7 @@ void FrameBuffersExercise::Draw() {
     glm::mat4 view = cameraUtils.GetViewMatrix();
     cameraUtils.Yaw -= 180.0f;//恢复摄像机Yaw角
     cameraUtils.ProcessMouseMovement(0, 0, true);
-    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom), m_Width / m_Height, 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom), SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
     setMat4(m_ProgramObj, "view", view);
     setMat4(m_ProgramObj, "projection", projection);
     // cubes

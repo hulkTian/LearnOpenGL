@@ -32,6 +32,8 @@
 #include "advanced_opengl/anti_aliasing/AnitAliasing.h"
 #include "5_advanced_lighting/1_blinn_phong/AdvancedLighting.h"
 #include "5_advanced_lighting/2_gamma_correction/gamma_correction.h"
+#include "5_advanced_lighting/3_shadow_mapping_depth/shadow_mapping_depth.h"
+#include "5_advanced_lighting/4_shadow_mapping_base/shadow_mapping_base.h"
 #include <NativeTriangle7.h>
 #include <NativeTriangle6.h>
 #include <NativeTriangle.h>
@@ -193,6 +195,12 @@ void MyGLRender::SetRenderType(int renderSampleType) {
         case SAMPLE_TYPE_ADVANCED_LIGHTING_GAMMA_CORRECTED:
             m_curr_sample = new gamma_correction();
             break;
+        case SAMPLE_TYPE_SHADOW_MAPPING_DEPTH:
+            m_curr_sample = new shadow_mapping_depth();
+            break;
+        case SAMPLE_TYPE_SHADOW_MAPPING_BASE:
+            m_curr_sample = new shadow_mapping_base();
+            break;
         default:
             break;
     }
@@ -216,7 +224,9 @@ void MyGLRender::OnSurfaceCreated(JNIEnv *env, jobject assetManager) {
         m_before_sample = nullptr;
     }
     if (m_curr_sample) {
+        LOGD("Create start")
         m_curr_sample->Create();
+        LOGD("Create end")
     }
 }
 
@@ -229,7 +239,9 @@ void MyGLRender::OnSurfaceChanged(int width, int height) {
 
 void MyGLRender::OnDrawFrame() {
     if (m_curr_sample) {
+        LOGD("Draw start")
         m_curr_sample->Draw();
+        LOGD("Draw end")
     }
 }
 
