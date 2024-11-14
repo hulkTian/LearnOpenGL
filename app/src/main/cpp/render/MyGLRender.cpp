@@ -34,6 +34,10 @@
 #include "5_advanced_lighting/2_gamma_correction/gamma_correction.h"
 #include "5_advanced_lighting/3_shadow_mapping_depth/shadow_mapping_depth.h"
 #include "5_advanced_lighting/4_shadow_mapping_base/shadow_mapping_base.h"
+#include "5_advanced_lighting/5_normal_mapping/normal_mapping.h"
+#include "5_advanced_lighting/6_parallax_mapping/parallax_mapping.h"
+#include "5_advanced_lighting/7_steep_parallax_mapping/steep_parallax_mapping.h"
+#include "5_advanced_lighting/8_parallax_occlusion_mapping/parallax_occlusion_mapping.h"
 #include <NativeTriangle7.h>
 #include <NativeTriangle6.h>
 #include <NativeTriangle.h>
@@ -200,6 +204,18 @@ void MyGLRender::SetRenderType(int renderSampleType) {
             break;
         case SAMPLE_TYPE_SHADOW_MAPPING_BASE:
             m_curr_sample = new shadow_mapping_base();
+            break;
+        case SAMPLE_TYPE_NORMAL_MAPPING:
+            m_curr_sample = new normal_mapping();
+            break;
+        case SAMPLE_TYPE_PARALLAX_MAPPING:
+            m_curr_sample = new parallax_mapping();
+            break;
+        case SAMPLE_TYPE_STEEP_PARALLAX_MAPPING:
+            m_curr_sample = new steep_parallax_mapping();
+            break;
+        case SAMPLE_TYPE_PARALLAX_OCCLUSION_MAPPING:
+            m_curr_sample = new parallax_occlusion_mapping();
             break;
         default:
             break;

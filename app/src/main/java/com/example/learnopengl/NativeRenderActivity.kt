@@ -126,6 +126,10 @@ class NativeRenderActivity : Activity() {
             || type == IMyNativeRendererType.SAMPLE_TYPE_ADVANCED_LIGHTING
             || type == IMyNativeRendererType.SAMPLE_TYPE_ADVANCED_LIGHTING_GAMMA_CORRECTED
             || type == IMyNativeRendererType.SAMPLE_TYPE_SHADOW_MAPPING_BASE
+            || type == IMyNativeRendererType.SAMPLE_TYPE_NORMAL_MAPPING
+            || type == IMyNativeRendererType.SAMPLE_TYPE_PARALLAX_MAPPING
+            || type == IMyNativeRendererType.SAMPLE_TYPE_STEEP_PARALLAX_MAPPING
+            || type == IMyNativeRendererType.SAMPLE_TYPE_PARALLAX_OCCLUSION_MAPPING
         ) {
             binding.llClick.visibility = View.VISIBLE
             binding.btW.setOnClickListener {
@@ -215,6 +219,10 @@ class NativeRenderActivity : Activity() {
             || type == IMyNativeRendererType.SAMPLE_TYPE_COORDINATE
             || type == IMyNativeRendererType.SAMPLE_TYPE_CAMERA
             || type == IMyNativeRendererType.SAMPLE_TYPE_COLORS_MATERIAL
+            || type == IMyNativeRendererType.SAMPLE_TYPE_NORMAL_MAPPING
+            || type == IMyNativeRendererType.SAMPLE_TYPE_PARALLAX_MAPPING
+            || type == IMyNativeRendererType.SAMPLE_TYPE_STEEP_PARALLAX_MAPPING
+            || type == IMyNativeRendererType.SAMPLE_TYPE_PARALLAX_OCCLUSION_MAPPING
         ) {
             glSurfaceView.renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY
         } else {

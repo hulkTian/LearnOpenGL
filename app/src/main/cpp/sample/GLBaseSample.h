@@ -46,6 +46,10 @@
 #define SAMPLE_TYPE_ADVANCED_LIGHTING_GAMMA_CORRECTED               SAMPLE_TYPE + 36
 #define SAMPLE_TYPE_SHADOW_MAPPING_DEPTH                            SAMPLE_TYPE + 37
 #define SAMPLE_TYPE_SHADOW_MAPPING_BASE                             SAMPLE_TYPE + 38
+#define SAMPLE_TYPE_NORMAL_MAPPING                                  SAMPLE_TYPE + 39
+#define SAMPLE_TYPE_PARALLAX_MAPPING                                SAMPLE_TYPE + 40
+#define SAMPLE_TYPE_STEEP_PARALLAX_MAPPING                          SAMPLE_TYPE + 41
+#define SAMPLE_TYPE_PARALLAX_OCCLUSION_MAPPING                      SAMPLE_TYPE + 42
 
 #define KEY_W 1
 #define KEY_S 2

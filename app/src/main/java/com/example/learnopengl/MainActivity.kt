@@ -285,6 +285,36 @@ class MainActivity : AppCompatActivity() {
             "使用帧缓冲获取场景深度贴图，在正常的场景中使用深度值渲染阴影",
             IMyNativeRendererType.SAMPLE_TYPE_SHADOW_MAPPING_BASE
         )
+        addItem(
+            i++, R.mipmap.normal_mapping,
+            "高级光照-法线贴图",
+            "通过法线贴图让平面在光照下更加真实",
+            IMyNativeRendererType.SAMPLE_TYPE_NORMAL_MAPPING
+        )
+        addItem(
+            i++, R.mipmap.parallax_mapping,
+            "高级光照-视差贴图",
+            "通过视差贴图让平面产生高度差效果",
+            IMyNativeRendererType.SAMPLE_TYPE_PARALLAX_MAPPING
+        )
+        addItem(
+            i++, R.mipmap.steep_parallax_mapping,
+            "高级光照-陡峭视差映射",
+            "解决普通视差贴图计算中存在的陡峭的高度导致的不真实的问题",
+            IMyNativeRendererType.SAMPLE_TYPE_STEEP_PARALLAX_MAPPING
+        )
+        addItem(
+            i++, R.mipmap.steep_parallax_mapping,
+            "高级光照-陡峭视差映射",
+            "解决普通视差贴图计算中存在的陡峭的高度导致的不真实的问题",
+            IMyNativeRendererType.SAMPLE_TYPE_STEEP_PARALLAX_MAPPING
+        )
+        addItem(
+            i++, R.mipmap.parallax_occlusion_mapping,
+            "高级光照-视差遮蔽映射",
+            "在陡峭视差映射基础上增加偏移的纹理坐标的线性插值计算，使高度效果更柔和",
+            IMyNativeRendererType.SAMPLE_TYPE_PARALLAX_OCCLUSION_MAPPING
+        )
     }
 
     private fun addItem(index: Int, redId: Int, title: String, subtitle: String, type: Int) {

@@ -15,7 +15,7 @@ void Model::Draw(GLuint programId) {
 
 void Model::loadModel(string const &path) {
     Assimp::Importer importer;
-    // 后期处理指令：aiProcess_Triangulate 将不是三角形图元的形状转为三角形；aiProcess_FlipUVs 反转纹理y轴；
+    // 后期处理指令：aiProcess_Triangulate 将不是三角形图元的形状转为三角形；aiProcess_FlipUVs 反转纹理y轴；aiProcess_CalcTangentSpace 计算切线和副切线
     const aiScene *scene = importer.ReadFile(path,
                                              aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
     // 判断场景和根节点是否为空，检查flag标记判断数据是否加载完整
@@ -107,20 +107,17 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
     if (mesh->mMaterialIndex >= 0) {
         aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
         // 1. diffuse maps
-        vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE,
-                                                           "texture_diffuse");
+        vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
         textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
         // 2. specular maps
-        vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR,
-                                                            "texture_specular");
+        vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
         textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
         // 3. normal maps
-        std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_NORMALS,
-                                                               "texture_normal");
+        // Assimp的aiTextureType_NORMAL并不会加载它的法线贴图，而aiTextureType_HEIGHT却能，所以我们经常这样加载它们：
+        std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
         textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
         // 4. height maps，反射贴图放在这里
-        std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT,
-                                                               "texture_height");
+        std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
         textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
     }
 
