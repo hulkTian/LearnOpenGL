@@ -12,6 +12,8 @@ import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
+import android.widget.SeekBar
+import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import com.example.learnopengl.databinding.ActivityNativeRenderBinding
@@ -130,6 +132,7 @@ class NativeRenderActivity : Activity() {
             || type == IMyNativeRendererType.SAMPLE_TYPE_PARALLAX_MAPPING
             || type == IMyNativeRendererType.SAMPLE_TYPE_STEEP_PARALLAX_MAPPING
             || type == IMyNativeRendererType.SAMPLE_TYPE_PARALLAX_OCCLUSION_MAPPING
+            || type == IMyNativeRendererType.SAMPLE_TYPE_HDR
         ) {
             binding.llClick.visibility = View.VISIBLE
             binding.btW.setOnClickListener {
@@ -148,7 +151,8 @@ class NativeRenderActivity : Activity() {
                 mRenderer?.processInput(Key.KEY_D)
                 mGLSurfaceView?.requestRender()
             }
-            if (type == IMyNativeRendererType.SAMPLE_TYPE_ADVANCED_LIGHTING_GAMMA_CORRECTED) {
+            if (type == IMyNativeRendererType.SAMPLE_TYPE_ADVANCED_LIGHTING_GAMMA_CORRECTED
+                || type == IMyNativeRendererType.SAMPLE_TYPE_HDR) {
                 binding.btB.visibility = View.VISIBLE
                 binding.btB.setOnClickListener {
                     mRenderer?.processInput(Key.KEY_B)
@@ -161,6 +165,26 @@ class NativeRenderActivity : Activity() {
             binding.llClick.visibility = View.GONE
         }
 
+        if (type == IMyNativeRendererType.SAMPLE_TYPE_HDR) {
+            binding.sbSeekBar.setOnSeekBarChangeListener(object:OnSeekBarChangeListener{
+                override fun onProgressChanged(
+                    seekBar: SeekBar?,
+                    progress: Int,
+                    fromUser: Boolean
+                ) {
+                    mRenderer?.progressChanged(progress)
+                    mGLSurfaceView?.requestRender()
+                }
+
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                }
+
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                }
+            })
+        } else {
+            binding.sbSeekBar.visibility = View.GONE
+        }
     }
 
     override fun onResume() {

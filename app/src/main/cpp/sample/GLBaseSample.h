@@ -50,6 +50,7 @@
 #define SAMPLE_TYPE_PARALLAX_MAPPING                                SAMPLE_TYPE + 40
 #define SAMPLE_TYPE_STEEP_PARALLAX_MAPPING                          SAMPLE_TYPE + 41
 #define SAMPLE_TYPE_PARALLAX_OCCLUSION_MAPPING                      SAMPLE_TYPE + 42
+#define SAMPLE_TYPE_HDR                                             SAMPLE_TYPE + 43
 
 #define KEY_W 1
 #define KEY_S 2
@@ -98,6 +99,10 @@ public:
             cameraUtils.ProcessKeyboard(BOOLEAN, deltaTime);
     }
 
+    virtual void ProgressChanged(int i) {
+        seek = i;
+    }
+
     virtual void MoveCallback(float x, float y) {
         float xpos = static_cast<float>(x);
         float ypos = static_cast<float>(y);
@@ -126,6 +131,8 @@ protected:
     float SCR_HEIGHT;
     CameraUtils cameraUtils = CameraUtils(glm::vec3(0.0f, 0.0f,  3.0f));
     float deltaTime = 0.0f; // 当前帧花费的时间
+    // 进度条滑动值范围：0-100
+    unsigned int seek = 0;
 };
 
 #endif //LEARNOPENGL_GLBASESAMPLE_H

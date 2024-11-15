@@ -38,6 +38,7 @@
 #include "5_advanced_lighting/6_parallax_mapping/parallax_mapping.h"
 #include "5_advanced_lighting/7_steep_parallax_mapping/steep_parallax_mapping.h"
 #include "5_advanced_lighting/8_parallax_occlusion_mapping/parallax_occlusion_mapping.h"
+#include "5_advanced_lighting/9_hdr/hdr.h"
 #include <NativeTriangle7.h>
 #include <NativeTriangle6.h>
 #include <NativeTriangle.h>
@@ -217,6 +218,9 @@ void MyGLRender::SetRenderType(int renderSampleType) {
         case SAMPLE_TYPE_PARALLAX_OCCLUSION_MAPPING:
             m_curr_sample = new parallax_occlusion_mapping();
             break;
+        case SAMPLE_TYPE_HDR:
+            m_curr_sample = new hdr();
+            break;
         default:
             break;
     }
@@ -283,6 +287,16 @@ void MyGLRender::ProcessInput(int i) {
                 "MyGLRender::ProcessInput() 请注意：你应该忘记初始化你要展示的Sample类型 ，请补上初始化的代码，否则无法渲染");
     } else {
         m_curr_sample->ProcessInput(i);
+    }
+}
+
+void MyGLRender:: ProgressChanged(int i) {
+    LOGD("MyGLRender::ProgressChanged key = %d", i)
+    if (m_curr_sample == nullptr) {
+        throw MyGLException(
+                "MyGLRender::ProgressChanged() 请注意：你应该忘记初始化你要展示的Sample类型 ，请补上初始化的代码，否则无法渲染");
+    } else {
+        m_curr_sample->ProgressChanged(i);
     }
 }
 

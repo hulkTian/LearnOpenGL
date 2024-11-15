@@ -21,6 +21,8 @@ public:
 
     void ProcessInput(int i);
 
+    void ProgressChanged(int i);
+
     void MoveCallback(float x, float y);
 
     void OnSurfaceCreated(JNIEnv *env, jobject assetManager);

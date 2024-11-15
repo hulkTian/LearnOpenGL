@@ -34,6 +34,10 @@ class MyNativeRenderer(activity: Activity) : GLSurfaceView.Renderer {
         nativeProcessInput(key)
     }
 
+    fun progressChanged(progress: Int) {
+        nativeProgressChanged(progress)
+    }
+
     fun moveCallback(x: Float, y: Float) {
         nativeMoveCallback(x, y)
     }
@@ -52,6 +56,7 @@ class MyNativeRenderer(activity: Activity) : GLSurfaceView.Renderer {
      * 处理按钮点击事件：
      */
     private external fun nativeProcessInput(key: Int)
+    private external fun nativeProgressChanged(progress: Int)
 
     private external fun nativeMoveCallback(x: Float, y: Float)
 

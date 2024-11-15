@@ -30,7 +30,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_toEndOf="@+id/bt_w"
             android:text="S" />
 
         <Button
@@ -38,7 +37,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_toEndOf="@+id/bt_S"
             android:text="A" />
 
         <Button
@@ -46,16 +44,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_toEndOf="@+id/bt_A"
             android:text="D" />
         <Button
             android:id="@+id/bt_B"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_toEndOf="@+id/bt_D"
             android:text="B" />
+
     </LinearLayout>
 
-
+    <androidx.appcompat.widget.AppCompatSeekBar
+        android:id="@+id/sb_seekBar"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="100dp"
+        android:max="100"
+        android:min="0"/>
 </RelativeLayout>

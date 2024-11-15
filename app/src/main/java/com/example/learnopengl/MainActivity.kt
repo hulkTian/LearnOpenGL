@@ -315,6 +315,12 @@ class MainActivity : AppCompatActivity() {
             "在陡峭视差映射基础上增加偏移的纹理坐标的线性插值计算，使高度效果更柔和",
             IMyNativeRendererType.SAMPLE_TYPE_PARALLAX_OCCLUSION_MAPPING
         )
+        addItem(
+            i++, R.mipmap.hdr,
+            "高级光照-HDR",
+            "使用高精度颜色缓冲获取更丰富的色彩还原",
+            IMyNativeRendererType.SAMPLE_TYPE_HDR
+        )
     }
 
     private fun addItem(index: Int, redId: Int, title: String, subtitle: String, type: Int) {

@@ -41,3 +41,9 @@ JNIEXPORT void JNICALL
 Java_com_example_learnopengl_MyNativeRenderer_nativeOnDestroy(JNIEnv *env, jobject thiz) {
     MyGLRender::DestroyInstance();
 }
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_example_learnopengl_MyNativeRenderer_nativeProgressChanged(JNIEnv *env, jobject thiz,
+                                                                    jint progress) {
+    MyGLRender::GetInstance()->ProgressChanged(progress);
+}
