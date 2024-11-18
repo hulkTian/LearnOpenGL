@@ -51,6 +51,7 @@
 #define SAMPLE_TYPE_STEEP_PARALLAX_MAPPING                          SAMPLE_TYPE + 41
 #define SAMPLE_TYPE_PARALLAX_OCCLUSION_MAPPING                      SAMPLE_TYPE + 42
 #define SAMPLE_TYPE_HDR                                             SAMPLE_TYPE + 43
+#define SAMPLE_TYPE_BLOOM                                           SAMPLE_TYPE + 44
 
 #define KEY_W 1
 #define KEY_S 2
@@ -127,8 +128,8 @@ protected:
     /**
      * 屏幕宽高
      */
-    float SCR_WIDTH;
-    float SCR_HEIGHT;
+    float SCR_WIDTH = 2208;
+    float SCR_HEIGHT = 1682;
     CameraUtils cameraUtils = CameraUtils(glm::vec3(0.0f, 0.0f,  3.0f));
     float deltaTime = 0.0f; // 当前帧花费的时间
     // 进度条滑动值范围：0-100

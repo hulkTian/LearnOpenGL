@@ -39,6 +39,7 @@
 #include "5_advanced_lighting/7_steep_parallax_mapping/steep_parallax_mapping.h"
 #include "5_advanced_lighting/8_parallax_occlusion_mapping/parallax_occlusion_mapping.h"
 #include "5_advanced_lighting/9_hdr/hdr.h"
+#include "5_advanced_lighting/10_bloom/bloom.h"
 #include <NativeTriangle7.h>
 #include <NativeTriangle6.h>
 #include <NativeTriangle.h>
@@ -220,6 +221,9 @@ void MyGLRender::SetRenderType(int renderSampleType) {
             break;
         case SAMPLE_TYPE_HDR:
             m_curr_sample = new hdr();
+            break;
+        case SAMPLE_TYPE_BLOOM:
+            m_curr_sample = new bloom();
             break;
         default:
             break;

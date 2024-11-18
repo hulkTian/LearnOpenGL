@@ -133,6 +133,7 @@ class NativeRenderActivity : Activity() {
             || type == IMyNativeRendererType.SAMPLE_TYPE_STEEP_PARALLAX_MAPPING
             || type == IMyNativeRendererType.SAMPLE_TYPE_PARALLAX_OCCLUSION_MAPPING
             || type == IMyNativeRendererType.SAMPLE_TYPE_HDR
+            || type == IMyNativeRendererType.SAMPLE_TYPE_BLOOM
         ) {
             binding.llClick.visibility = View.VISIBLE
             binding.btW.setOnClickListener {
@@ -152,7 +153,9 @@ class NativeRenderActivity : Activity() {
                 mGLSurfaceView?.requestRender()
             }
             if (type == IMyNativeRendererType.SAMPLE_TYPE_ADVANCED_LIGHTING_GAMMA_CORRECTED
-                || type == IMyNativeRendererType.SAMPLE_TYPE_HDR) {
+                || type == IMyNativeRendererType.SAMPLE_TYPE_HDR
+                || type == IMyNativeRendererType.SAMPLE_TYPE_BLOOM
+            ) {
                 binding.btB.visibility = View.VISIBLE
                 binding.btB.setOnClickListener {
                     mRenderer?.processInput(Key.KEY_B)
@@ -165,8 +168,8 @@ class NativeRenderActivity : Activity() {
             binding.llClick.visibility = View.GONE
         }
 
-        if (type == IMyNativeRendererType.SAMPLE_TYPE_HDR) {
-            binding.sbSeekBar.setOnSeekBarChangeListener(object:OnSeekBarChangeListener{
+        if (type == IMyNativeRendererType.SAMPLE_TYPE_HDR || type == IMyNativeRendererType.SAMPLE_TYPE_BLOOM) {
+            binding.sbSeekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
                 override fun onProgressChanged(
                     seekBar: SeekBar?,
                     progress: Int,

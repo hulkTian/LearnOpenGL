@@ -321,6 +321,12 @@ class MainActivity : AppCompatActivity() {
             "使用高精度颜色缓冲获取更丰富的色彩还原",
             IMyNativeRendererType.SAMPLE_TYPE_HDR
         )
+        addItem(
+            i++, R.mipmap.bloom,
+            "高级光照-泛光",
+            "使用高斯模糊实现泛光效果",
+            IMyNativeRendererType.SAMPLE_TYPE_BLOOM
+        )
     }
 
     private fun addItem(index: Int, redId: Int, title: String, subtitle: String, type: Int) {
