@@ -49,6 +49,7 @@ object IMyNativeRendererType {
     const val SAMPLE_TYPE_PARALLAX_OCCLUSION_MAPPING = SAMPLE_TYPE + 42
     const val SAMPLE_TYPE_HDR = SAMPLE_TYPE + 43
     const val SAMPLE_TYPE_BLOOM = SAMPLE_TYPE + 44
+    const val SAMPLE_TYPE_DEFERRED_SHADING = SAMPLE_TYPE + 45
 }
 
 object Key {

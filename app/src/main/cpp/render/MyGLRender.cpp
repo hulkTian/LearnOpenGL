@@ -40,6 +40,7 @@
 #include "5_advanced_lighting/8_parallax_occlusion_mapping/parallax_occlusion_mapping.h"
 #include "5_advanced_lighting/9_hdr/hdr.h"
 #include "5_advanced_lighting/10_bloom/bloom.h"
+#include "5_advanced_lighting/11_deferred_shading/deferred_shading.h"
 #include <NativeTriangle7.h>
 #include <NativeTriangle6.h>
 #include <NativeTriangle.h>
@@ -224,6 +225,9 @@ void MyGLRender::SetRenderType(int renderSampleType) {
             break;
         case SAMPLE_TYPE_BLOOM:
             m_curr_sample = new bloom();
+            break;
+        case SAMPLE_TYPE_DEFERRED_SHADING:
+            m_curr_sample = new deferred_shading();
             break;
         default:
             break;

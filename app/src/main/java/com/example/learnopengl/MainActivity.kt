@@ -327,6 +327,12 @@ class MainActivity : AppCompatActivity() {
             "使用高斯模糊实现泛光效果",
             IMyNativeRendererType.SAMPLE_TYPE_BLOOM
         )
+        addItem(
+            i++, R.mipmap.deferred_shading,
+            "高级光照-延迟着色法",
+            "",
+            IMyNativeRendererType.SAMPLE_TYPE_DEFERRED_SHADING
+        )
     }
 
     private fun addItem(index: Int, redId: Int, title: String, subtitle: String, type: Int) {

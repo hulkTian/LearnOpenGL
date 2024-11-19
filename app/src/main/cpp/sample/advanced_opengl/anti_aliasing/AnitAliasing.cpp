@@ -119,7 +119,7 @@ void AnitAliasing::Create() {
     // 生成多重采样纹理附件
     glGenTextures(1, &textureColorBufferMultiSampled);
     glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, textureColorBufferMultiSampled);
-    glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA8, 2208, 1682, GL_TRUE);
+    glTexStorage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGBA8, SCR_WIDTH, SCR_HEIGHT, GL_TRUE);
     glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
 
     // 将纹理附件附加到当前绑定的帧缓冲对象
@@ -129,7 +129,7 @@ void AnitAliasing::Create() {
     // 生成渲染缓冲对象附件
     glGenRenderbuffers(1, &rbo);
     glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-    glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8, 2208, 1682);
+    glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8, SCR_WIDTH, SCR_HEIGHT);
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
     // 将渲染缓冲对象附件附加到当前绑定的帧缓冲对象
@@ -149,7 +149,7 @@ void AnitAliasing::Create() {
     // create a color attachment texture
     glGenTextures(1, &screenTexture);
     glBindTexture(GL_TEXTURE_2D, screenTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2208, 1682, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, SCR_WIDTH, SCR_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, screenTexture, 0);
@@ -213,7 +213,6 @@ void AnitAliasing::Shutdown() {
     glDeleteTextures(1, &screenTexture);
     glDeleteBuffers(1, &framebuffer);
     glDeleteBuffers(1, &textureColorBufferMultiSampled);
-    glDeleteBuffers(1, &rbo);
     glDeleteBuffers(1, &rbo);
     glDeleteProgram(m_ProgramObj_screen);
     GLBaseSample::Shutdown();

@@ -52,6 +52,7 @@
 #define SAMPLE_TYPE_PARALLAX_OCCLUSION_MAPPING                      SAMPLE_TYPE + 42
 #define SAMPLE_TYPE_HDR                                             SAMPLE_TYPE + 43
 #define SAMPLE_TYPE_BLOOM                                           SAMPLE_TYPE + 44
+#define SAMPLE_TYPE_DEFERRED_SHADING                                SAMPLE_TYPE + 45
 
 #define KEY_W 1
 #define KEY_S 2

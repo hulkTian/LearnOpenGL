@@ -134,6 +134,7 @@ class NativeRenderActivity : Activity() {
             || type == IMyNativeRendererType.SAMPLE_TYPE_PARALLAX_OCCLUSION_MAPPING
             || type == IMyNativeRendererType.SAMPLE_TYPE_HDR
             || type == IMyNativeRendererType.SAMPLE_TYPE_BLOOM
+            || type == IMyNativeRendererType.SAMPLE_TYPE_DEFERRED_SHADING
         ) {
             binding.llClick.visibility = View.VISIBLE
             binding.btW.setOnClickListener {
