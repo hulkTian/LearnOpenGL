@@ -19,6 +19,8 @@
  *
  * 结合延迟渲染和正向渲染：复制出在几何渲染阶段中储存的深度信息，并输出到默认的帧缓冲的深度缓冲，然后才进行正向渲染。
  *
+ * 光体积：计算光照可以照亮的体积，超过体积的片段就不需要计算这个光照对片段的影响。
+ * 从而减少多光源中片段计算量。
  */
 
 #include "deferred_shading.h"
@@ -172,15 +174,26 @@ void deferred_shading::Draw() {
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
     // send light relevant uniforms
-    for (unsigned int i = 0; i < lightPositions.size(); i++)
-    {
-        setVec3(m_ProgramObj_Lighting_Pass, "lights[" + std::to_string(i) + "].Position", lightPositions[i]);
-        setVec3(m_ProgramObj_Lighting_Pass, "lights[" + std::to_string(i) + "].Color", lightColors[i]);
+    for (unsigned int i = 0; i < lightPositions.size(); i++) {
+        setVec3(m_ProgramObj_Lighting_Pass, "lights[" + std::to_string(i) + "].Position",
+                lightPositions[i]);
+        setVec3(m_ProgramObj_Lighting_Pass, "lights[" + std::to_string(i) + "].Color",
+                lightColors[i]);
         // update attenuation parameters and calculate radius
+        const float constant = 1.0f; // note that we don't send this to the shader, we assume it is always 1.0 (in our case)
         const float linear = 0.7f;
         const float quadratic = 1.8f;
         setFloat(m_ProgramObj_Lighting_Pass, "lights[" + std::to_string(i) + "].Linear", linear);
-        setFloat(m_ProgramObj_Lighting_Pass, "lights[" + std::to_string(i) + "].Quadratic", quadratic);
+        setFloat(m_ProgramObj_Lighting_Pass, "lights[" + std::to_string(i) + "].Quadratic",
+                 quadratic);
+        // then calculate radius of light volume/sphere
+        // 取光源最亮颜色分量作为公式中的亮度值
+        const float maxBrightness = std::fmaxf(std::fmaxf(lightColors[i].r, lightColors[i].g), lightColors[i].b);
+        // 256.0f / 5.0f 光照最暗亮度值带入公式，因为最暗亮度值不会是0，为提高片段着色器计算优化效率，给定一个最小亮度值。
+        // 使用光照衰减公式推到半径：
+        float radius = (-linear + std::sqrt(
+                linear * linear - 4 * quadratic * (constant - (256.0f / 5.0f) * maxBrightness))) / (2.0f * quadratic);
+        setFloat(m_ProgramObj_Lighting_Pass, "lights[" + std::to_string(i) + "].Radius", radius);
     }
     setVec3(m_ProgramObj_Lighting_Pass, "viewPos", cameraUtils.Position);
     // finally render quad
