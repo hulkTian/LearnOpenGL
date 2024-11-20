@@ -50,6 +50,7 @@ object IMyNativeRendererType {
     const val SAMPLE_TYPE_HDR = SAMPLE_TYPE + 43
     const val SAMPLE_TYPE_BLOOM = SAMPLE_TYPE + 44
     const val SAMPLE_TYPE_DEFERRED_SHADING = SAMPLE_TYPE + 45
+    const val SAMPLE_TYPE_SSAO = SAMPLE_TYPE + 46
 }
 
 object Key {

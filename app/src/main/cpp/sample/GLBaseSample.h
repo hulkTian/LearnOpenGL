@@ -53,6 +53,7 @@
 #define SAMPLE_TYPE_HDR                                             SAMPLE_TYPE + 43
 #define SAMPLE_TYPE_BLOOM                                           SAMPLE_TYPE + 44
 #define SAMPLE_TYPE_DEFERRED_SHADING                                SAMPLE_TYPE + 45
+#define SAMPLE_TYPE_SSAO                                            SAMPLE_TYPE + 46
 
 #define KEY_W 1
 #define KEY_S 2
@@ -129,8 +130,8 @@ protected:
     /**
      * 屏幕宽高
      */
-    float SCR_WIDTH = 2208;
-    float SCR_HEIGHT = 1682;
+    float SCR_WIDTH = 2560;
+    float SCR_HEIGHT = 1680;
     CameraUtils cameraUtils = CameraUtils(glm::vec3(0.0f, 0.0f,  3.0f));
     float deltaTime = 0.0f; // 当前帧花费的时间
     // 进度条滑动值范围：0-100

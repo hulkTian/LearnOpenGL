@@ -330,8 +330,14 @@ class MainActivity : AppCompatActivity() {
         addItem(
             i++, R.mipmap.deferred_shading,
             "高级光照-延迟着色法",
-            "",
+            "多光源场景使用延迟着色法优化显示性能",
             IMyNativeRendererType.SAMPLE_TYPE_DEFERRED_SHADING
+        )
+        addItem(
+            i++, R.mipmap.ssao,
+            "高级光照-SSAO",
+            "环境光遮蔽使场景更真实",
+            IMyNativeRendererType.SAMPLE_TYPE_SSAO
         )
     }
 

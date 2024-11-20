@@ -20,11 +20,7 @@ import com.example.learnopengl.databinding.ActivityNativeRenderBinding
 
 class NativeRenderActivity : Activity() {
     companion object {
-        private const val MIN_DIALOG = 1
         private const val CONTEXT_CLIENT_VERSION = 3
-        private const val MAG_DIALOG = 2
-        private const val MIN_SETTING = "min_setting"
-        private const val MAG_SETTING = "mag_setting"
         private const val TAG: String = "NativeRenderActivity"
 
         private val REQUEST_PERMISSIONS = arrayOf(
@@ -135,6 +131,7 @@ class NativeRenderActivity : Activity() {
             || type == IMyNativeRendererType.SAMPLE_TYPE_HDR
             || type == IMyNativeRendererType.SAMPLE_TYPE_BLOOM
             || type == IMyNativeRendererType.SAMPLE_TYPE_DEFERRED_SHADING
+            || type == IMyNativeRendererType.SAMPLE_TYPE_SSAO
         ) {
             binding.llClick.visibility = View.VISIBLE
             binding.btW.setOnClickListener {
