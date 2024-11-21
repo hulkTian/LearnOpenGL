@@ -54,6 +54,8 @@
 #define SAMPLE_TYPE_BLOOM                                           SAMPLE_TYPE + 44
 #define SAMPLE_TYPE_DEFERRED_SHADING                                SAMPLE_TYPE + 45
 #define SAMPLE_TYPE_SSAO                                            SAMPLE_TYPE + 46
+#define SAMPLE_TYPE_PBR_LIGHTING                                    SAMPLE_TYPE + 47
+#define SAMPLE_TYPE_PBR_LIGHTING_TEXTURED                           SAMPLE_TYPE + 48
 
 #define KEY_W 1
 #define KEY_S 2

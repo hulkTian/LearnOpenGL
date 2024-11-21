@@ -237,6 +237,10 @@ GLuint GLUtils::loadTgaTexture(const char *fileName, const bool flip,
 
         // 打开assets中的文件
         AAsset *asset = loadAsset(fileName);
+        if (asset == nullptr) {
+            LOGE("Couldn't load %s", fileName)
+            return textureId;
+        }
 
         // 获取文件大小
         off_t assetLength = AAsset_getLength(asset);
@@ -294,12 +298,21 @@ GLuint GLUtils::loadCubemap(const std::vector<std::string> faces, const bool fli
 
             // 打开assets中的文件
             AAsset *asset = loadAsset(faces[i].c_str());
+            if (asset == nullptr) {
+                LOGE("Could not open %s", faces[i].c_str())
+                return textureId;
+            }
 
             // 获取文件大小
             off_t assetLength = AAsset_getLength(asset);
             void *assetBuffer = malloc(assetLength);
-            AAsset_read(asset, assetBuffer, assetLength);
+            int num = AAsset_read(asset, assetBuffer, assetLength);
             AAsset_close(asset);
+            if (num != assetLength) {
+                LOGE("Couldn't load %s", faces[i].c_str())
+                free(assetBuffer);
+                return textureId;
+            }
 
             // 翻转y轴，使纹理坐标从底部开始
             stbi_set_flip_vertically_on_load(flip);
@@ -348,12 +361,21 @@ GLuint GLUtils::loadTexture(const char *path, bool gammaCorrection) {
 
         // 打开assets中的文件
         AAsset *asset = loadAsset(path);
+        if (asset == nullptr) {
+            LOGE("Could not open %s", path)
+            return textureID;
+        }
 
         // 获取文件大小
         off_t assetLength = AAsset_getLength(asset);
         void *assetBuffer = malloc(assetLength);
-        AAsset_read(asset, assetBuffer, assetLength);
+        int num = AAsset_read(asset, assetBuffer, assetLength);
         AAsset_close(asset);
+        if (num != assetLength) {
+            LOGE("Couldn't load %s", path)
+            free(assetBuffer);
+            return textureID;
+        }
 
         int width, height, nrComponents;
         unsigned char *data = stbi_load_from_memory(static_cast<stbi_uc *>(assetBuffer),

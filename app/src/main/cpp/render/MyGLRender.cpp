@@ -42,6 +42,8 @@
 #include "5_advanced_lighting/10_bloom/bloom.h"
 #include "5_advanced_lighting/11_deferred_shading/deferred_shading.h"
 #include "5_advanced_lighting/12_ssao/ssao.h"
+#include "6_pbr/1_lighting/pbr_lighting.h"
+#include "6_pbr/2_lighting_textured/lighting_textured.h"
 #include <NativeTriangle7.h>
 #include <NativeTriangle6.h>
 #include <NativeTriangle.h>
@@ -232,6 +234,12 @@ void MyGLRender::SetRenderType(int renderSampleType) {
             break;
         case SAMPLE_TYPE_SSAO:
             m_curr_sample = new ssao();
+            break;
+        case SAMPLE_TYPE_PBR_LIGHTING:
+            m_curr_sample = new pbr_lighting();
+            break;
+        case SAMPLE_TYPE_PBR_LIGHTING_TEXTURED:
+            m_curr_sample = new lighting_textured();
             break;
         default:
             break;

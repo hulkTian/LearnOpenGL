@@ -339,6 +339,18 @@ class MainActivity : AppCompatActivity() {
             "环境光遮蔽使场景更真实",
             IMyNativeRendererType.SAMPLE_TYPE_SSAO
         )
+        addItem(
+            i++, R.mipmap.pbr_lighting,
+            "高级光照-PBR",
+            "直接光显示PBR",
+            IMyNativeRendererType.SAMPLE_TYPE_PBR_LIGHTING
+        )
+        addItem(
+            i++, R.mipmap.pbr_lighting_textured,
+            "高级光照-PBR纹理材质",
+            "PBR纹理材质",
+            IMyNativeRendererType.SAMPLE_TYPE_PBR_LIGHTING_TEXTURED
+        )
     }
 
     private fun addItem(index: Int, redId: Int, title: String, subtitle: String, type: Int) {

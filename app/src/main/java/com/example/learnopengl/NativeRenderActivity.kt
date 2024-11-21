@@ -132,6 +132,8 @@ class NativeRenderActivity : Activity() {
             || type == IMyNativeRendererType.SAMPLE_TYPE_BLOOM
             || type == IMyNativeRendererType.SAMPLE_TYPE_DEFERRED_SHADING
             || type == IMyNativeRendererType.SAMPLE_TYPE_SSAO
+            || type == IMyNativeRendererType.SAMPLE_TYPE_PBR_LIGHTING
+            || type == IMyNativeRendererType.SAMPLE_TYPE_PBR_LIGHTING_TEXTURED
         ) {
             binding.llClick.visibility = View.VISIBLE
             binding.btW.setOnClickListener {
