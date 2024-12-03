@@ -44,6 +44,10 @@
 #include "5_advanced_lighting/12_ssao/ssao.h"
 #include "6_pbr/1_lighting/pbr_lighting.h"
 #include "6_pbr/2_lighting_textured/lighting_textured.h"
+#include "6_pbr/3_ibl_irradiance_conversion/ibl_irradiance_conversion.h"
+#include "6_pbr/4_ibl_irradiance/ibl_irradiance.h"
+#include "6_pbr/5_ibl_specular/ibl_specular.h"
+#include "6_pbr/6_ibl_specular_textured/ibl_specular_textured.h"
 #include <NativeTriangle7.h>
 #include <NativeTriangle6.h>
 #include <NativeTriangle.h>
@@ -240,6 +244,18 @@ void MyGLRender::SetRenderType(int renderSampleType) {
             break;
         case SAMPLE_TYPE_PBR_LIGHTING_TEXTURED:
             m_curr_sample = new lighting_textured();
+            break;
+        case SAMPLE_TYPE_PBR_IBL_IRRADIANCE_CONVERSION:
+            m_curr_sample = new ibl_irradiance_conversion();
+            break;
+        case SAMPLE_TYPE_PBR_IBL_IRRADIANCE:
+            m_curr_sample = new ibl_irradiance();
+            break;
+        case SAMPLE_TYPE_PBR_IBL_SPECULAR:
+            m_curr_sample = new ibl_specular();
+            break;
+        case SAMPLE_TYPE_PBR_IBL_SPECULAR_TEXTURED:
+            m_curr_sample = new ibl_specular_textured();
             break;
         default:
             break;

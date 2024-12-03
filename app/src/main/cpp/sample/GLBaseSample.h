@@ -56,6 +56,10 @@
 #define SAMPLE_TYPE_SSAO                                            SAMPLE_TYPE + 46
 #define SAMPLE_TYPE_PBR_LIGHTING                                    SAMPLE_TYPE + 47
 #define SAMPLE_TYPE_PBR_LIGHTING_TEXTURED                           SAMPLE_TYPE + 48
+#define SAMPLE_TYPE_PBR_IBL_IRRADIANCE_CONVERSION                   SAMPLE_TYPE + 49
+#define SAMPLE_TYPE_PBR_IBL_IRRADIANCE                              SAMPLE_TYPE + 50
+#define SAMPLE_TYPE_PBR_IBL_SPECULAR                                SAMPLE_TYPE + 51
+#define SAMPLE_TYPE_PBR_IBL_SPECULAR_TEXTURED                       SAMPLE_TYPE + 52
 
 #define KEY_W 1
 #define KEY_S 2

@@ -351,6 +351,30 @@ class MainActivity : AppCompatActivity() {
             "PBR纹理材质",
             IMyNativeRendererType.SAMPLE_TYPE_PBR_LIGHTING_TEXTURED
         )
+        addItem(
+            i++, R.mipmap.pbr_hdr_conversion,
+            "高级光照-PBR和HDR",
+            "HDR 环境贴图转换为立方体贴图，并将直接光照的PBR球体显示在立方体贴图中",
+            IMyNativeRendererType.SAMPLE_TYPE_PBR_IBL_IRRADIANCE_CONVERSION
+        )
+        addItem(
+            i++, R.mipmap.pbr_ibl,
+            "高级光照-PBR和IBL漫反射",
+            "IBL贴图作为环境光照渲染PBR球体",
+            IMyNativeRendererType.SAMPLE_TYPE_PBR_IBL_IRRADIANCE
+        )
+        addItem(
+            i++, R.mipmap.pbr_ibl,
+            "高级光照-PBR和IBL镜面反射",
+            "IBL贴图作为环境光照和镜面反射光照渲染PBR球体",
+            IMyNativeRendererType.SAMPLE_TYPE_PBR_IBL_SPECULAR
+        )
+        addItem(
+            i++, R.mipmap.pbr_ibl,
+            "高级光照-PBR和IBL镜面反射纹理",
+            "IBL贴图作为环境光照和镜面反射光照渲染PBR球体",
+            IMyNativeRendererType.SAMPLE_TYPE_PBR_IBL_SPECULAR_TEXTURED
+        )
     }
 
     private fun addItem(index: Int, redId: Int, title: String, subtitle: String, type: Int) {

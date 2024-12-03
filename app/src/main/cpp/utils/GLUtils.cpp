@@ -227,7 +227,8 @@ void GLUtils::checkGlError(const char *pGLOperation) {
 }
 
 //从图片中加载纹理
-GLuint GLUtils::loadTgaTexture(const char *fileName, const bool flip,
+GLuint GLUtils::loadTgaTexture(const char *fileName, GLint internalformat, GLenum format,
+                               GLenum type, const bool flip,
                                unsigned int texture_warp_s, unsigned int texture_warp_t,
                                unsigned int texture_min_filter, unsigned int texture_max_filter) {
     GLuint textureId;
@@ -267,8 +268,7 @@ GLuint GLUtils::loadTgaTexture(const char *fileName, const bool flip,
         }
 
         //加载纹理数据
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height,
-                     0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
+        glTexImage2D(GL_TEXTURE_2D, 0, internalformat, width, height, 0, format, type, imageData);
         // 生成多级渐远纹理
         glGenerateMipmap(GL_TEXTURE_2D);
         // 为当前绑定的纹理对象设置环绕、过滤方式
@@ -281,6 +281,60 @@ GLuint GLUtils::loadTgaTexture(const char *fileName, const bool flip,
         stbi_image_free(imageData);
 
     FUN_END_TIME("GLUtils::loadTgaTexture")
+    return textureId;
+}
+
+//从图片中加载纹理
+GLuint GLUtils::loadHDRTexture(const char *fileName) {
+    GLuint textureId;
+    FUN_BEGIN_TIME("GLUtils::loadHDRTexture")
+        glGenTextures(1, &textureId);
+        glBindTexture(GL_TEXTURE_2D, textureId);
+
+        // 打开assets中的文件
+        AAsset *asset = loadAsset(fileName);
+        if (asset == nullptr) {
+            LOGE("Couldn't load %s", fileName)
+            return textureId;
+        }
+
+        // 获取文件大小
+        off_t assetLength = AAsset_getLength(asset);
+        void *assetBuffer = malloc(assetLength);
+        AAsset_read(asset, assetBuffer, assetLength);
+        AAsset_close(asset);
+
+        // 翻转y轴，使纹理坐标从底部开始
+        stbi_set_flip_vertically_on_load(true);
+
+        // 使用stb_image解码图片数据
+        int width, height, channels;
+        float *imageData = stbi_loadf_from_memory(static_cast<stbi_uc *>(assetBuffer),
+                                                         static_cast<int>(assetLength),
+                                                         &width, &height,
+                                                         &channels, 0);
+        free(assetBuffer);
+
+        if (imageData == nullptr) {
+            // 图片解码失败的处理逻辑
+            LOGD("Image data is null")
+            return 0;
+        }
+
+        //加载纹理数据
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, imageData);
+        // 生成多级渐远纹理
+        glGenerateMipmap(GL_TEXTURE_2D);
+        // 为当前绑定的纹理对象设置环绕、过滤方式
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        // 释放图片数据
+        stbi_image_free(imageData);
+
+    FUN_END_TIME("GLUtils::loadHDRTexture")
     return textureId;
 }
 

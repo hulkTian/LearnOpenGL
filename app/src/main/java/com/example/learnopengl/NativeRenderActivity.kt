@@ -134,6 +134,10 @@ class NativeRenderActivity : Activity() {
             || type == IMyNativeRendererType.SAMPLE_TYPE_SSAO
             || type == IMyNativeRendererType.SAMPLE_TYPE_PBR_LIGHTING
             || type == IMyNativeRendererType.SAMPLE_TYPE_PBR_LIGHTING_TEXTURED
+            || type == IMyNativeRendererType.SAMPLE_TYPE_PBR_IBL_IRRADIANCE_CONVERSION
+            || type == IMyNativeRendererType.SAMPLE_TYPE_PBR_IBL_IRRADIANCE
+            || type == IMyNativeRendererType.SAMPLE_TYPE_PBR_IBL_SPECULAR
+            || type == IMyNativeRendererType.SAMPLE_TYPE_PBR_IBL_SPECULAR_TEXTURED
         ) {
             binding.llClick.visibility = View.VISIBLE
             binding.btW.setOnClickListener {

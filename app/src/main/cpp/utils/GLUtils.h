@@ -39,11 +39,16 @@ public:
     /**
      * Loads a texture from assets/texture/<name>
      */
-    static GLuint loadTgaTexture(const char *fileName, const bool flip = true,
+    static GLuint loadTgaTexture(const char *fileName, GLint internalformat = GL_RGBA,
+                                 GLenum format = GL_RGBA,
+                                 GLenum type = GL_UNSIGNED_BYTE,
+                                 const bool flip = true,
                                  unsigned int texture_warp_s = GL_CLAMP_TO_EDGE,
                                  unsigned int texture_warp_t = GL_CLAMP_TO_EDGE,
                                  unsigned int texture_min_filter = GL_NEAREST,
                                  unsigned int texture_max_filter = GL_NEAREST);
+
+    static GLuint loadHDRTexture(const char *fileName);
 
     /**
      * 加载立方体贴图
