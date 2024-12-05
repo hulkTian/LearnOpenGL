@@ -78,6 +78,10 @@ find_library( # Sets the name of the path variable.
 add_library(libassimp SHARED IMPORTED )
 set_target_properties(libassimp PROPERTIES IMPORTED_LOCATION "${libs}/${ANDROID_ABI}/libassimp.so")
 
+# =====  FreeType  =====
+add_library(libfreetype SHARED IMPORTED )
+set_target_properties(libfreetype PROPERTIES IMPORTED_LOCATION "${libs}/${ANDROID_ABI}/libfreetype.so")
+
 # Specifies libraries CMake should link to your target library. You
 # can link libraries from various origins, such as libraries defined in this
 # build script, prebuilt third-party libraries, or Android system libraries.
@@ -86,5 +90,6 @@ target_link_libraries(learn-opengles-lib
         EGL
         GLESv3
         android
+        libfreetype
         libassimp
         ${log-lib})

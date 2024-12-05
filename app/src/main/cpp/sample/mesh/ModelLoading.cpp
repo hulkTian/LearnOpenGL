@@ -18,7 +18,7 @@ void ModelLoading::Create() {
 
     //TODO 先把 model 文件夹拷贝到 /data/user/0/com.example.learnopengl/files 路径下，然后可以选择你要加载的模型
     std::string path(DEFAULT_OGL_ASSETS_DIR);
-    ourModel = Model(path + "/nanosuit/nanosuit.obj");
+    ourModel = Model(path + "objects/nanosuit/nanosuit.obj");
 
     //创建着色器程序,并编译着色器代码
     m_ProgramObj = GLUtils::createProgram("shaders/vs_model_loading.glsl",

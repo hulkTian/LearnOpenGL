@@ -375,6 +375,12 @@ class MainActivity : AppCompatActivity() {
             "IBL贴图作为环境光照和镜面反射光照渲染PBR球体",
             IMyNativeRendererType.SAMPLE_TYPE_PBR_IBL_SPECULAR_TEXTURED
         )
+        addItem(
+            i++, R.mipmap.text_rendering,
+            "文本渲染",
+            "使用FreeType库渲染文本",
+            IMyNativeRendererType.SAMPLE_TYPE_TEXT_RENDERING
+        )
     }
 
     private fun addItem(index: Int, redId: Int, title: String, subtitle: String, type: Int) {

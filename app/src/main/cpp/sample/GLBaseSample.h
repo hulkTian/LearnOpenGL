@@ -60,6 +60,7 @@
 #define SAMPLE_TYPE_PBR_IBL_IRRADIANCE                              SAMPLE_TYPE + 50
 #define SAMPLE_TYPE_PBR_IBL_SPECULAR                                SAMPLE_TYPE + 51
 #define SAMPLE_TYPE_PBR_IBL_SPECULAR_TEXTURED                       SAMPLE_TYPE + 52
+#define SAMPLE_TYPE_TEXT_RENDERING                                  SAMPLE_TYPE + 53
 
 #define KEY_W 1
 #define KEY_S 2
@@ -67,7 +68,7 @@
 #define KEY_D 4
 #define KEY_B 5
 
-#define DEFAULT_OGL_ASSETS_DIR "/data/user/0/com.example.learnopengl/files"
+#define DEFAULT_OGL_ASSETS_DIR "/data/data/com.example.learnopengl/"
 
 #include <GLUtils.h>
 #include "CameraUtils.h"
@@ -136,8 +137,8 @@ protected:
     /**
      * 屏幕宽高
      */
-    float SCR_WIDTH = 2560;
-    float SCR_HEIGHT = 1680;
+    float SCR_WIDTH = 2208;
+    float SCR_HEIGHT = 1756;
     CameraUtils cameraUtils = CameraUtils(glm::vec3(0.0f, 0.0f,  3.0f));
     float deltaTime = 0.0f; // 当前帧花费的时间
     // 进度条滑动值范围：0-100
