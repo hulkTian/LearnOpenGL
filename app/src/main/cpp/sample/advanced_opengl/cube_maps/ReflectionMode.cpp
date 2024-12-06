@@ -77,7 +77,7 @@ void ReflectionMode::Create() {
     cubemapTexture = GLUtils::loadCubemap(faces, false);
 
     std::string path(DEFAULT_OGL_ASSETS_DIR);
-    ourModel = Model(path + "/nanosuit/nanosuit.obj");
+    ourModel = Model(path + "/objects/nanosuit/nanosuit.obj");
 
     m_ProgramObj = GLUtils::createProgram("shaders/vs_cube_map.glsl",
                                           "shaders/fs_cube_map.glsl");

@@ -21,8 +21,8 @@ void Asteroids::Create() {
     // load models
     // -----------
     std::string path(DEFAULT_OGL_ASSETS_DIR);
-    rock = Model(path + "/rock/rock.obj");
-    planet = Model(path + "/planet/planet.obj");
+    rock = Model(path + "/objects/rock/rock.obj");
+    planet = Model(path + "/objects/planet/planet.obj");
 
     // generate a large list of semi-random model transformation matrices
     // ------------------------------------------------------------------

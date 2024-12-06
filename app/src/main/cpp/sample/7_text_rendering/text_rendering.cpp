@@ -144,7 +144,7 @@ void text_rendering::loadText(const FT_Face face, const std::wstring text)
                 texture,
                 glm::ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
                 glm::ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
-                static_cast<GLuint>(face->glyph->advance.x)
+                face->glyph->advance.x
         };
         // 字符的度量值使用映射表存储，key就是字符的值，方便后续根据字符索引
         Characters.insert(std::pair<wchar_t, Character>(c, character));

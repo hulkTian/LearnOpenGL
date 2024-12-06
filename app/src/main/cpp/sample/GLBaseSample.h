@@ -61,6 +61,7 @@
 #define SAMPLE_TYPE_PBR_IBL_SPECULAR                                SAMPLE_TYPE + 51
 #define SAMPLE_TYPE_PBR_IBL_SPECULAR_TEXTURED                       SAMPLE_TYPE + 52
 #define SAMPLE_TYPE_TEXT_RENDERING                                  SAMPLE_TYPE + 53
+#define SAMPLE_TYPE_DEBUGGING                                       SAMPLE_TYPE + 54
 
 #define KEY_W 1
 #define KEY_S 2
@@ -68,7 +69,7 @@
 #define KEY_D 4
 #define KEY_B 5
 
-#define DEFAULT_OGL_ASSETS_DIR "/data/data/com.example.learnopengl/"
+#define DEFAULT_OGL_ASSETS_DIR "/data/data/com.example.learnopengl"
 
 #include <GLUtils.h>
 #include "CameraUtils.h"
@@ -127,7 +128,68 @@ public:
         }
     }
 
+    /**
+     * 调试帧缓冲的纹理附件
+     * @param textureID
+     */
+    void DisplayFramebufferTexture(GLuint shaderID, GLuint textureID)
+    {
+        if (debuggingVAO == 0)
+        {
+            float quadVertices[] = {
+                    // positions      // texture Coords
+                    0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
+                    0.5f,  0.5f, 0.0f, 0.0f, 0.0f,
+                    1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+                    1.0f,  0.5f, 0.0f, 1.0f, 0.0f,
+            };
+            // setup plane VAO
+            glGenVertexArrays(1, &debuggingVAO);
+            glGenBuffers(1, &debuggingVBO);
+            glBindVertexArray(debuggingVAO);
+            glBindBuffer(GL_ARRAY_BUFFER, debuggingVBO);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+            glEnableVertexAttribArray(0);
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+            glEnableVertexAttribArray(1);
+            glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+        }
 
+        glActiveTexture(GL_TEXTURE0);
+        glUseProgram(shaderID);
+        glBindTexture(GL_TEXTURE_2D, textureID);
+        glBindVertexArray(debuggingVAO);
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        glBindVertexArray(0);
+        glUseProgram(0);
+    }
+
+    void renderQuad()
+    {
+        if (quadVAO == 0)
+        {
+            float quadVertices[] = {
+                    // positions        // texture Coords
+                    -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
+                    -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+                    1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
+                    1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
+            };
+            // setup plane VAO
+            glGenVertexArrays(1, &quadVAO);
+            glGenBuffers(1, &quadVBO);
+            glBindVertexArray(quadVAO);
+            glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+            glEnableVertexAttribArray(0);
+            glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+            glEnableVertexAttribArray(1);
+            glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+        }
+        glBindVertexArray(quadVAO);
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        glBindVertexArray(0);
+    }
 
 protected:
     /**
@@ -137,12 +199,15 @@ protected:
     /**
      * 屏幕宽高
      */
-    float SCR_WIDTH = 2208;
-    float SCR_HEIGHT = 1756;
+    float SCR_WIDTH = 2208.0f;
+    float SCR_HEIGHT = 1756.0f;
     CameraUtils cameraUtils = CameraUtils(glm::vec3(0.0f, 0.0f,  3.0f));
     float deltaTime = 0.0f; // 当前帧花费的时间
     // 进度条滑动值范围：0-100
     unsigned int seek = 0;
+
+    GLuint quadVAO, quadVBO;
+    GLuint debuggingVAO, debuggingVBO;
 };
 
 #endif //LEARNOPENGL_GLBASESAMPLE_H

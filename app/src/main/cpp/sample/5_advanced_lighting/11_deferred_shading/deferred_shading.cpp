@@ -39,7 +39,6 @@ void deferred_shading::Create() {
     m_ProgramObj_Geometry_Pass = GLUtils::createProgram("shaders/vs_g_buffer.glsl", "shaders/fs_g_buffer.glsl");
     m_ProgramObj_Lighting_Pass = GLUtils::createProgram("shaders/vs_deferred_shading.glsl", "shaders/fs_deferred_shading.glsl");
     m_ProgramObj_Light_Box = GLUtils::createProgram("shaders/vs_deferred_light_box.glsl", "shaders/fs_deferred_light_box.glsl");
-    //m_ProgramObj_FBO_Debug = GLUtils::createProgram("shaders/vs_fbo_debug.glsl", "shaders/fs_fbo_debug.glsl");
 
     if (!m_ProgramObj_Geometry_Pass || !m_ProgramObj_Lighting_Pass || !m_ProgramObj_Light_Box) {
         LOGD("Could not create program")
@@ -49,7 +48,7 @@ void deferred_shading::Create() {
     // load models
     // -----------
     std::string path(DEFAULT_OGL_ASSETS_DIR);
-    ourModel = Model(path + "/backpack/backpack.obj");
+    ourModel = Model(path + "/objects/backpack/backpack.obj");
     objectPositions.push_back(glm::vec3(-3.0,  -0.5, -3.0));
     objectPositions.push_back(glm::vec3( 0.0,  -0.5, -3.0));
     objectPositions.push_back(glm::vec3( 3.0,  -0.5, -3.0));
@@ -124,8 +123,9 @@ void deferred_shading::Create() {
     setInt(m_ProgramObj_Lighting_Pass, "gNormal", 1);
     setInt(m_ProgramObj_Lighting_Pass, "gAlbedoSpec", 2);
 
-    /*glUseProgram(m_ProgramObj_FBO_Debug);
-    setInt(m_ProgramObj_FBO_Debug, "fboAttachment", 0);*/
+    m_ProgramObj_FBO_Debug = GLUtils::createProgram("shaders/vs_debugging_fbo_texture.glsl", "shaders/fs_debugging_fbo_texture.glsl");
+    glUseProgram(m_ProgramObj_FBO_Debug);
+    setInt(m_ProgramObj_FBO_Debug, "fboAttachment", 0);
 }
 
 void deferred_shading::Draw() {
@@ -156,12 +156,6 @@ void deferred_shading::Draw() {
         ourModel.Draw(m_ProgramObj_Geometry_Pass);
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-    /*glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glUseProgram(m_ProgramObj_FBO_Debug);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, gAlbedoSpec);
-    renderQuad();*/
 
     // 2. lighting pass: calculate lighting by iterating over a screen filled quad pixel-by-pixel using the gbuffer's content.
     // -----------------------------------------------------------------------------------------------------------------------
@@ -223,6 +217,10 @@ void deferred_shading::Draw() {
         setVec3(m_ProgramObj_Light_Box, "lightColor", lightColors[i]);
         renderCube();
     }
+
+    // todo 显示缓冲帧纹理附件，debugging 是否按照求渲染成功
+    DisplayFramebufferTexture(m_ProgramObj_FBO_Debug, gPosition);
+    //DisplayFramebufferTexture(m_ProgramObj_FBO_Debug, gAlbedoSpec);
 
     // 计算每一帧绘制的时间，再计算当前帧结束时间
     deltaTime = TimeUtils::currentTimeSeconds() - currentFrame;

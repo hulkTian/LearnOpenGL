@@ -49,6 +49,7 @@
 #include "6_pbr/5_ibl_specular/ibl_specular.h"
 #include "6_pbr/6_ibl_specular_textured/ibl_specular_textured.h"
 #include "7_text_rendering/text_rendering.h"
+#include "8_debugging/debugging.h"
 #include <NativeTriangle7.h>
 #include <NativeTriangle6.h>
 #include <NativeTriangle.h>
@@ -261,6 +262,9 @@ void MyGLRender::SetRenderType(int renderSampleType) {
         case SAMPLE_TYPE_TEXT_RENDERING:
             m_curr_sample = new text_rendering();
             break;
+        case SAMPLE_TYPE_DEBUGGING:
+            m_curr_sample = new debugging();
+            break;
         default:
             break;
     }
@@ -341,7 +345,7 @@ void MyGLRender:: ProgressChanged(int i) {
 }
 
 void MyGLRender::MoveCallback(float x, float y) {
-    LOGD("MyGLRender::MoveCallback x = %f，y = %f", x, y)
+    LOGD("MyGLRender::MoveCallback x = %f, y = %f", x, y)
     if (m_curr_sample == nullptr) {
         throw MyGLException(
                 "MyGLRender::MoveCallback() 请注意：你应该忘记初始化你要展示的Sample类型 ，请补上初始化的代码，否则无法渲染");

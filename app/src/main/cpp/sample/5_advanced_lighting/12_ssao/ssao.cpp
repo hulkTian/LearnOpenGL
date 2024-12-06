@@ -61,7 +61,7 @@ void ssao::Create() {
     // load models
     // -----------
     std::string path(DEFAULT_OGL_ASSETS_DIR);
-    ourModel = Model(path + "/backpack/backpack.obj");
+    ourModel = Model(path + "/objects/backpack/backpack.obj");
 
     // configure g-buffer framebuffer
     // ------------------------------

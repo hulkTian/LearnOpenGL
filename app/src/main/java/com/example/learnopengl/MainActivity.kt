@@ -377,6 +377,12 @@ class MainActivity : AppCompatActivity() {
         )
         addItem(
             i++, R.mipmap.text_rendering,
+            "调试OpenGL",
+            "打印OpenGl 错误信息",
+            IMyNativeRendererType.SAMPLE_TYPE_DEBUGGING
+        )
+        addItem(
+            i++, R.mipmap.text_rendering,
             "文本渲染",
             "使用FreeType库渲染文本",
             IMyNativeRendererType.SAMPLE_TYPE_TEXT_RENDERING
