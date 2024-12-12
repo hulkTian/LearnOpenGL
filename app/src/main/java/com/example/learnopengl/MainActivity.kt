@@ -387,6 +387,12 @@ class MainActivity : AppCompatActivity() {
             "使用FreeType库渲染文本",
             IMyNativeRendererType.SAMPLE_TYPE_TEXT_RENDERING
         )
+        addItem(
+            i++, R.mipmap.break_out,
+            "Breakout 2D游戏",
+            "开发2D游戏",
+            IMyNativeRendererType.SAMPLE_TYPE_BREAK_OUT
+        )
     }
 
     private fun addItem(index: Int, redId: Int, title: String, subtitle: String, type: Int) {

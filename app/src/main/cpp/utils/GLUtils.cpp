@@ -9,15 +9,12 @@
 
 #include "stb_image.h"
 
-static JNIEnv *sEnv = nullptr;
-static jobject sAssetManager = nullptr;
-
 /**
  * 打开文件.
  * @param path
  * @return
  */
-static AAsset *loadAsset(const char *path) {
+ AAsset * GLUtils::loadAsset(const char *path) {
     //将Java层的AssetManager对象转换为native层的对象
     AAssetManager *aAssetManager = AAssetManager_fromJava(sEnv, sAssetManager);
     if (aAssetManager == nullptr) {

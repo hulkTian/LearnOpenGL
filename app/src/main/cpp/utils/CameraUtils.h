@@ -12,8 +12,8 @@
 enum Camera_Movement {
     FORWARD,
     BACKWARD,
-    LEFT,
-    RIGHT,
+    MOVE_LEFT,
+    MOVE_RIGHT,
     BOOLEAN
 };
 
@@ -82,9 +82,9 @@ public:
                 Position += Front * velocity;
             if (direction == BACKWARD)
                 Position -= Front * velocity;
-            if (direction == LEFT)
+            if (direction == MOVE_LEFT)
                 Position -= Right * velocity;
-            if (direction == RIGHT)
+            if (direction == MOVE_RIGHT)
                 Position += Right * velocity;
             LOGV("ProcessKeyboard: velocity = %f, direction = %d, Position(%f, %f, %f)", velocity,
                  direction, Position.x, Position.y, Position.z)

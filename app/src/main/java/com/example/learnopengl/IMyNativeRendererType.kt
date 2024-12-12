@@ -59,6 +59,7 @@ object IMyNativeRendererType {
     const val SAMPLE_TYPE_PBR_IBL_SPECULAR_TEXTURED = SAMPLE_TYPE + 52
     const val SAMPLE_TYPE_TEXT_RENDERING = SAMPLE_TYPE + 53
     const val SAMPLE_TYPE_DEBUGGING = SAMPLE_TYPE + 54
+    const val SAMPLE_TYPE_BREAK_OUT = SAMPLE_TYPE + 55
 }
 
 object Key {

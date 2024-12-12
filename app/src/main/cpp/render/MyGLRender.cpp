@@ -50,6 +50,7 @@
 #include "6_pbr/6_ibl_specular_textured/ibl_specular_textured.h"
 #include "7_text_rendering/text_rendering.h"
 #include "8_debugging/debugging.h"
+#include "9_break_out/Breakout.h"
 #include <NativeTriangle7.h>
 #include <NativeTriangle6.h>
 #include <NativeTriangle.h>
@@ -264,6 +265,9 @@ void MyGLRender::SetRenderType(int renderSampleType) {
             break;
         case SAMPLE_TYPE_DEBUGGING:
             m_curr_sample = new debugging();
+            break;
+        case SAMPLE_TYPE_BREAK_OUT:
+            m_curr_sample = new Breakout();
             break;
         default:
             break;

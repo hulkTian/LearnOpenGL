@@ -92,4 +92,5 @@ target_link_libraries(learn-opengles-lib
         android
         libfreetype
         libassimp
-        ${log-lib})
+        ${log-lib}
+        aaudio)

@@ -138,6 +138,7 @@ class NativeRenderActivity : Activity() {
             || type == IMyNativeRendererType.SAMPLE_TYPE_PBR_IBL_IRRADIANCE
             || type == IMyNativeRendererType.SAMPLE_TYPE_PBR_IBL_SPECULAR
             || type == IMyNativeRendererType.SAMPLE_TYPE_PBR_IBL_SPECULAR_TEXTURED
+            || type == IMyNativeRendererType.SAMPLE_TYPE_BREAK_OUT
         ) {
             binding.llClick.visibility = View.VISIBLE
             binding.btW.setOnClickListener {
@@ -254,6 +255,7 @@ class NativeRenderActivity : Activity() {
             || type == IMyNativeRendererType.SAMPLE_TYPE_PARALLAX_MAPPING
             || type == IMyNativeRendererType.SAMPLE_TYPE_STEEP_PARALLAX_MAPPING
             || type == IMyNativeRendererType.SAMPLE_TYPE_PARALLAX_OCCLUSION_MAPPING
+            || type == IMyNativeRendererType.SAMPLE_TYPE_BREAK_OUT
         ) {
             glSurfaceView.renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY
         } else {

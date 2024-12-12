@@ -5,6 +5,12 @@
 #ifndef LEARNOPENGL_GLUTILS_H
 #define LEARNOPENGL_GLUTILS_H
 
+#define KEY_W 1
+#define KEY_S 2
+#define KEY_A 3
+#define KEY_D 4
+#define KEY_B 5
+
 #include <jni.h>
 #include <GLES3/gl32.h>
 #include <GLES3/gl3ext.h>
@@ -17,6 +23,9 @@
 
 #define MATH_PI 3.1415926535897932384626433832802
 
+static JNIEnv *sEnv;
+static jobject sAssetManager;
+
 class GLUtils {
 
 public:
@@ -25,6 +34,8 @@ public:
 	 * Set Environment parameter
 	 */
     static void setEnvAndAssetManager(JNIEnv *env, jobject assetManager);
+
+    static AAsset *loadAsset(const char *path);
 
     /**
      *  Loads a file from assets/path into a char array.

@@ -62,12 +62,7 @@
 #define SAMPLE_TYPE_PBR_IBL_SPECULAR_TEXTURED                       SAMPLE_TYPE + 52
 #define SAMPLE_TYPE_TEXT_RENDERING                                  SAMPLE_TYPE + 53
 #define SAMPLE_TYPE_DEBUGGING                                       SAMPLE_TYPE + 54
-
-#define KEY_W 1
-#define KEY_S 2
-#define KEY_A 3
-#define KEY_D 4
-#define KEY_B 5
+#define SAMPLE_TYPE_BREAK_OUT                                       SAMPLE_TYPE + 55
 
 #define DEFAULT_OGL_ASSETS_DIR "/data/data/com.example.learnopengl"
 
@@ -103,9 +98,9 @@ public:
         if (i == KEY_S)
             cameraUtils.ProcessKeyboard(BACKWARD, deltaTime);
         if (i == KEY_A)
-            cameraUtils.ProcessKeyboard(LEFT, deltaTime);
+            cameraUtils.ProcessKeyboard(MOVE_LEFT, deltaTime);
         if (i == KEY_D)
-            cameraUtils.ProcessKeyboard(RIGHT, deltaTime);
+            cameraUtils.ProcessKeyboard(MOVE_RIGHT, deltaTime);
         if (i == KEY_B)
             cameraUtils.ProcessKeyboard(BOOLEAN, deltaTime);
     }
