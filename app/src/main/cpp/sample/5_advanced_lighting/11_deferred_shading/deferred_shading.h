@@ -21,7 +21,7 @@ public:
     virtual void Shutdown();
 
 private:
-    GLuint m_ProgramObj_Geometry_Pass, m_ProgramObj_Lighting_Pass, m_ProgramObj_Light_Box, m_ProgramObj_FBO_Debug;
+    GLuint m_ProgramObj_Geometry_Pass, m_ProgramObj_Lighting_Pass, m_ProgramObj_Light_Box;
     Model ourModel;
     GLuint gBuffer, gPosition, gNormal, gAlbedoSpec, rboDepth;
     GLuint cubeVAO, cubeVBO;

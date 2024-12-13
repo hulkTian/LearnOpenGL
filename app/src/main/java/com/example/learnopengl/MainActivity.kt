@@ -390,8 +390,14 @@ class MainActivity : AppCompatActivity() {
         addItem(
             i++, R.mipmap.break_out,
             "Breakout 2D游戏",
-            "开发2D游戏",
+            "结合所有OpenGL技术实现一个2D游戏",
             IMyNativeRendererType.SAMPLE_TYPE_BREAK_OUT
+        )
+        addItem(
+            i++, R.mipmap.weighted_blended,
+            "不依赖顺序的混合技术（OIT）",
+            "",
+            IMyNativeRendererType.SAMPLE_TYPE_WEIGHTED_BLENDED_OIT
         )
     }
 

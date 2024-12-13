@@ -14,8 +14,7 @@
 // compile/link-time error messages and hosts several utility
 // functions for easy management.
 // 通用的着色器程序对象。从文件编译，生成编译/链接时错误信息并实现一些实用方法便于管理。
-class Shader
-{
+class Shader {
 public:
     // State
     // 着色器程序对象句柄

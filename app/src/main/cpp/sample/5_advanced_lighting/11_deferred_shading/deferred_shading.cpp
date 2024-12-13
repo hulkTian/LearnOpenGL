@@ -123,9 +123,7 @@ void deferred_shading::Create() {
     setInt(m_ProgramObj_Lighting_Pass, "gNormal", 1);
     setInt(m_ProgramObj_Lighting_Pass, "gAlbedoSpec", 2);
 
-    m_ProgramObj_FBO_Debug = GLUtils::createProgram("shaders/vs_debugging_fbo_texture.glsl", "shaders/fs_debugging_fbo_texture.glsl");
-    glUseProgram(m_ProgramObj_FBO_Debug);
-    setInt(m_ProgramObj_FBO_Debug, "fboAttachment", 0);
+    CreateFBODebugShader();
 }
 
 void deferred_shading::Draw() {
@@ -219,18 +217,16 @@ void deferred_shading::Draw() {
     }
 
     // todo 显示缓冲帧纹理附件，debugging 是否按照求渲染成功
-    DisplayFramebufferTexture(m_ProgramObj_FBO_Debug, gPosition);
+    DisplayFramebufferTexture(gPosition);
     //DisplayFramebufferTexture(m_ProgramObj_FBO_Debug, gAlbedoSpec);
 
     // 计算每一帧绘制的时间，再计算当前帧结束时间
     deltaTime = TimeUtils::currentTimeSeconds() - currentFrame;
 }
 
-void deferred_shading::renderCube()
-{
+void deferred_shading::renderCube() {
     // initialize (if necessary)
-    if (cubeVAO == 0)
-    {
+    if (cubeVAO == 0) {
         float vertices[] = {
                 // back face
                 -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left

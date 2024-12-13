@@ -51,6 +51,7 @@
 #include "7_text_rendering/text_rendering.h"
 #include "8_debugging/debugging.h"
 #include "9_break_out/Breakout.h"
+#include "10_guest/1_oit/weighted_blended.h"
 #include <NativeTriangle7.h>
 #include <NativeTriangle6.h>
 #include <NativeTriangle.h>
@@ -268,6 +269,9 @@ void MyGLRender::SetRenderType(int renderSampleType) {
             break;
         case SAMPLE_TYPE_BREAK_OUT:
             m_curr_sample = new Breakout();
+            break;
+        case SAMPLE_TYPE_WEIGHTED_BLENDED_OIT:
+            m_curr_sample = new weighted_blended();
             break;
         default:
             break;

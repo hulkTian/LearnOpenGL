@@ -63,10 +63,12 @@
 #define SAMPLE_TYPE_TEXT_RENDERING                                  SAMPLE_TYPE + 53
 #define SAMPLE_TYPE_DEBUGGING                                       SAMPLE_TYPE + 54
 #define SAMPLE_TYPE_BREAK_OUT                                       SAMPLE_TYPE + 55
+#define SAMPLE_TYPE_WEIGHTED_BLENDED_OIT                            SAMPLE_TYPE + 56
 
 #define DEFAULT_OGL_ASSETS_DIR "/data/data/com.example.learnopengl"
 
 #include <GLUtils.h>
+
 #include "CameraUtils.h"
 
 class GLBaseSample {
@@ -123,14 +125,18 @@ public:
         }
     }
 
+    void CreateFBODebugShader() {
+        m_ProgramObj_FBO_Debug = GLUtils::createProgram("shaders/vs_debugging_fbo_texture.glsl", "shaders/fs_debugging_fbo_texture.glsl");
+        glUseProgram(m_ProgramObj_FBO_Debug);
+        setInt(m_ProgramObj_FBO_Debug, "fboAttachment", 0);
+    }
+
     /**
      * 调试帧缓冲的纹理附件
      * @param textureID
      */
-    void DisplayFramebufferTexture(GLuint shaderID, GLuint textureID)
-    {
-        if (debuggingVAO == 0)
-        {
+    void DisplayFramebufferTexture(GLuint textureID, GLboolean isDepth = false) {
+        if (debuggingVAO == 0) {
             float quadVertices[] = {
                     // positions      // texture Coords
                     0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
@@ -149,40 +155,49 @@ public:
             glEnableVertexAttribArray(1);
             glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
         }
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
+        glUseProgram(m_ProgramObj_FBO_Debug);
         glActiveTexture(GL_TEXTURE0);
-        glUseProgram(shaderID);
         glBindTexture(GL_TEXTURE_2D, textureID);
+        setBool(m_ProgramObj_FBO_Debug, "isDepth", isDepth);
         glBindVertexArray(debuggingVAO);
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         glBindVertexArray(0);
         glUseProgram(0);
     }
 
-    void renderQuad()
-    {
-        if (quadVAO == 0)
-        {
+    // 渲染一个屏幕大小的四边形
+    void renderQuad() {
+        if (quadVAO == 0) {
             float quadVertices[] = {
-                    // positions        // texture Coords
+                    // 位置             // 纹理坐标
                     -1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
                     -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
                     1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
                     1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
             };
-            // setup plane VAO
+            // 配置VAO
             glGenVertexArrays(1, &quadVAO);
             glGenBuffers(1, &quadVBO);
             glBindVertexArray(quadVAO);
             glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+            // 创建缓冲区内存，并填充数据，当缓冲区数据是动态的时，可以使用GL_DYNAMIC_DRAW，并且可以不加载数据只申请内存
+            // 缓冲区存放的顶点数据是不会变化的，所以可以使用GL_STATIC_DRAW
             glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+            // 启用两个顶点数据，并告知OpenGL顶点属性数据的加载方式，包括：数据大小，数据类型，是否是标准数据，读取补偿，内存地址偏移量
             glEnableVertexAttribArray(0);
             glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
             glEnableVertexAttribArray(1);
             glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
         }
+        /// 绑定VAO，高数OpenGL从哪个缓冲区读取数据
         glBindVertexArray(quadVAO);
+        /// 使用GL_TRIANGLE_STRIP只需要4个顶点，节省了两个顶点数据
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        /// 渲染完成后，接触VAO的绑定
         glBindVertexArray(0);
     }
 
@@ -191,6 +206,7 @@ protected:
      * 程序对象
      */
     GLuint m_ProgramObj;
+    GLuint m_ProgramObj_FBO_Debug;
     /**
      * 屏幕宽高
      */
