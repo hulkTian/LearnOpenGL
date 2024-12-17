@@ -8,8 +8,8 @@
 #include <map>
 #include <string>
 
-#include "texture2D.h"
-#include "shader.h"
+#include "Texture2D.h"
+#include "Shader.h"
 #include "Audio.h"
 
 // A static singleton ResourceManager class that hosts several

@@ -36,7 +36,7 @@ class MyGLSurfaceView : GLSurfaceView {
         /*If no setEGLConfigChooser method is called,
         then by default the view will choose an RGB_888 surface with a depth buffer depth of at least 16 bits.*/
         // 最后 2 个参数表示分别配置 24 位的深度缓冲区和模板缓冲区
-        setEGLConfigChooser(8, 8, 8, 8, 16, 8)
+        setEGLConfigChooser(8, 8, 8, 8, 24, 8)
         setRenderer(mRenderer)
     }
 

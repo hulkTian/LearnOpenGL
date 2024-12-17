@@ -3,6 +3,8 @@
 //
 
 #include "MyGLRender.h"
+#include "1_getting_started/1_vao_vbo/vao_vbo.h"
+#include "1_getting_started/2_ebo/ebo.h"
 #include "transform/Transform.h"
 #include "transform/CoordinateSystems.h"
 #include "transform/Camera.h"
@@ -102,11 +104,11 @@ void MyGLRender::SetRenderType(int renderSampleType) {
     LOGD("MyGLRenderContext::SetRenderType 0 m_pBeforeSample = %p", m_before_sample)
     m_before_sample = m_curr_sample;
     switch (renderSampleType) {
-        case SAMPLE_TYPE_KEY_TRIANGLE:
-            m_curr_sample = new NativeTriangle();
+        case SAMPLE_TYPE_TRIANGLE:
+            m_curr_sample = new vao_vbo();
             break;
-        case SAMPLE_TYPE_KEY_RECTANGLE:
-            m_curr_sample = new NativeRectangle();
+        case SAMPLE_TYPE_RECTANGLE:
+            m_curr_sample = new ebo();
             break;
         case SAMPLE_TYPE_TRIANGLE2:
             m_curr_sample = new NativeTriangle2();

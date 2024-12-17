@@ -20,7 +20,7 @@ import com.example.learnopengl.databinding.ActivityNativeRenderBinding
 
 class NativeRenderActivity : Activity() {
     companion object {
-        private const val CONTEXT_CLIENT_VERSION = 2
+        private const val CONTEXT_CLIENT_VERSION = 3
         private const val TAG: String = "NativeRenderActivity"
 
         private val REQUEST_PERMISSIONS = arrayOf(
@@ -222,7 +222,7 @@ class NativeRenderActivity : Activity() {
         // 有些GPU模拟部分有缺陷，为了使代码在模拟器上正常工作，写下面的代码
         // 这段代码判断当前设备是不是模拟器，如果是，就假定它支持OpenGL ES 3.0
         // 要确保程序能运行，模拟器一定要配置OpenGL ES 3.0
-        val isSupportedOpenGLES30 = reqGlEsVersion >= 0x20000
+        val isSupportedOpenGLES30 = reqGlEsVersion >= 0x30000
                 || (Build.FINGERPRINT.startsWith("generic")
                 || Build.FINGERPRINT.startsWith("unknown")
                 || Build.MODEL.contains("google_sdk")

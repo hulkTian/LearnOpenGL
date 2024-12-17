@@ -75,7 +75,7 @@ public:
     void ProcessKeyboard(Camera_Movement direction, float deltaTime) {
         if (direction == BOOLEAN) {
             isEnable = !isEnable;
-            LOGV("ProcessKeyboard: isEnabled = %b", isEnable)
+            LOGV("ProcessKeyboard: isEnabled = %d", isEnable)
         } else {
             float velocity = MovementSpeed * deltaTime;
             if (direction == FORWARD)

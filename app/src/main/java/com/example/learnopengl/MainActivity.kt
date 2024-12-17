@@ -52,13 +52,13 @@ class MainActivity : AppCompatActivity() {
     private fun initData() {
         var i = 0
         addItem(
-            i++, R.mipmap.triangle,
+            i++, R.mipmap.vao_vbo,
             "绘制三角形",
-            "通过绘制一个三角形，理解VAO、VBO、顶点属性指针、着色器代码编译过程、着色器程序对象和图形的渲染过程。",
+            "第一个渲染例子，展示了VAO和VBO的使用流程；着色器代码的编写、加载和编译流程；以及渲染一个三角形的简单流程。",
             IMyNativeRendererType.SAMPLE_TYPE_TRIANGLE
         )
         addItem(
-            i++, R.mipmap.rectangle,
+            i++, R.mipmap.ebo,
             "绘制矩形",
             "展示如何使用VAO、VBO和IBO绘制矩形",
             IMyNativeRendererType.SAMPLE_TYPE_RECTANGLE

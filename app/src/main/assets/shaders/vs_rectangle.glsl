@@ -4,9 +4,6 @@
 //声明一个输入变量，用作缓存顶点位置
 //对于顶点着色器而言，输入的变量都叫顶点属性，OpenGL 一般最大允许16个顶点属性
 layout(location = 0) in vec3 vPosition;
-layout(location = 1) in vec3 color;
-
-out vec3 Color;
 
 /**
 * 向量的使用：
@@ -19,7 +16,4 @@ void main() {
     //gl_Position 是预定义的变量，用作输出顶点位置数据，它是一个vec4类型的变量。
     //每个顶点着色器都必须在gl_Position变量中输出一个位置，给下一阶段使用。
     gl_Position = vec4(vPosition, 1.0);
-    // 颜色数据传递给着色器，这里只给三个顶点的设置的颜色，顶点之间的区域颜色将会自动使用两个顶点之间的颜色插值作为最终颜色
-    Color = color;
-
 }

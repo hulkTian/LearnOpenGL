@@ -6,9 +6,9 @@
 #define LEARNOPENGL_GLBASESAMPLE_H
 
 // 这些定义和Java层的 IMyNativeRendererType 类对应起来
-#define SAMPLE_TYPE                             100
-#define SAMPLE_TYPE_KEY_TRIANGLE                                    SAMPLE_TYPE + 0
-#define SAMPLE_TYPE_KEY_RECTANGLE                                   SAMPLE_TYPE + 1
+#define SAMPLE_TYPE                                                 100
+#define SAMPLE_TYPE_TRIANGLE                                        SAMPLE_TYPE + 0
+#define SAMPLE_TYPE_RECTANGLE                                       SAMPLE_TYPE + 1
 #define SAMPLE_TYPE_TRIANGLE2                                       SAMPLE_TYPE + 2
 #define SAMPLE_TYPE_TRIANGLE3                                       SAMPLE_TYPE + 3
 #define SAMPLE_TYPE_TRIANGLE4                                       SAMPLE_TYPE + 4
