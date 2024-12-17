@@ -3,7 +3,7 @@
 //
 #pragma once
 
-#include <GLBaseSample.h>
+#include "GLBaseSample.h"
 
 class NativeTriangle4 : public GLBaseSample{
 

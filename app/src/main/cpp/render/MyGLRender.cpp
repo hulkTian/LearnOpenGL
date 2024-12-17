@@ -54,14 +54,11 @@
 #include "8_debugging/debugging.h"
 #include "9_break_out/Breakout.h"
 #include "10_guest/1_oit/weighted_blended.h"
-#include <NativeTriangle7.h>
-#include <NativeTriangle6.h>
-#include <NativeTriangle.h>
-#include <NativeRectangle.h>
-#include <NativeTriangle2.h>
-#include <NativeTriangle3.h>
-#include <NativeTriangle4.h>
-#include <NativeTriangle5.h>
+#include "1_getting_started/3_triangle_exercise/NativeTriangle7.h"
+#include "1_getting_started/3_triangle_exercise/NativeTriangle6.h"
+#include "1_getting_started/3_triangle_exercise/NativeTriangle3.h"
+#include "1_getting_started/3_triangle_exercise/NativeTriangle4.h"
+#include "1_getting_started/3_triangle_exercise/NativeTriangle5.h"
 #include <exception>
 
 struct MyGLException : public std::exception {
@@ -111,7 +108,6 @@ void MyGLRender::SetRenderType(int renderSampleType) {
             m_curr_sample = new ebo();
             break;
         case SAMPLE_TYPE_TRIANGLE2:
-            m_curr_sample = new NativeTriangle2();
             break;
         case SAMPLE_TYPE_TRIANGLE3:
             m_curr_sample = new NativeTriangle3();

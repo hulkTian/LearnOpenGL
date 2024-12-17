@@ -21,7 +21,6 @@ include_directories(
         render
 
         sample
-        sample/triangle
         sample/light
         sample/mesh
         sample/advanced_opengl/depth_testing
