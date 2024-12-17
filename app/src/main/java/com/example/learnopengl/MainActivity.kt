@@ -55,42 +55,36 @@ class MainActivity : AppCompatActivity() {
             i++, R.mipmap.vao_vbo,
             "绘制三角形",
             "第一个渲染例子，展示了VAO和VBO的使用流程；着色器代码的编写、加载和编译流程；以及渲染一个三角形的简单流程。",
-            IMyNativeRendererType.SAMPLE_TYPE_TRIANGLE
+            IMyNativeRendererType.SAMPLE_TYPE_VAO_VBO
         )
         addItem(
             i++, R.mipmap.ebo,
             "绘制矩形",
             "展示如何使用VAO、VBO和IBO绘制矩形",
-            IMyNativeRendererType.SAMPLE_TYPE_RECTANGLE
+            IMyNativeRendererType.SAMPLE_TYPE_EBO
         )
         addItem(
-            i++, R.mipmap.triangle2,
-            "绘制彩色三角形",
-            "在着色器代码中定义两个属性，一个位置属性，一个颜色属性，并通过CPU代码把位置数据和颜色数据设置给两个属性",
-            IMyNativeRendererType.SAMPLE_TYPE_TRIANGLE2
-        )
-        addItem(
-            i++, R.mipmap.triangle3,
+            i++, R.mipmap.vao_vbo_exercise_1,
             "绘制两个三角形",
             "使用glDrawArrays绘制两个相连的三角形，按照默认顺序绘制多个顶点",
-            IMyNativeRendererType.SAMPLE_TYPE_TRIANGLE3
+            IMyNativeRendererType.SAMPLE_TYPE_VAO_VBO_EXERCISE_1
         )
         addItem(
-            i++, R.mipmap.triangle3,
+            i++, R.mipmap.vao_vbo_exercise_1,
             "绘制两个三角形",
             "使用不同的VAO和VBO绘制两个三角形，理解VAO的意义",
-            IMyNativeRendererType.SAMPLE_TYPE_TRIANGLE4
+            IMyNativeRendererType.SAMPLE_TYPE_VAO_VBO_EXERCISE_2
         )
         addItem(
             i++, R.mipmap.triangle,
             "着色器语言GLSL",
             "使用Uniform在片段着色器声明一个变量，实现一个颜色会变化的三角形",
-            IMyNativeRendererType.SAMPLE_TYPE_TRIANGLE5
+            IMyNativeRendererType.SAMPLE_TYPE_UNIFORM
         )
         addItem(
             i++, R.mipmap.triangle6,
             "纹理",
-            "使用图片生成纹理，了解纹理冲生成到使用的过程",
+            "使用图片生成纹理，了解纹理从生成到使用的过程",
             IMyNativeRendererType.SAMPLE_TYPE_TEXTURE
         )
         addItem(

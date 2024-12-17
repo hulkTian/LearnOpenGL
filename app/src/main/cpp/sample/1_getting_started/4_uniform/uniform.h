@@ -6,11 +6,11 @@
 
 #include "GLBaseSample.h"
 
-class NativeTriangle5 : public GLBaseSample{
+class uniform : public GLBaseSample{
 public:
-    NativeTriangle5() = default;
+    uniform() = default;
 
-    ~NativeTriangle5() = default;
+    ~uniform() = default;
 
     virtual void Create();
 

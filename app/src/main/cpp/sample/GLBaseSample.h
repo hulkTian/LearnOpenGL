@@ -7,12 +7,11 @@
 
 // 这些定义和Java层的 IMyNativeRendererType 类对应起来
 #define SAMPLE_TYPE                                                 100
-#define SAMPLE_TYPE_TRIANGLE                                        SAMPLE_TYPE + 0
-#define SAMPLE_TYPE_RECTANGLE                                       SAMPLE_TYPE + 1
-#define SAMPLE_TYPE_TRIANGLE2                                       SAMPLE_TYPE + 2
-#define SAMPLE_TYPE_TRIANGLE3                                       SAMPLE_TYPE + 3
-#define SAMPLE_TYPE_TRIANGLE4                                       SAMPLE_TYPE + 4
-#define SAMPLE_TYPE_TRIANGLE5                                       SAMPLE_TYPE + 5
+#define SAMPLE_TYPE_VAO_VBO                                         SAMPLE_TYPE + 0
+#define SAMPLE_TYPE_EBO                                             SAMPLE_TYPE + 1
+#define SAMPLE_TYPE_VAO_VBO_EXERCISE_1                              SAMPLE_TYPE + 2
+#define SAMPLE_TYPE_VAO_VBO_EXERCISE_2                              SAMPLE_TYPE + 3
+#define SAMPLE_TYPE_UNIFORM                                         SAMPLE_TYPE + 4
 #define SAMPLE_TYPE_TEXTURE                                         SAMPLE_TYPE + 6
 #define SAMPLE_TYPE_TEXTURE2                                        SAMPLE_TYPE + 7
 #define SAMPLE_TYPE_MAT                                             SAMPLE_TYPE + 8

@@ -70,7 +70,7 @@ void vao_vbo::Draw() {
 }
 
 void vao_vbo::Shutdown() {
-    glDeleteBuffers(1, &VBO);
     glDeleteVertexArrays(1, &VAO);
-    glDeleteProgram(m_ProgramObj);
+    glDeleteBuffers(1, &VBO);
+    GLBaseSample::Shutdown();
 }

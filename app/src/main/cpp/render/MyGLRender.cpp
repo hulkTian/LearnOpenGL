@@ -54,11 +54,11 @@
 #include "8_debugging/debugging.h"
 #include "9_break_out/Breakout.h"
 #include "10_guest/1_oit/weighted_blended.h"
-#include "1_getting_started/3_triangle_exercise/NativeTriangle7.h"
-#include "1_getting_started/3_triangle_exercise/NativeTriangle6.h"
-#include "1_getting_started/3_triangle_exercise/NativeTriangle3.h"
-#include "1_getting_started/3_triangle_exercise/NativeTriangle4.h"
-#include "1_getting_started/3_triangle_exercise/NativeTriangle5.h"
+#include "1_getting_started/5_texture/NativeTriangle7.h"
+#include "1_getting_started/5_texture/NativeTriangle6.h"
+#include "1_getting_started/3_triangle_exercise/1_triangle_exercise.h"
+#include "1_getting_started/3_triangle_exercise/2_triangle_exercise.h"
+#include "1_getting_started/4_uniform/uniform.h"
 #include <exception>
 
 struct MyGLException : public std::exception {
@@ -101,22 +101,20 @@ void MyGLRender::SetRenderType(int renderSampleType) {
     LOGD("MyGLRenderContext::SetRenderType 0 m_pBeforeSample = %p", m_before_sample)
     m_before_sample = m_curr_sample;
     switch (renderSampleType) {
-        case SAMPLE_TYPE_TRIANGLE:
+        case SAMPLE_TYPE_VAO_VBO:
             m_curr_sample = new vao_vbo();
             break;
-        case SAMPLE_TYPE_RECTANGLE:
+        case SAMPLE_TYPE_EBO:
             m_curr_sample = new ebo();
             break;
-        case SAMPLE_TYPE_TRIANGLE2:
+        case SAMPLE_TYPE_VAO_VBO_EXERCISE_1:
+            m_curr_sample = new triangle_exercise_1();
             break;
-        case SAMPLE_TYPE_TRIANGLE3:
-            m_curr_sample = new NativeTriangle3();
+        case SAMPLE_TYPE_VAO_VBO_EXERCISE_2:
+            m_curr_sample = new triangle_exercise_2();
             break;
-        case SAMPLE_TYPE_TRIANGLE4:
-            m_curr_sample = new NativeTriangle4();
-            break;
-        case SAMPLE_TYPE_TRIANGLE5:
-            m_curr_sample = new NativeTriangle5();
+        case SAMPLE_TYPE_UNIFORM:
+            m_curr_sample = new uniform();
             break;
         case SAMPLE_TYPE_TEXTURE:
             m_curr_sample = new NativeTriangle6();

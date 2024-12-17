@@ -1,17 +1,16 @@
 //
 // Created by TS on 2024/2/29.
 //
-
 #pragma once
 
 #include "GLBaseSample.h"
 
-class NativeTriangle3 : public GLBaseSample {
+class triangle_exercise_2 : public GLBaseSample{
 
 public:
-    NativeTriangle3() = default;
+    triangle_exercise_2() = default;
 
-    virtual ~NativeTriangle3() = default;
+    virtual ~triangle_exercise_2() = default;
 
     virtual void Create();
 
@@ -19,5 +18,5 @@ public:
 
     virtual void Shutdown();
 private:
-    unsigned int VBO, VAO;
+    GLuint VBOs[2], VAOs[2];
 };

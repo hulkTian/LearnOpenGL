@@ -3,16 +3,16 @@
 //
 //使用uniform定义一个颜色变量，再循环渲染过程中随着时间设置颜色变量的值
 
-#include "NativeTriangle5.h"
+#include "uniform.h"
 
-static float vVertices[] = {
-        0.0f, 0.5f, 0.0f,            // 上角
-        -0.5f, -0.5f, 0.0f,          // 左下角
-        0.5f, -0.5f, 0.0f            // 右下角
-};
-
-void NativeTriangle5::Create() {
+void uniform::Create() {
     GLUtils::printGLInfo();
+
+    float vVertices[] = {
+            0.0f, 0.5f, 0.0f,            // 上角
+            -0.5f, -0.5f, 0.0f,          // 左下角
+            0.5f, -0.5f, 0.0f            // 右下角
+    };
 
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
@@ -26,8 +26,8 @@ void NativeTriangle5::Create() {
     glEnableVertexAttribArray(0);
 
     //创建着色器程序,并编译着色器代码
-    m_ProgramObj = GLUtils::createProgram("shaders/vs_triangle5.glsl",
-                                          "shaders/fs_triangle5.glsl");
+    m_ProgramObj = GLUtils::createProgram("shaders/vs_uniform.glsl",
+                                          "shaders/fs_uniform.glsl");
 
     if (!m_ProgramObj) {
         LOGD("Could not create program")
@@ -37,7 +37,7 @@ void NativeTriangle5::Create() {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 }
 
-void NativeTriangle5::Draw() {
+void uniform::Draw() {
     //清除屏幕
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -54,8 +54,7 @@ void NativeTriangle5::Draw() {
     glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
-void NativeTriangle5::Shutdown() {
-
+void uniform::Shutdown() {
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
     GLBaseSample::Shutdown();

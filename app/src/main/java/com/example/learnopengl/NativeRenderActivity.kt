@@ -247,7 +247,7 @@ class NativeRenderActivity : Activity() {
      * 根据渲染类型设置渲染模式.
      */
     private fun setRenderMode(glSurfaceView: MyGLSurfaceView) {
-        if (type == IMyNativeRendererType.SAMPLE_TYPE_TRIANGLE5
+        if (type == IMyNativeRendererType.SAMPLE_TYPE_UNIFORM
             || type == IMyNativeRendererType.SAMPLE_TYPE_MAT
             || type == IMyNativeRendererType.SAMPLE_TYPE_COORDINATE
             || type == IMyNativeRendererType.SAMPLE_TYPE_CAMERA

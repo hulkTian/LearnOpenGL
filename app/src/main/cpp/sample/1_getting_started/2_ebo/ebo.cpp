@@ -75,8 +75,8 @@ void ebo::Draw() {
 }
 
 void ebo::Shutdown() {
+    glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
     glDeleteBuffers(1, &EBO);
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteProgram(m_ProgramObj);
+    GLBaseSample::Shutdown();
 }
