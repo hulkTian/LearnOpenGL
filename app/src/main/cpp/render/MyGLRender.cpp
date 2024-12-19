@@ -55,7 +55,7 @@
 #include "9_break_out/Breakout.h"
 #include "10_guest/1_oit/weighted_blended.h"
 #include "1_getting_started/5_texture/NativeTriangle7.h"
-#include "1_getting_started/5_texture/NativeTriangle6.h"
+#include "1_getting_started/5_texture/1_texture_warp/texture_warp.h"
 #include "1_getting_started/3_triangle_exercise/1_triangle_exercise.h"
 #include "1_getting_started/3_triangle_exercise/2_triangle_exercise.h"
 #include "1_getting_started/4_uniform/uniform.h"
@@ -116,8 +116,8 @@ void MyGLRender::SetRenderType(int renderSampleType) {
         case SAMPLE_TYPE_UNIFORM:
             m_curr_sample = new uniform();
             break;
-        case SAMPLE_TYPE_TEXTURE:
-            m_curr_sample = new NativeTriangle6();
+        case SAMPLE_TYPE_TEXTURE_WARP:
+            m_curr_sample = new texture_warp();
             break;
         case SAMPLE_TYPE_TEXTURE2:
             m_curr_sample = new NativeTriangle7();

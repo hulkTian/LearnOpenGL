@@ -85,13 +85,13 @@ class MainActivity : AppCompatActivity() {
             i++, R.mipmap.triangle6,
             "纹理",
             "使用图片生成纹理，了解纹理从生成到使用的过程",
-            IMyNativeRendererType.SAMPLE_TYPE_TEXTURE
+            IMyNativeRendererType.SAMPLE_TYPE_TEXTURE_WARP
         )
         addItem(
             i++, R.mipmap.texture_unit,
             "纹理单元",
             "通过纹理单元让多个纹理显示在一个图形上",
-            IMyNativeRendererType.SAMPLE_TYPE_TEXTURE2
+            IMyNativeRendererType.SAMPLE_TYPE_TEXTURE_MIPMAP
         )
         addItem(
             i++, R.mipmap.transform,

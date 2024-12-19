@@ -10,11 +10,66 @@
 #include "stb_image.h"
 
 /**
+     * 设置并配置VAO（顶点数组对象）和VBO（顶点缓冲对象），如果有索引数据（通过indices传入），也会配置EBO（元素缓冲对象）。
+     * 函数接收顶点数据、索引数据（可选，若不需要传nullptr）以及用于描述顶点属性布局的指针数组（pointer）。
+     * @param vertices 指向顶点数据的指针，数据按顺序排列，每个顶点包含多个属性，具体由pointer描述。
+     * @param indices 指向索引数据的指针（可选，若不需要索引则传入nullptr），用于指定绘制顶点的顺序。
+     * @param pointer 一个整数数组指针，用于指定每个属性在单个顶点数据中的组件数量（如位置属性可能是3个组件等），以确定顶点属性布局。
+     * @return 创建并配置好的VAO的标识符（GLuint类型），供后续渲染操作使用。
+     */
+GLuint GLUtils::setUpVAOAndVBO(const float *vertices, const GLsizeiptr vSize, const GLuint *indices,
+                               const GLsizeiptr iSize, const int *pointer) {
+    GLuint VAO, VBO;
+
+    // 创建并绑定VAO
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
+
+    // 创建并绑定VBO
+    glGenBuffers(1, &VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+
+    // 正确计算顶点数据的字节大小并复制到VBO中
+    // 通过将指针类型转换为size_t并相减来获取顶点数量，再乘以单个顶点占用字节数来计算总字节数
+    glBufferData(GL_ARRAY_BUFFER, vSize, vertices, GL_STATIC_DRAW);
+
+    if (indices != nullptr) {
+        GLuint EBO;
+        glGenBuffers(1, &EBO);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+
+        // 正确计算索引数据的字节大小并复制到EBO中
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, iSize, indices, GL_STATIC_DRAW);
+    }
+
+    // 配置顶点属性指针，循环处理每个属性
+    int numAttributes = 0;
+    GLsizei stride = 0;
+    while (pointer[numAttributes] != 0) {
+        stride += pointer[numAttributes] * sizeof(float);
+        numAttributes++;
+    }
+
+    int offset = 0;
+    for (int i = 0; i < numAttributes; ++i) {
+        if (i > 0) {
+            offset += sizeof(float) * pointer[i - 1];
+        }
+        glVertexAttribPointer(i, pointer[i], GL_FLOAT, GL_FALSE, stride, reinterpret_cast<const void *>(offset));
+        glEnableVertexAttribArray(i);
+    }
+
+    // 解绑VAO，恢复默认状态
+    glBindVertexArray(0);
+    return VAO;
+}
+
+/**
  * 打开文件.
  * @param path
  * @return
  */
- AAsset * GLUtils::loadAsset(const char *path) {
+AAsset *GLUtils::loadAsset(const char *path) {
     //将Java层的AssetManager对象转换为native层的对象
     AAssetManager *aAssetManager = AAssetManager_fromJava(sEnv, sAssetManager);
     if (aAssetManager == nullptr) {
@@ -219,17 +274,30 @@ GLUtils::createProgram(const char *vertexPath, const char *fragmentPath, const c
 
 void GLUtils::checkGlError(const char *pGLOperation) {
     GLenum errorCode;
-    while ((errorCode = glGetError()) != GL_NO_ERROR)
-    {
+    while ((errorCode = glGetError()) != GL_NO_ERROR) {
         std::string error;
         switch (errorCode) {
-            case GL_INVALID_ENUM: error = "GL_INVALID_ENUM"; break;
-            case GL_INVALID_VALUE: error = "GL_INVALID_VALUE"; break;
-            case GL_INVALID_OPERATION: error = "GL_INVALID_OPERATION"; break;
-            case GL_STACK_OVERFLOW: error = "GL_STACK_OVERFLOW"; break;
-            case GL_STACK_UNDERFLOW: error = "GL_STACK_UNDERFLOW"; break;
-            case GL_OUT_OF_MEMORY: error = "GL_OUT_OF_MEMORY"; break;
-            case GL_INVALID_FRAMEBUFFER_OPERATION: error = "GL_INVALID_FRAMEBUFFER_OPERATION"; break;
+            case GL_INVALID_ENUM:
+                error = "GL_INVALID_ENUM";
+                break;
+            case GL_INVALID_VALUE:
+                error = "GL_INVALID_VALUE";
+                break;
+            case GL_INVALID_OPERATION:
+                error = "GL_INVALID_OPERATION";
+                break;
+            case GL_STACK_OVERFLOW:
+                error = "GL_STACK_OVERFLOW";
+                break;
+            case GL_STACK_UNDERFLOW:
+                error = "GL_STACK_UNDERFLOW";
+                break;
+            case GL_OUT_OF_MEMORY:
+                error = "GL_OUT_OF_MEMORY";
+                break;
+            case GL_INVALID_FRAMEBUFFER_OPERATION:
+                error = "GL_INVALID_FRAMEBUFFER_OPERATION";
+                break;
         }
         LOGE("GLUtils::CheckGLError after GL Operation %s() : %s\n", pGLOperation, error.c_str())
     }
@@ -266,7 +334,7 @@ GLuint GLUtils::loadTgaTexture(const char *fileName, GLint internalformat, GLenu
         unsigned char *imageData = stbi_load_from_memory(static_cast<stbi_uc *>(assetBuffer),
                                                          static_cast<int>(assetLength),
                                                          &width, &height,
-                                                         &channels, 4);
+                                                         &channels, 0);
 
         free(assetBuffer);
 
@@ -281,10 +349,24 @@ GLuint GLUtils::loadTgaTexture(const char *fileName, GLint internalformat, GLenu
         // 生成多级渐远纹理
         glGenerateMipmap(GL_TEXTURE_2D);
         // 为当前绑定的纹理对象设置环绕、过滤方式
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, texture_warp_s);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, texture_warp_t);
+        LOGE("=========================")
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texture_min_filter);
+        LOGE("=========================")
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texture_max_filter);
+        LOGE("=========================")
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, texture_warp_s);
+        LOGE("=========================")
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, texture_warp_t);
+
+        // 当配置环绕方式为GL_CLAMP_TO_BORDER时，需要设置边框颜色
+        LOGE("=========================")
+        if (texture_warp_s == GL_CLAMP_TO_BORDER || texture_warp_t == GL_CLAMP_TO_BORDER) {
+            LOGE("=========================")
+            GLfloat borderColor[] = { 1.0f, 1.0f, 0.0f, 1.0f };
+            LOGE("=========================")
+            glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+            LOGE("=========================")
+        }
 
         // 释放图片数据
         stbi_image_free(imageData);
@@ -319,9 +401,9 @@ GLuint GLUtils::loadHDRTexture(const char *fileName) {
         // 使用stb_image解码图片数据
         int width, height, channels;
         float *imageData = stbi_loadf_from_memory(static_cast<stbi_uc *>(assetBuffer),
-                                                         static_cast<int>(assetLength),
-                                                         &width, &height,
-                                                         &channels, 0);
+                                                  static_cast<int>(assetLength),
+                                                  &width, &height,
+                                                  &channels, 0);
         free(assetBuffer);
 
         if (imageData == nullptr) {
@@ -459,7 +541,8 @@ GLuint GLUtils::loadTexture(const char *path, bool gammaCorrection) {
             }
 
             glBindTexture(GL_TEXTURE_2D, textureID);
-            glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, dataFormat, GL_UNSIGNED_BYTE, data);
+            glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, dataFormat,
+                         GL_UNSIGNED_BYTE, data);
             // todo 需要判断设备是否支持 GL_SRGB8纹理生成多级渐远纹理
             glGenerateMipmap(GL_TEXTURE_2D);
 

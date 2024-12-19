@@ -61,6 +61,9 @@ public:
 
     static GLuint loadHDRTexture(const char *fileName);
 
+    static GLuint setUpVAOAndVBO(const float *vertices, const GLsizeiptr vSize,
+                                 const GLuint *indices, const GLsizeiptr iSize, const int *pointer);
+
     /**
      * 加载立方体贴图
      * @param faces 纹理地址
