@@ -308,33 +308,40 @@ GLuint GLUtils::loadTgaTexture(const char *fileName, GLint internalformat, GLenu
                                GLenum type, const bool flip,
                                unsigned int texture_warp_s, unsigned int texture_warp_t,
                                unsigned int texture_min_filter, unsigned int texture_max_filter) {
+    LOGE("================================")
     GLuint textureId;
+    LOGE("================================")
     FUN_BEGIN_TIME("GLUtils::loadTgaTexture")
+        LOGE("================================")
         glGenTextures(1, &textureId);
+        LOGE("================================")
         glBindTexture(GL_TEXTURE_2D, textureId);
-
+        LOGE("================================")
         // 打开assets中的文件
         AAsset *asset = loadAsset(fileName);
+        LOGE("================================")
         if (asset == nullptr) {
             LOGE("Couldn't load %s", fileName)
             return textureId;
         }
-
+        LOGE("================================")
         // 获取文件大小
         off_t assetLength = AAsset_getLength(asset);
         void *assetBuffer = malloc(assetLength);
         AAsset_read(asset, assetBuffer, assetLength);
         AAsset_close(asset);
-
+        LOGE("================================")
         // 翻转y轴，使纹理坐标从底部开始
         stbi_set_flip_vertically_on_load(flip);
 
         // 使用stb_image解码图片数据
         int width, height, channels;
+        LOGE("================================")
         unsigned char *imageData = stbi_load_from_memory(static_cast<stbi_uc *>(assetBuffer),
                                                          static_cast<int>(assetLength),
                                                          &width, &height,
-                                                         &channels, 0);
+                                                         &channels, 4);
+        LOGE("================================")
 
         free(assetBuffer);
 

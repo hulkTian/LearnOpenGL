@@ -5,7 +5,7 @@
 #include "CoordinateSystems.h"
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
-
+#include <iostream>
 // 3D盒子顶点坐标和纹理坐标
 // 6个面 x 每个面有2个三角形组成 x 每个三角形有3个顶点
 static float vertices[] = {
@@ -160,20 +160,53 @@ void CoordinateSystems::Draw() {
     setMat4(m_ProgramObj, "view", view);
 
     // 透视投影矩阵
-    glm::mat4 projection = glm::mat4(1.0f);
-    projection = glm::perspective(glm::radians(60.0f), SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
-    setMat4(m_ProgramObj, "projection", projection);
+    glm::mat4 projection = glm::perspective(glm::radians(60.0f), SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
+    //setMat4(m_ProgramObj, "projection", projection);
 
-    for (unsigned int i = 0; i < 10; i++) {
+    // 正射投影矩阵
+    glm::mat4 ortho = glm::ortho(0.0f, SCR_WIDTH, 0.0f, SCR_HEIGHT, 0.1f, 100.f);
+    setMat4(m_ProgramObj, "projection", ortho);
+
+    for (unsigned int i = 0; i < 1; i++) {
         glm::mat4 model = glm::mat4(1.0f);
         model = glm::translate(model, cubePositions[i]);
         float angle = 20.0f * i;
         if (i % 3 == 0) {
-            angle = TimeUtils::currentTimeSeconds() * 25.0f;
+            //angle = TimeUtils::currentTimeSeconds() * 25.0f;
+            angle = 25.0f;
         }
         model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+        model = glm::scale(model, glm::vec3(1.5, 1.5, 1.5));
         setMat4(m_ProgramObj, "model", model);
 
+        glm::vec4 a = model*glm::vec4(-0.5f, -0.5f, -0.5f, 1.0f);
+        glm::vec4 b = view*a;
+        glm::vec4 c = projection*b;
+        glm::vec4 d = ortho*b;
+        float v1 = a[0];
+        float v2 = a[1];
+        float v3 = a[2];
+        float v4 = a[3];
+        LOGD("%f,%f,%f,%f", v1, v2, v3,v4)
+        v1 = b[0];
+        v2 = b[1];
+        v3 = b[2];
+        v4 = b[3];
+        LOGD("%f,%f,%f,%f", v1, v2, v3,v4)
+        v1 = c[0];
+        v2 = c[1];
+        v3 = c[2];
+        v4 = c[3];
+        LOGD("%f,%f,%f,%f", v1, v2, v3, v4)
+        v1 = c[0]/c[3];
+        v2 = c[1]/c[3];
+        v3 = c[2]/c[3];
+        LOGD("%f,%f,%f", v1, v2, v3)
+        v1 = d[0];
+        v2 = d[1];
+        v3 = d[2];
+        v4 = d[3];
+        LOGD("%f,%f,%f,%f", v1, v2, v3, v4)
         glDrawArrays(GL_TRIANGLES, 0, 36);
     }
 }

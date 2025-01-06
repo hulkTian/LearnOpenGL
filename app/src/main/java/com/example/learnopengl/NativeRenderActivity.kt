@@ -249,7 +249,7 @@ class NativeRenderActivity : Activity() {
     private fun setRenderMode(glSurfaceView: MyGLSurfaceView) {
         if (type == IMyNativeRendererType.SAMPLE_TYPE_UNIFORM
             || type == IMyNativeRendererType.SAMPLE_TYPE_MAT
-            || type == IMyNativeRendererType.SAMPLE_TYPE_COORDINATE
+            //|| type == IMyNativeRendererType.SAMPLE_TYPE_COORDINATE
             || type == IMyNativeRendererType.SAMPLE_TYPE_CAMERA
             || type == IMyNativeRendererType.SAMPLE_TYPE_COLORS_MATERIAL
             || type == IMyNativeRendererType.SAMPLE_TYPE_NORMAL_MAPPING

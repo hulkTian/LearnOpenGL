@@ -26,16 +26,16 @@ void texture_warp::Create() {
 
     //load texture1
     // 设置环绕方式为：GL_REPEAT
-    /*ourTexture = GLUtils::loadTgaTexture("textures/container.jpg", GL_RGB, GL_RGB,GL_UNSIGNED_BYTE,
+    /*ourTexture = GLUtils::loadTgaTexture("textures/container.jpg", GL_RGBA, GL_RGBA,GL_UNSIGNED_BYTE,
                                          true, GL_REPEAT, GL_REPEAT,GL_NEAREST,GL_LINEAR);*/
     // 设置环绕方式为：GL_MIRRORED_REPEAT
-    ourTexture = GLUtils::loadTgaTexture("textures/container.jpg", GL_RGB, GL_RGB,GL_UNSIGNED_BYTE,
+    ourTexture = GLUtils::loadTgaTexture("textures/container.jpg", GL_RGBA, GL_RGBA,GL_UNSIGNED_BYTE,
                                          true, GL_MIRRORED_REPEAT, GL_MIRRORED_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_LINEAR);
     // 设置环绕方式为：GL_CLAMP_TO_EDGE
-    /*ourTexture = GLUtils::loadTgaTexture("textures/container.jpg", GL_RGB, GL_RGB,GL_UNSIGNED_BYTE,
+    /*ourTexture = GLUtils::loadTgaTexture("textures/container.jpg", GL_RGBA, GL_RGBA,GL_UNSIGNED_BYTE,
                                          true, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_NEAREST, GL_LINEAR);*/
     // 设置环绕方式为：GL_CLAMP_TO_EDGE
-    /*ourTexture = GLUtils::loadTgaTexture("textures/container.jpg", GL_RGB, GL_RGB,GL_UNSIGNED_BYTE,
+    /*ourTexture = GLUtils::loadTgaTexture("textures/container.jpg", GL_RGBA, GL_RGBA,GL_UNSIGNED_BYTE,
                                          true, GL_CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER,GL_NEAREST, GL_LINEAR);*/
 
     //创建着色器程序,并编译着色器代码
