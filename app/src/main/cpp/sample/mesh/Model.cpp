@@ -44,6 +44,12 @@ void Model::processNode(aiNode *node, const aiScene *scene) {
     }
 }
 
+/**
+ * 解析网格
+ * @param mesh 为解析的网格对象
+ * @param scene 场景对象，网格的材质需要从场景中获取
+ * @return Mesh对象
+ */
 Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
     LOGI("Model::processMesh start %d", mesh->mNumVertices)
     vector<Vertex> vertices;
@@ -180,8 +186,7 @@ unsigned int TextureFromFile(const string path, const string &directory) {
 
             // 加载纹理贴身数据并绑定到之前生成的纹理对象
             glBindTexture(GL_TEXTURE_2D, textureID);
-            glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE,
-                         data);
+            glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
             glGenerateMipmap(GL_TEXTURE_2D); // 创建多级渐远纹理
 
             // 配置纹理采样参数
