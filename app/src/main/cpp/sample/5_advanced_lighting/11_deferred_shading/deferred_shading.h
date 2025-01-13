@@ -6,7 +6,7 @@
 #define LEARNOPENGL_DEFERRED_SHADING_H
 
 #include "GLBaseSample.h"
-#include "Model.h"
+#include "3_mesh/Model.h"
 
 class deferred_shading : public GLBaseSample {
 public:

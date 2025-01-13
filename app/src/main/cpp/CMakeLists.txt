@@ -21,10 +21,6 @@ include_directories(
         render
 
         sample
-        sample/light
-        sample/mesh
-        sample/advanced_opengl/depth_testing
-        sample/advanced_opengl/stencil_testing
 
         utils
         utils/log

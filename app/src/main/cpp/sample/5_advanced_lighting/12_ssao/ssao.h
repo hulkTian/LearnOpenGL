@@ -6,7 +6,7 @@
 #define LEARNOPENGL_SSAO_H
 
 #include "GLBaseSample.h"
-#include "Model.h"
+#include "3_mesh/Model.h"
 
 class ssao : public GLBaseSample {
 public:

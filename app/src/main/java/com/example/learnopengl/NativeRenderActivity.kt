@@ -140,6 +140,7 @@ class NativeRenderActivity : Activity() {
             || type == IMyNativeRendererType.SAMPLE_TYPE_PBR_IBL_SPECULAR_TEXTURED
             || type == IMyNativeRendererType.SAMPLE_TYPE_BREAK_OUT
             || type == IMyNativeRendererType.SAMPLE_TYPE_WEIGHTED_BLENDED_OIT
+            || type == IMyNativeRendererType.SAMPLE_TYPE_DEPTH_DISPLAY
         ) {
             binding.llClick.visibility = View.VISIBLE
             binding.btW.setOnClickListener {

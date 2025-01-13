@@ -166,11 +166,18 @@ class MainActivity : AppCompatActivity() {
             IMyNativeRendererType.SAMPLE_TYPE_DEPTH_TESTING
         )
         addItem(
+            i++, R.mipmap.depth_display,
+            "模板测试可视化",
+            "将深度值作为颜色输出",
+            IMyNativeRendererType.SAMPLE_TYPE_DEPTH_DISPLAY
+        )
+        addItem(
             i++, R.mipmap.depth_testing,
             "模板测试",
             "使用模板测试实现边框效果",
             IMyNativeRendererType.SAMPLE_TYPE_STENCIL_TESTING
         )
+
         addItem(
             i++, R.mipmap.blending_discard,
             "混合",

@@ -57,7 +57,9 @@ void AdvancedLighting::Create() {
 
     // load textures
     // -------------
-    floorTexture = GLUtils::loadTgaTexture("textures/wood.png", false, GL_REPEAT, GL_REPEAT,
+    floorTexture = GLUtils::loadTgaTexture("textures/wood.png", GL_RGBA,
+                                           GL_RGBA, GL_UNSIGNED_BYTE,false,
+                                           GL_REPEAT, GL_REPEAT,
                                            GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
 
     // shader configuration

@@ -26,6 +26,7 @@
 #define SAMPLE_TYPE_LIGHTING_MERGE                                  SAMPLE_TYPE + 17
 #define SAMPLE_TYPE_MODEL_LOADING                                   SAMPLE_TYPE + 18
 #define SAMPLE_TYPE_DEPTH_TESTING                                   SAMPLE_TYPE + 19
+#define SAMPLE_TYPE_DEPTH_DISPLAY                                   SAMPLE_TYPE + 191
 #define SAMPLE_TYPE_STENCIL_TESTING                                 SAMPLE_TYPE + 20
 #define SAMPLE_TYPE_BLENDING_DISCARD                                SAMPLE_TYPE + 21
 #define SAMPLE_TYPE_CULL_FACE                                       SAMPLE_TYPE + 22

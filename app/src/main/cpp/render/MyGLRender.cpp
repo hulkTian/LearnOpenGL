@@ -9,29 +9,29 @@
 #include "1_getting_started/7_coordinate/CoordinateSystems.h"
 #include "1_getting_started/8_camera/Camera.h"
 #include "1_getting_started/8_camera/CameraAutoMove.h"
-#include "ColorsLight.h"
-#include "ColorsAtView.h"
-#include "Material.h"
-#include "lighting_maps_diffuse.h"
-#include "LightCastersDirectional.h"
-#include "ModelLoading.h"
-#include "multiple_lights.h"
-#include "advanced_opengl/depth_testing/DepthTesting.h"
-#include "advanced_opengl/stencil_testing/StencilTesting.h"
-#include "advanced_opengl/blending_discard/BlendingDiscard.h"
-#include "advanced_opengl/cull_face/CullFace.h"
-#include "advanced_opengl/frame_buffer/FrameBuffers.h"
-#include "advanced_opengl/frame_buffer/FrameBuffersExercise.h"
-#include "advanced_opengl/cube_maps/CubeMaps.h"
-#include "advanced_opengl/cube_maps/CubeMapsReflection.h"
-#include "advanced_opengl/cube_maps/ReflectionMode.h"
-#include "advanced_opengl/cube_maps/CubeMapsRefraction.h"
-#include "advanced_opengl/cube_maps/CubeMapsReflectionExercise.h"
-#include "advanced_opengl/AdvancedUbo.h"
-#include "advanced_opengl/geometry_shader/GeometryShaderPoint.h"
-#include "advanced_opengl/instancing/Instancing.h"
-#include "advanced_opengl/instancing/Asteroids.h"
-#include "advanced_opengl/anti_aliasing/AnitAliasing.h"
+#include "2_light/1_colors/ColorsLight.h"
+#include "2_light/2_base_lighting/ColorsAtView.h"
+#include "2_light/3_material/Material.h"
+#include "2_light/4_light_map/lighting_maps_diffuse.h"
+#include "2_light/5_light_caster/LightCastersDirectional.h"
+#include "3_mesh/ModelLoading.h"
+#include "2_light/6_multiple_lights/multiple_lights.h"
+#include "4_advanced_opengl/1_depth_testing/1_depth_testing/DepthTesting.h"
+#include "4_advanced_opengl/2_stencil_testing/StencilTesting.h"
+#include "4_advanced_opengl/3_blending_discard/BlendingDiscard.h"
+#include "4_advanced_opengl/4_cull_face/CullFace.h"
+#include "4_advanced_opengl/5_frame_buffer/FrameBuffers.h"
+#include "4_advanced_opengl/5_frame_buffer/FrameBuffersExercise.h"
+#include "4_advanced_opengl/6_cube_maps/CubeMaps.h"
+#include "4_advanced_opengl/6_cube_maps/CubeMapsReflection.h"
+#include "4_advanced_opengl/6_cube_maps/ReflectionMode.h"
+#include "4_advanced_opengl/6_cube_maps/CubeMapsRefraction.h"
+#include "4_advanced_opengl/6_cube_maps/CubeMapsReflectionExercise.h"
+#include "4_advanced_opengl/7_ubo/AdvancedUbo.h"
+#include "4_advanced_opengl/9_geometry_shader/GeometryShaderPoint.h"
+#include "4_advanced_opengl/10_instancing/Instancing.h"
+#include "4_advanced_opengl/10_instancing/Asteroids.h"
+#include "4_advanced_opengl/11_anti_aliasing/AnitAliasing.h"
 #include "5_advanced_lighting/1_blinn_phong/AdvancedLighting.h"
 #include "5_advanced_lighting/2_gamma_correction/gamma_correction.h"
 #include "5_advanced_lighting/3_shadow_mapping_depth/shadow_mapping_depth.h"
@@ -59,6 +59,7 @@
 #include "1_getting_started/3_triangle_exercise/1_triangle_exercise.h"
 #include "1_getting_started/3_triangle_exercise/2_triangle_exercise.h"
 #include "1_getting_started/4_uniform/uniform.h"
+#include "4_advanced_opengl/1_depth_testing/2_depth_visualization/depth_display.h"
 #include <exception>
 
 struct MyGLException : public std::exception {
@@ -157,6 +158,9 @@ void MyGLRender::SetRenderType(int renderSampleType) {
             break;
         case SAMPLE_TYPE_DEPTH_TESTING:
             m_curr_sample = new DepthTesting();
+            break;
+        case SAMPLE_TYPE_DEPTH_DISPLAY:
+            m_curr_sample = new depth_display();
             break;
         case SAMPLE_TYPE_STENCIL_TESTING:
             m_curr_sample = new StencilTesting();
