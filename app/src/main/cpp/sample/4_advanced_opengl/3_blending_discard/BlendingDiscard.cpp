@@ -179,9 +179,10 @@ void BlendingDiscard::Create() {
                                            GL_RGBA, GL_UNSIGNED_BYTE,false,
                                            GL_REPEAT, GL_REPEAT,
                                            GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
-    /*transparentTexture = GLUtils::loadTgaTexture("textures/grass.png", false,
+    grassTexture = GLUtils::loadTgaTexture("textures/grass.png", GL_RGBA,
+                                           GL_RGBA, GL_UNSIGNED_BYTE,false,
                                                  GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE,
-                                                 GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);*/
+                                                 GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
     transparentTexture = GLUtils::loadTgaTexture("textures/blending_transparent_window.png",
                                                  GL_RGBA,GL_RGBA, GL_UNSIGNED_BYTE,false,
                                                  GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE,
@@ -257,8 +258,7 @@ void BlendingDiscard::Draw() {
     glBindVertexArray(transparentVAO);
     glBindTexture(GL_TEXTURE_2D, transparentTexture);
     // 根据窗户的深度顺序绘制半透明的窗户，避免由于先绘制深度值较小的纹理，而丢弃深度值较大的片段
-    for (std::map<float, glm::vec3>::reverse_iterator it = sorted.rbegin();
-         it != sorted.rend(); ++it) {
+    for (auto it = sorted.rbegin(); it != sorted.rend(); ++it) {
         model = glm::mat4(1.0f);
         model = glm::translate(model, it->second);
         setMat4(m_ProgramObj, "model", model);
@@ -278,6 +278,7 @@ void BlendingDiscard::Shutdown() {
     glDeleteBuffers(1, &transparentVBO);
     glDeleteTextures(1, &cubeTexture);
     glDeleteTextures(1, &floorTexture);
+    glDeleteTextures(1, &grassTexture);
     glDeleteTextures(1, &transparentTexture);
     GLBaseSample::Shutdown();
 }

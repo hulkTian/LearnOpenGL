@@ -21,7 +21,7 @@ public:
 
 private:
     GLuint cubeVAO, cubeVBO, planeVAO, planeVBO, transparentVAO, transparentVBO;
-    GLuint cubeTexture, floorTexture, transparentTexture;
+    GLuint cubeTexture, floorTexture, grassTexture, transparentTexture;
 
 };
 
