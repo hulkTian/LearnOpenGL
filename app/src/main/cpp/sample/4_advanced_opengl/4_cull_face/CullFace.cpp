@@ -148,7 +148,8 @@ void CullFace::Create() {
     glGenBuffers(1, &cubeVBO);
     glBindVertexArray(cubeVAO);
     glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices2), &cubeVertices2, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), &cubeVertices, GL_STATIC_DRAW);
+    //glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices2), &cubeVertices2, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) 0);
     glEnableVertexAttribArray(1);
@@ -196,8 +197,10 @@ void CullFace::Create() {
 
     // todo 开启面剔除
     glEnable(GL_CULL_FACE);
+    // 设置逆时针是正面
+    glFrontFace(GL_CCW);
     // 设置顺时针是正面
-    glFrontFace(GL_CW);
+    //glFrontFace(GL_CW);
 
     //设置清屏颜色
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -224,14 +227,15 @@ void CullFace::Draw() {
     glBindVertexArray(cubeVAO);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, cubeTexture);
-    model = glm::translate(model, glm::vec3(-1.0f, 0.0f, -1.0f));
+    model = glm::translate(model, glm::vec3(-1.0f, 0.01f, -1.0f));
     setMat4(m_ProgramObj, "model", model);
     glDrawArrays(GL_TRIANGLES, 0, 36);
     model = glm::mat4(1.0f);
-    model = glm::translate(model, glm::vec3(2.0f, 0.0f, 0.0f));
+    model = glm::translate(model, glm::vec3(2.0f, 0.01f, 0.0f));
     setMat4(m_ProgramObj, "model", model);
     glDrawArrays(GL_TRIANGLES, 0, 36);
     // floor
+    glDisable(GL_CULL_FACE);
     glBindVertexArray(planeVAO);
     glBindTexture(GL_TEXTURE_2D, floorTexture);
     setMat4(m_ProgramObj, "model", glm::mat4(1.0f));
