@@ -79,6 +79,7 @@ public:
 
     virtual ~GLBaseSample() {}
 
+    // 纯虚函数，强制子类必须实现
     virtual void Create() = 0;
 
     virtual void Change(float width, float height) {

@@ -10,11 +10,11 @@
 class vao_vbo :public GLBaseSample {
 public:
     vao_vbo() = default;
-    ~vao_vbo() = default;
+    virtual ~vao_vbo() = default;
 
-    virtual void Create();
-    virtual void Draw();
-    virtual void Shutdown();
+    virtual void Create() override;
+    virtual void Draw() override;
+    virtual void Shutdown() override;
 
 private:
     // 使用OpenGL提供的数据类型可以保证不同平台数据宽度一致

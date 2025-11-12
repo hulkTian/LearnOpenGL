@@ -48,18 +48,25 @@ void kernel() {
     );*/
 
     // 模糊核数组
-    /*float kernel[9] = float[](
+    float kernel[9] = float[](
     1.0 / 16.0, 2.0 / 16.0, 1.0 / 16.0,
     2.0 / 16.0, 4.0 / 16.0, 2.0 / 16.0,
     1.0 / 16.0, 2.0 / 16.0, 1.0 / 16.0
-    );*/
+    );
 
     // 边缘检测(Edge-detection)核数组
-    float kernel[9] = float[](
+    /**float kernel[9] = float[](
     1.0, 1.0, 1.0,
     1.0, -8.0, 1.0,
     1.0, 1.0, 1.0
-    );
+    );*/
+
+    // 浮雕内核
+    /**float kernel[9] = float[](
+    2.0, -1.0, 0.0,
+    -1.0, 1.0, 1.0,
+    0.0, 1.0, 2.0
+    );*/
 
     vec3 sampleTex[9];
     for (int i = 0; i < 9; i++)
@@ -79,5 +86,7 @@ void kernel() {
 
 void main()
 {
-    normal();
+    //normal();
+    //kernel();
+    grayscale();
 }
