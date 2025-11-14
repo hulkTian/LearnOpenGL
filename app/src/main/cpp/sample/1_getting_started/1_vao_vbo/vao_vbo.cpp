@@ -26,12 +26,12 @@ void vao_vbo::Create() {
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     // 3.复制顶点数据到VBO
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    // 4.设置顶点属性配置
-    // 设置位置属性
+    // 4.设置顶点属性读取方式
+    // 设置位置属性，放在顶点属性的第0个位置上，每个顶点有3个float数据，步长为6个float数据，起始位置偏移量为0
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *) nullptr);
     // 5.启动指定索引的顶点属性
     glEnableVertexAttribArray(0); // 启用第0个顶点属性
-    // 设置颜色属性，最后一个参数需要注意设置起始位置的偏移量
+    // 设置颜色属性，放在顶点属性的第1个位置上，每个顶点有3个float数据，步长为6个float数据，起始位置偏移量为3个float数据
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *) (3 * sizeof(float)));
     glEnableVertexAttribArray(1); // 启用第1个顶点属性
     // 6.优化可选操作：解绑VAO，避免当前VAO在使用前被修改
