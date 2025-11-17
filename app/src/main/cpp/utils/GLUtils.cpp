@@ -106,11 +106,11 @@ static GLuint loadShader(GLenum shaderType, const char **source) {
         glCompileShader(shader);
 
         //检查着色器编译状态，获取编译状态
-        GLint success;
-        glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+        GLint status;
+        glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
 
         //编译不成功，打印错误信息
-        if (!success) {
+        if (status != GL_TRUE) {
             GLint infoLen = 0;
             //获取错误信息的长度
             glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLen);
@@ -181,7 +181,7 @@ GLUtils::createProgram(const char *vertexPath, const char *fragmentPath, const c
     if (geometryPath) {
         geometryCode = openTextFile(geometryPath);
     } else {
-        LOGV("geometry shader path is null")
+        LOGE("geometry shader path is null")
     }
 
 
@@ -203,18 +203,20 @@ GLUtils::createProgram(const char *vertexPath, const char *fragmentPath, const c
                 return 0;
             }
         } else {
-            LOGV("geometry shader code is null")
+            LOGE("geometry shader code is null")
         }
 
         //加载片段着色器代码并创建shader对象
         GLuint fragmentShader = loadShader(GL_FRAGMENT_SHADER, &fragmentCode);
         if (fragmentShader == 0) {
+            LOGE("fragment shader is null")
             return 0;
         }
 
         //创建着色器程序对象
         programId = glCreateProgram();
         if (programId == 0) {
+            LOGE("Could not create program")
             return 0;
         }
 
@@ -230,7 +232,7 @@ GLUtils::createProgram(const char *vertexPath, const char *fragmentPath, const c
             LOGV("geometry shader object is null")
         }
 
-        //绑定顶点着色器对象到着色器程序
+        //绑定片元着色器对象到着色器程序
         glAttachShader(programId, fragmentShader);
         checkGlError("glAttachShader");
 

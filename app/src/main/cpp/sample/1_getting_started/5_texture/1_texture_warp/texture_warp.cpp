@@ -20,17 +20,17 @@ void texture_warp::Create() {
             1, 2, 3  // second triangle
     };
 
-    int pointer[] = {3, 3, 2};
+    int pointer[] = {3, 3, 2, 0};
 
     VAO = GLUtils::setUpVAOAndVBO(vertices, sizeof(vertices), indices, sizeof(indices) ,pointer);
 
     //load texture1
     // 设置环绕方式为：GL_REPEAT
-    /*ourTexture = GLUtils::loadTgaTexture("textures/container.jpg", GL_RGBA, GL_RGBA,GL_UNSIGNED_BYTE,
-                                         true, GL_REPEAT, GL_REPEAT,GL_NEAREST,GL_LINEAR);*/
-    // 设置环绕方式为：GL_MIRRORED_REPEAT
     ourTexture = GLUtils::loadTgaTexture("textures/container.jpg", GL_RGBA, GL_RGBA,GL_UNSIGNED_BYTE,
-                                         true, GL_MIRRORED_REPEAT, GL_MIRRORED_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_LINEAR);
+                                         true, GL_REPEAT, GL_REPEAT,GL_NEAREST,GL_LINEAR);
+    // 设置环绕方式为：GL_MIRRORED_REPEAT
+    /*ourTexture = GLUtils::loadTgaTexture("textures/container.jpg", GL_RGBA, GL_RGBA,GL_UNSIGNED_BYTE,
+                                         true, GL_MIRRORED_REPEAT, GL_MIRRORED_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_LINEAR);*/
     // 设置环绕方式为：GL_CLAMP_TO_EDGE
     /*ourTexture = GLUtils::loadTgaTexture("textures/container.jpg", GL_RGBA, GL_RGBA,GL_UNSIGNED_BYTE,
                                          true, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_NEAREST, GL_LINEAR);*/
