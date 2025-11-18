@@ -176,7 +176,9 @@ class NativeRenderActivity : Activity() {
         }
 
         if (type == IMyNativeRendererType.SAMPLE_TYPE_HDR || type == IMyNativeRendererType.SAMPLE_TYPE_BLOOM
-            || type == IMyNativeRendererType.SAMPLE_TYPE_TEXTURE_EXERCISE_4) {
+            || type == IMyNativeRendererType.SAMPLE_TYPE_TEXTURE_EXERCISE_4
+            || type == IMyNativeRendererType.SAMPLE_TYPE_COORDINATE_EXERCISE_1
+            || type == IMyNativeRendererType.SAMPLE_TYPE_COORDINATE_EXERCISE_2) {
             binding.sbSeekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
                 override fun onProgressChanged(
                     seekBar: SeekBar?,
@@ -252,6 +254,8 @@ class NativeRenderActivity : Activity() {
         if (type == IMyNativeRendererType.SAMPLE_TYPE_UNIFORM
             || type == IMyNativeRendererType.SAMPLE_TYPE_MAT
             //|| type == IMyNativeRendererType.SAMPLE_TYPE_COORDINATE
+            || type == IMyNativeRendererType.SAMPLE_TYPE_COORDINATE_EXERCISE_2
+            || type == IMyNativeRendererType.SAMPLE_TYPE_COORDINATE_EXERCISE_3
             || type == IMyNativeRendererType.SAMPLE_TYPE_CAMERA
             || type == IMyNativeRendererType.SAMPLE_TYPE_COLORS_MATERIAL
             || type == IMyNativeRendererType.SAMPLE_TYPE_NORMAL_MAPPING

@@ -21,6 +21,9 @@
 #define SAMPLE_TYPE_TEXTURE_EXERCISE_4                              SAMPLE_TYPE_EXERCISE + 8
 #define SAMPLE_TYPE_MAT                                             SAMPLE_TYPE + 8
 #define SAMPLE_TYPE_COORDINATE                                      SAMPLE_TYPE + 9
+#define SAMPLE_TYPE_COORDINATE_EXERCISE_1                           SAMPLE_TYPE_EXERCISE + 9
+#define SAMPLE_TYPE_COORDINATE_EXERCISE_2                           SAMPLE_TYPE_EXERCISE + 10
+#define SAMPLE_TYPE_COORDINATE_EXERCISE_3                           SAMPLE_TYPE_EXERCISE + 11
 #define SAMPLE_TYPE_CAMERA                                          SAMPLE_TYPE + 10
 #define SAMPLE_TYPE_CAMERA_AUTO_MOVE                                SAMPLE_TYPE + 11
 #define SAMPLE_TYPE_COLORS                                          SAMPLE_TYPE + 12

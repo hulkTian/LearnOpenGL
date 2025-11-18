@@ -131,6 +131,24 @@ class MainActivity : AppCompatActivity() {
         )
         addItem(
             i++, R.mipmap.coordinate,
+            "坐标系统-练习1",
+            "控制foV和aspect-ratio观察3D场景",
+            IMyNativeRendererType.SAMPLE_TYPE_COORDINATE_EXERCISE_1
+        )
+        addItem(
+            i++, R.mipmap.coordinate,
+            "坐标系统-练习2",
+            "移动观察矩阵位置观察3D场景",
+            IMyNativeRendererType.SAMPLE_TYPE_COORDINATE_EXERCISE_2
+        )
+        addItem(
+            i++, R.mipmap.coordinate,
+            "坐标系统-练习3",
+            "使用模型矩阵旋转特定的物体",
+            IMyNativeRendererType.SAMPLE_TYPE_COORDINATE_EXERCISE_3
+        )
+        addItem(
+            i++, R.mipmap.coordinate,
             "摄像机",
             "使用摄像机矩阵，实现3D空间观察视角",
             IMyNativeRendererType.SAMPLE_TYPE_CAMERA

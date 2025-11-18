@@ -64,6 +64,9 @@
 #include "1_getting_started/5_texture/4_texture_exercise/texture_exercise_2.h"
 #include "1_getting_started/5_texture/4_texture_exercise/texture_exercise_3.h"
 #include "1_getting_started/5_texture/4_texture_exercise/texture_exercise_4.h"
+#include "1_getting_started/7_coordinate/CoordinateSystemsExercise_1.h"
+#include "1_getting_started/7_coordinate/CoordinateSystemsExercise_2.h"
+#include "1_getting_started/7_coordinate/CoordinateSystemsExercise_3.h"
 #include <exception>
 
 struct MyGLException : public std::exception {
@@ -144,6 +147,15 @@ void MyGLRender::SetRenderType(int renderSampleType) {
             break;
         case SAMPLE_TYPE_COORDINATE:
             m_curr_sample = new CoordinateSystems();
+            break;
+        case SAMPLE_TYPE_COORDINATE_EXERCISE_1:
+            m_curr_sample = new CoordinateSystemsExercise_1();
+            break;
+        case SAMPLE_TYPE_COORDINATE_EXERCISE_2:
+            m_curr_sample = new CoordinateSystemsExercise_2();
+            break;
+        case SAMPLE_TYPE_COORDINATE_EXERCISE_3:
+            m_curr_sample = new CoordinateSystemsExercise_3();
             break;
         case SAMPLE_TYPE_CAMERA:
             m_curr_sample = new Camera();

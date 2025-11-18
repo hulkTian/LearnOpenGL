@@ -1,8 +1,8 @@
 //
-// Created by ts on 2024/7/1.
+// Created by tzh on 2025/11/18.
 //
 
-#include "CoordinateSystems.h"
+#include "CoordinateSystemsExercise_1.h"
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 #include <iostream>
@@ -69,31 +69,12 @@ static glm::vec3 cubePositions[] = {
         glm::vec3(-1.3f, 1.0f, -1.5f)
 };
 
-void CoordinateSystems::Create() {
+void CoordinateSystemsExercise_1::Create() {
     GLUtils::printGLInfo();
-
-    /*glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &EBO);
-
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-    // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) 0);
-    glEnableVertexAttribArray(0);
-    // texture coord attribute
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),(void *) (3 * sizeof(float)));
-    glEnableVertexAttribArray(1);*/
 
     int pointer[] = {3, 2, 0};
 
-    VAO = GLUtils::setUpVAOAndVBO(vertices, sizeof(vertices), indices, sizeof(indices) ,pointer);
+    VAO = GLUtils::setUpVAOAndVBO(vertices, sizeof(vertices), indices, sizeof(indices), pointer);
 
     //load texture1
     texture1 = GLUtils::loadTgaTexture("textures/container.jpg");
@@ -117,7 +98,7 @@ void CoordinateSystems::Create() {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 }
 
-void CoordinateSystems::Draw() {
+void CoordinateSystemsExercise_1::Draw() {
     //清除屏幕和深度缓冲
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -142,12 +123,12 @@ void CoordinateSystems::Draw() {
     setMat4(m_ProgramObj, "view", view);
 
     // 透视投影矩阵
-    glm::mat4 projection = glm::perspective(glm::radians(60.0f), SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
+    float fov = glm::radians(static_cast<float>(seek));
+    LOGD("fov: %f", fov)
+    //todo 结论：fov可以控制视野的大小，fov越大，视野越大，看到的东西越多，但物体会显得更小；fov越小，视野越小，看到的东西越少，但物体会显得更大。
+    // aspect可以控制视野的宽高比，影响画面的变形程度。
+    glm::mat4 projection = glm::perspective(fov, SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
     setMat4(m_ProgramObj, "projection", projection);
-
-    // 正射投影矩阵
-    glm::mat4 ortho = glm::ortho(0.0f, SCR_WIDTH, 0.0f, SCR_HEIGHT, 0.1f, 100.f);
-    //setMat4(m_ProgramObj, "projection", ortho);
 
     for (unsigned int i = 0; i < sizeof(cubePositions) / sizeof(cubePositions[0]); i++) {
         glm::mat4 model = glm::mat4(1.0f);
@@ -160,7 +141,6 @@ void CoordinateSystems::Draw() {
         glm::vec4 a = model*glm::vec4(-0.5f, -0.5f, -0.5f, 1.0f);
         glm::vec4 b = view*a;
         glm::vec4 c = projection*b;
-        glm::vec4 d = ortho*b;
         float v1 = a[0];
         float v2 = a[1];
         float v3 = a[2];
@@ -180,11 +160,6 @@ void CoordinateSystems::Draw() {
         v2 = c[1]/c[3];
         v3 = c[2]/c[3];
         LOGD("%f,%f,%f", v1, v2, v3)
-        v1 = d[0];
-        v2 = d[1];
-        v3 = d[2];
-        v4 = d[3];
-        LOGD("%f,%f,%f,%f", v1, v2, v3, v4)
 
         //绑定VAO
         glBindVertexArray(VAO);
@@ -193,10 +168,8 @@ void CoordinateSystems::Draw() {
     }
 }
 
-void CoordinateSystems::Shutdown() {
+void CoordinateSystemsExercise_1::Shutdown() {
     //关闭顶点属性
     glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &EBO);
     GLBaseSample::Shutdown();
 }
