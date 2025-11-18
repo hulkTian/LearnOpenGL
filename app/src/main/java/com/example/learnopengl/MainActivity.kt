@@ -94,6 +94,30 @@ class MainActivity : AppCompatActivity() {
             IMyNativeRendererType.SAMPLE_TYPE_TEXTURE_MIPMAP
         )
         addItem(
+            i++, R.mipmap.texture_unit,
+            "纹理",
+            "练习1，调整纹理坐标让纹理反转显示",
+            IMyNativeRendererType.SAMPLE_TYPE_TEXTURE_EXERCISE_1
+        )
+        addItem(
+            i++, R.mipmap.texture_unit,
+            "纹理",
+            "练习2，设置环绕方式让纹理重复显示",
+            IMyNativeRendererType.SAMPLE_TYPE_TEXTURE_EXERCISE_2
+        )
+        addItem(
+            i++, R.mipmap.texture_unit,
+            "纹理",
+            "练习3，放大纹理使用GL_NEAREST",
+            IMyNativeRendererType.SAMPLE_TYPE_TEXTURE_EXERCISE_3
+        )
+        addItem(
+            i++, R.mipmap.texture_unit,
+            "纹理",
+            "练习4，使用uniform控制纹理混合比例",
+            IMyNativeRendererType.SAMPLE_TYPE_TEXTURE_EXERCISE_4
+        )
+        addItem(
             i++, R.mipmap.transform,
             "变换",
             "使用变换矩阵实现物体的缩放、位移和旋转",

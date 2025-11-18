@@ -60,6 +60,10 @@
 #include "1_getting_started/3_triangle_exercise/2_triangle_exercise.h"
 #include "1_getting_started/4_uniform/uniform.h"
 #include "4_advanced_opengl/1_depth_testing/2_depth_visualization/depth_display.h"
+#include "1_getting_started/5_texture/4_texture_exercise/texture_exercise_1.h"
+#include "1_getting_started/5_texture/4_texture_exercise/texture_exercise_2.h"
+#include "1_getting_started/5_texture/4_texture_exercise/texture_exercise_3.h"
+#include "1_getting_started/5_texture/4_texture_exercise/texture_exercise_4.h"
 #include <exception>
 
 struct MyGLException : public std::exception {
@@ -122,6 +126,18 @@ void MyGLRender::SetRenderType(int renderSampleType) {
             break;
         case SAMPLE_TYPE_TEXTURE2:
             m_curr_sample = new NativeTriangle7();
+            break;
+        case SAMPLE_TYPE_TEXTURE_EXERCISE_1:
+            m_curr_sample = new texture_exercise_1();
+            break;
+        case SAMPLE_TYPE_TEXTURE_EXERCISE_2:
+            m_curr_sample = new texture_exercise_2();
+            break;
+        case SAMPLE_TYPE_TEXTURE_EXERCISE_3:
+            m_curr_sample = new texture_exercise_3();
+            break;
+        case SAMPLE_TYPE_TEXTURE_EXERCISE_4:
+            m_curr_sample = new texture_exercise_4();
             break;
         case SAMPLE_TYPE_MAT:
             m_curr_sample = new Transform();

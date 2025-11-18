@@ -175,7 +175,8 @@ class NativeRenderActivity : Activity() {
             binding.llClick.visibility = View.GONE
         }
 
-        if (type == IMyNativeRendererType.SAMPLE_TYPE_HDR || type == IMyNativeRendererType.SAMPLE_TYPE_BLOOM) {
+        if (type == IMyNativeRendererType.SAMPLE_TYPE_HDR || type == IMyNativeRendererType.SAMPLE_TYPE_BLOOM
+            || type == IMyNativeRendererType.SAMPLE_TYPE_TEXTURE_EXERCISE_4) {
             binding.sbSeekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
                 override fun onProgressChanged(
                     seekBar: SeekBar?,

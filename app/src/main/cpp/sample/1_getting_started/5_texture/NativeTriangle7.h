@@ -17,6 +17,6 @@ public:
 
 private:
     //声明顶点缓存对象和顶点数组对象
-    GLuint VBO, VAO, EBO;
+    GLuint VAO;
     GLuint texture1, texture2;
 };

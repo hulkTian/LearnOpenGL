@@ -2,13 +2,25 @@
 // Created by ts on 2024/12/18.
 //
 
-#ifndef LEARNOPENGL_TEXTURE_EXERCISE_1_H
-#define LEARNOPENGL_TEXTURE_EXERCISE_1_H
+#pragma once
 
+#include "GLBaseSample.h"
 
-class texture_exercise_1 {
+class texture_exercise_1 : public GLBaseSample {
+public:
+    texture_exercise_1() = default;
+
+    virtual ~texture_exercise_1() = default;
+
+    virtual void Create();
+
+    virtual void Draw();
+
+    virtual void Shutdown();
+
+private:
+    //声明顶点缓存对象和顶点数组对象
+    GLuint VAO;
+    GLuint texture1, texture2;
 
 };
-
-
-#endif //LEARNOPENGL_TEXTURE_EXERCISE_1_H
