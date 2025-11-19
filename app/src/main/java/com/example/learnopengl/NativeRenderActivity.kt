@@ -178,7 +178,8 @@ class NativeRenderActivity : Activity() {
         if (type == IMyNativeRendererType.SAMPLE_TYPE_HDR || type == IMyNativeRendererType.SAMPLE_TYPE_BLOOM
             || type == IMyNativeRendererType.SAMPLE_TYPE_TEXTURE_EXERCISE_4
             || type == IMyNativeRendererType.SAMPLE_TYPE_COORDINATE_EXERCISE_1
-            || type == IMyNativeRendererType.SAMPLE_TYPE_COORDINATE_EXERCISE_2) {
+            || type == IMyNativeRendererType.SAMPLE_TYPE_COORDINATE_EXERCISE_2
+            || type == IMyNativeRendererType.SAMPLE_TYPE_CAMERA_AUTO_MOVE) {
             binding.sbSeekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
                 override fun onProgressChanged(
                     seekBar: SeekBar?,

@@ -68,20 +68,15 @@ static glm::vec3 cubePositions[] = {
 void CameraAutoMove::Create() {
     GLUtils::printGLInfo();
 
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
+    int pointer[] = {3, 2, 0};
 
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    VAO = GLUtils::setUpVAOAndVBO(vertices, sizeof(vertices), nullptr, 0 ,pointer);
 
     // position attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) 0);
     glEnableVertexAttribArray(0);
     // texture coord attribute
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
-                          (void *) (3 * sizeof(float)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),(void *) (3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
     //load texture1
@@ -153,6 +148,5 @@ void CameraAutoMove::Draw() {
 void CameraAutoMove::Shutdown() {
     //关闭顶点属性
     glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
     GLBaseSample::Shutdown();
 }

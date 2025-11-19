@@ -118,6 +118,7 @@ public:
 
     virtual void ProgressChanged(int i) {
         seek = i;
+        cameraUtils.ProcessMouseScroll(static_cast<float>(i));
     }
 
     virtual void MoveCallback(float x, float y) {

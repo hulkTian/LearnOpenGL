@@ -117,16 +117,6 @@ void CoordinateSystemsExercise_2::Draw() {
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, texture2);
 
-
-    // 让摄像机在 X 轴上移动，物体保持在中间
-    /*float cameraX = sin(TimeUtils::currentTimeSeconds()) * 5.0f; // 摄像机左右移动
-    glm::vec3 cameraPos = glm::vec3(cameraX, 0.0f, 9.0f);
-    glm::mat4 view = glm::lookAt(
-            cameraPos,                // 摄像机位置
-            glm::vec3(0.0f, 0.0f, 0.0f), // 观察目标（物体中心）
-            glm::vec3(0.0f, 1.0f, 0.0f)  // 上方向
-    );*/
-
     // 观察矩阵
     glm::mat4 view = glm::mat4(1.0f);
     view = glm::translate(view, glm::vec3(0.0f, 0.0f, -9.0f));

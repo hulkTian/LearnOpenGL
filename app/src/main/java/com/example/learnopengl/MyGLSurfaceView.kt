@@ -62,7 +62,7 @@ class MyGLSurfaceView : GLSurfaceView {
             val x: Float = event.x
             if (event.action == MotionEvent.ACTION_MOVE) {
                 val dy: Float = y - mPreviousY
-                val dx: Float = x - mPreviousX
+                val dx: Float = mPreviousX - x
                 moveCallback(dx, dy)
                 requestRender()
             }
