@@ -15,6 +15,7 @@ import android.widget.RelativeLayout
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import com.example.learnopengl.databinding.ActivityNativeRenderBinding
 
@@ -41,16 +42,21 @@ class NativeRenderActivity : Activity() {
     //当前需要渲染的内容类型
     var type = IMyNativeRendererType.SAMPLE_TYPE
 
+    var renderMode = GLSurfaceView.RENDERMODE_WHEN_DIRTY
+
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (!detectOpenGLES30()) {
             return
         }
         val intent = intent
-        type = intent.getIntExtra(
-            IMyNativeRendererType.RENDER_TYPE,
-            IMyNativeRendererType.SAMPLE_TYPE
-        )
+        val uiConfig =
+            intent.getSerializableExtra(IMyNativeRendererType.RENDER_TYPE, UIConfig::class.java)
+        uiConfig?.let {
+            type = it.type
+            renderMode = it.renderMode
+        }
 
         mRenderer = MyNativeRenderer(this)
         mRenderer?.let { myNativeRenderer ->
@@ -67,8 +73,9 @@ class NativeRenderActivity : Activity() {
                 binding.ivRootBack.setOnClickListener {
                     finish()
                 }
-
-                initClickLayout()
+                uiConfig?.let { config ->
+                    initClickLayout(config)
+                }
 
                 val lp = RelativeLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
@@ -84,7 +91,7 @@ class NativeRenderActivity : Activity() {
                 }
 
                 //设置渲染模式
-                setRenderMode(glSurfaceView)
+                glSurfaceView.renderMode = renderMode
 
                 //加载渲染内容
                 loadRenderContent()
@@ -99,50 +106,9 @@ class NativeRenderActivity : Activity() {
         Log.i("", "===================")
     }
 
-    private fun initClickLayout() {
-        if (type == IMyNativeRendererType.SAMPLE_TYPE_CAMERA_AUTO_MOVE
-            || type == IMyNativeRendererType.SAMPLE_TYPE_COLORS
-            || type == IMyNativeRendererType.SAMPLE_TYPE_COLORS_VIEW
-            || type == IMyNativeRendererType.SAMPLE_TYPE_COLORS_MATERIAL
-            || type == IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_MAPS_DIFFUSE
-            || type == IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_CASTERS_DIRECTIONAL
-            || type == IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_MERGE
-            || type == IMyNativeRendererType.SAMPLE_TYPE_MODEL_LOADING
-            || type == IMyNativeRendererType.SAMPLE_TYPE_DEPTH_TESTING
-            || type == IMyNativeRendererType.SAMPLE_TYPE_STENCIL_TESTING
-            || type == IMyNativeRendererType.SAMPLE_TYPE_BLENDING_DISCARD
-            || type == IMyNativeRendererType.SAMPLE_TYPE_CULL_FACE
-            || type == IMyNativeRendererType.SAMPLE_TYPE_FRAME_BUFFERS
-            || type == IMyNativeRendererType.SAMPLE_TYPE_FRAME_BUFFERS_EXERCISE
-            || type == IMyNativeRendererType.SAMPLE_TYPE_CUBE_MAPS
-            || type == IMyNativeRendererType.SAMPLE_TYPE_CUBE_MAPS_REFLECTION1
-            || type == IMyNativeRendererType.SAMPLE_TYPE_CUBE_MAPS_REFLECTION2
-            || type == IMyNativeRendererType.SAMPLE_TYPE_CUBE_MAPS_REFRACTION
-            || type == IMyNativeRendererType.SAMPLE_TYPE_CUBE_MAPS_EXERCISE
-            || type == IMyNativeRendererType.SAMPLE_TYPE_INSTANCING_ASTEROIDS
-            || type == IMyNativeRendererType.SAMPLE_TYPE_ANIT_ALIASING
-            || type == IMyNativeRendererType.SAMPLE_TYPE_ADVANCED_LIGHTING
-            || type == IMyNativeRendererType.SAMPLE_TYPE_ADVANCED_LIGHTING_GAMMA_CORRECTED
-            || type == IMyNativeRendererType.SAMPLE_TYPE_SHADOW_MAPPING_BASE
-            || type == IMyNativeRendererType.SAMPLE_TYPE_NORMAL_MAPPING
-            || type == IMyNativeRendererType.SAMPLE_TYPE_PARALLAX_MAPPING
-            || type == IMyNativeRendererType.SAMPLE_TYPE_STEEP_PARALLAX_MAPPING
-            || type == IMyNativeRendererType.SAMPLE_TYPE_PARALLAX_OCCLUSION_MAPPING
-            || type == IMyNativeRendererType.SAMPLE_TYPE_HDR
-            || type == IMyNativeRendererType.SAMPLE_TYPE_BLOOM
-            || type == IMyNativeRendererType.SAMPLE_TYPE_DEFERRED_SHADING
-            || type == IMyNativeRendererType.SAMPLE_TYPE_SSAO
-            || type == IMyNativeRendererType.SAMPLE_TYPE_PBR_LIGHTING
-            || type == IMyNativeRendererType.SAMPLE_TYPE_PBR_LIGHTING_TEXTURED
-            || type == IMyNativeRendererType.SAMPLE_TYPE_PBR_IBL_IRRADIANCE_CONVERSION
-            || type == IMyNativeRendererType.SAMPLE_TYPE_PBR_IBL_IRRADIANCE
-            || type == IMyNativeRendererType.SAMPLE_TYPE_PBR_IBL_SPECULAR
-            || type == IMyNativeRendererType.SAMPLE_TYPE_PBR_IBL_SPECULAR_TEXTURED
-            || type == IMyNativeRendererType.SAMPLE_TYPE_BREAK_OUT
-            || type == IMyNativeRendererType.SAMPLE_TYPE_WEIGHTED_BLENDED_OIT
-            || type == IMyNativeRendererType.SAMPLE_TYPE_DEPTH_DISPLAY
-        ) {
-            binding.llClick.visibility = View.VISIBLE
+    private fun initClickLayout(uiConfig: UIConfig) {
+        binding.llClick.visibility = uiConfig.showClickLayout
+        if (uiConfig.showClickLayout == View.VISIBLE) {
             binding.btW.setOnClickListener {
                 mRenderer?.processInput(Key.KEY_W)
                 mGLSurfaceView?.requestRender()
@@ -159,27 +125,18 @@ class NativeRenderActivity : Activity() {
                 mRenderer?.processInput(Key.KEY_D)
                 mGLSurfaceView?.requestRender()
             }
-            if (type == IMyNativeRendererType.SAMPLE_TYPE_ADVANCED_LIGHTING_GAMMA_CORRECTED
-                || type == IMyNativeRendererType.SAMPLE_TYPE_HDR
-                || type == IMyNativeRendererType.SAMPLE_TYPE_BLOOM
-            ) {
-                binding.btB.visibility = View.VISIBLE
-                binding.btB.setOnClickListener {
-                    mRenderer?.processInput(Key.KEY_B)
-                    mGLSurfaceView?.requestRender()
-                }
-            } else {
-                binding.btB.visibility = View.GONE
-            }
-        } else {
-            binding.llClick.visibility = View.GONE
         }
-
-        if (type == IMyNativeRendererType.SAMPLE_TYPE_HDR || type == IMyNativeRendererType.SAMPLE_TYPE_BLOOM
-            || type == IMyNativeRendererType.SAMPLE_TYPE_TEXTURE_EXERCISE_4
-            || type == IMyNativeRendererType.SAMPLE_TYPE_COORDINATE_EXERCISE_1
-            || type == IMyNativeRendererType.SAMPLE_TYPE_COORDINATE_EXERCISE_2
-            || type == IMyNativeRendererType.SAMPLE_TYPE_CAMERA_AUTO_MOVE) {
+        binding.btB.visibility = uiConfig.showBooleanButton
+        if (uiConfig.showBooleanButton == View.VISIBLE) {
+            binding.btB.setOnClickListener {
+                mRenderer?.processInput(Key.KEY_B)
+                mGLSurfaceView?.requestRender()
+            }
+        }
+        binding.sbSeekBar.visibility = uiConfig.showSeekBar1
+        binding.tvTitle.visibility = uiConfig.showSeekBar1
+        if (uiConfig.showSeekBar1 == View.VISIBLE) {
+            binding.tvTitle.text = uiConfig.title1
             binding.sbSeekBar.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
                 override fun onProgressChanged(
                     seekBar: SeekBar?,
@@ -196,107 +153,124 @@ class NativeRenderActivity : Activity() {
                 override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 }
             })
-        } else {
-            binding.sbSeekBar.visibility = View.GONE
+        }
+        binding.sbSeekBar2.visibility = uiConfig.showSeekBar2
+        binding.tvTitle2.visibility = uiConfig.showSeekBar2
+        if (uiConfig.showSeekBar2 == View.VISIBLE) {
+            binding.tvTitle2.text = uiConfig.title2
+            binding.sbSeekBar2.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+                override fun onProgressChanged(
+                    seekBar: SeekBar?,
+                    progress: Int,
+                    fromUser: Boolean
+                ) {
+                    mRenderer?.progressChanged2(progress)
+                    mGLSurfaceView?.requestRender()
+                }
+
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                }
+
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                }
+            })
+        }
+        binding.sbSeekBar3.visibility = uiConfig.showSeekBar3
+        binding.tvTitle3.visibility = uiConfig.showSeekBar3
+        if (uiConfig.showSeekBar3 == View.VISIBLE) {
+            binding.tvTitle3.text = uiConfig.title3
+            binding.sbSeekBar3.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
+                override fun onProgressChanged(
+                    seekBar: SeekBar?,
+                    progress: Int,
+                    fromUser: Boolean
+                ) {
+                    mRenderer?.progressChanged3(progress)
+                    mGLSurfaceView?.requestRender()
+                }
+
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                }
+
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                }
+            })
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        mGLSurfaceView?.onResume()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        mGLSurfaceView?.onPause()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        mRenderer?.onDestroy()
-    }
-
-    /**
-     * 检测设备是否支持OpenGL ES 3.0
-     */
-    private fun detectOpenGLES30(): Boolean {
-        val am = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-        val info = am.deviceConfigurationInfo
-        val reqGlEsVersion = info.reqGlEsVersion
-
-        // 有些GPU模拟部分有缺陷，为了使代码在模拟器上正常工作，写下面的代码
-        // 这段代码判断当前设备是不是模拟器，如果是，就假定它支持OpenGL ES 3.0
-        // 要确保程序能运行，模拟器一定要配置OpenGL ES 3.0
-        val isSupportedOpenGLES30 = reqGlEsVersion >= 0x30000
-                || (Build.FINGERPRINT.startsWith("generic")
-                || Build.FINGERPRINT.startsWith("unknown")
-                || Build.MODEL.contains("google_sdk")
-                || Build.MODEL.contains("Emulator")
-                || Build.MODEL.contains("Android SDK built for x86"))
-
-        if (!isSupportedOpenGLES30) {
-            Log.e(
-                TAG,
-                "OpenGL ES 3.0 not supported on device. The device's reqGlEsVersion is $reqGlEsVersion, Exiting..."
-            )
-            Toast.makeText(
-                this,
-                "当前设备不支持OpenGL ES 3.0 ，当前设备的GlEs版本是$reqGlEsVersion",
-                Toast.LENGTH_LONG
-            ).show()
+        override fun onResume() {
+            super.onResume()
+            mGLSurfaceView?.onResume()
         }
-        return isSupportedOpenGLES30
-    }
 
-    /**
-     * 根据渲染类型设置渲染模式.
-     */
-    private fun setRenderMode(glSurfaceView: MyGLSurfaceView) {
-        if (type == IMyNativeRendererType.SAMPLE_TYPE_UNIFORM
-            || type == IMyNativeRendererType.SAMPLE_TYPE_MAT
-            //|| type == IMyNativeRendererType.SAMPLE_TYPE_COORDINATE
-            || type == IMyNativeRendererType.SAMPLE_TYPE_COORDINATE_EXERCISE_2
-            || type == IMyNativeRendererType.SAMPLE_TYPE_COORDINATE_EXERCISE_3
-            || type == IMyNativeRendererType.SAMPLE_TYPE_CAMERA
-            || type == IMyNativeRendererType.SAMPLE_TYPE_COLORS_MATERIAL
-            || type == IMyNativeRendererType.SAMPLE_TYPE_NORMAL_MAPPING
-            || type == IMyNativeRendererType.SAMPLE_TYPE_PARALLAX_MAPPING
-            || type == IMyNativeRendererType.SAMPLE_TYPE_STEEP_PARALLAX_MAPPING
-            || type == IMyNativeRendererType.SAMPLE_TYPE_PARALLAX_OCCLUSION_MAPPING
-            || type == IMyNativeRendererType.SAMPLE_TYPE_BREAK_OUT
-        ) {
-            glSurfaceView.renderMode = GLSurfaceView.RENDERMODE_CONTINUOUSLY
-        } else {
-            glSurfaceView.renderMode = GLSurfaceView.RENDERMODE_WHEN_DIRTY
+        override fun onPause() {
+            super.onPause()
+            mGLSurfaceView?.onPause()
         }
-    }
 
-    private fun hasPermissionsGranted(permissions: Array<String>): Boolean {
-        for (permission in permissions) {
-            if (ActivityCompat.checkSelfPermission(this, permission)
-                != PackageManager.PERMISSION_GRANTED
-            ) {
-                return false
-            }
+        override fun onDestroy() {
+            super.onDestroy()
+            mRenderer?.onDestroy()
         }
-        return true
-    }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String?>,
-        grantResults: IntArray
-    ) {
-        if (requestCode == PERMISSION_REQUEST_CODE) {
-            if (!hasPermissionsGranted(REQUEST_PERMISSIONS)) {
+        /**
+         * 检测设备是否支持OpenGL ES 3.0
+         */
+        private fun detectOpenGLES30(): Boolean {
+            val am = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+            val info = am.deviceConfigurationInfo
+            val reqGlEsVersion = info.reqGlEsVersion
+
+            // 有些GPU模拟部分有缺陷，为了使代码在模拟器上正常工作，写下面的代码
+            // 这段代码判断当前设备是不是模拟器，如果是，就假定它支持OpenGL ES 3.0
+            // 要确保程序能运行，模拟器一定要配置OpenGL ES 3.0
+            val isSupportedOpenGLES30 = reqGlEsVersion >= 0x30000
+                    || (Build.FINGERPRINT.startsWith("generic")
+                    || Build.FINGERPRINT.startsWith("unknown")
+                    || Build.MODEL.contains("google_sdk")
+                    || Build.MODEL.contains("Emulator")
+                    || Build.MODEL.contains("Android SDK built for x86"))
+
+            if (!isSupportedOpenGLES30) {
+                Log.e(
+                    TAG,
+                    "OpenGL ES 3.0 not supported on device. The device's reqGlEsVersion is $reqGlEsVersion, Exiting..."
+                )
                 Toast.makeText(
                     this,
-                    "We need the permission: RECORD_AUDIO && WRITE_EXTERNAL_STORAGE",
-                    Toast.LENGTH_SHORT
+                    "当前设备不支持OpenGL ES 3.0 ，当前设备的GlEs版本是$reqGlEsVersion",
+                    Toast.LENGTH_LONG
                 ).show()
             }
-        } else {
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+            return isSupportedOpenGLES30
+        }
+
+        private fun hasPermissionsGranted(permissions: Array<String>): Boolean {
+            for (permission in permissions) {
+                if (ActivityCompat.checkSelfPermission(this, permission)
+                    != PackageManager.PERMISSION_GRANTED
+                ) {
+                    return false
+                }
+            }
+            return true
+        }
+
+        override fun onRequestPermissionsResult(
+            requestCode: Int,
+            permissions: Array<String?>,
+            grantResults: IntArray
+        ) {
+            if (requestCode == PERMISSION_REQUEST_CODE) {
+                if (!hasPermissionsGranted(REQUEST_PERMISSIONS)) {
+                    Toast.makeText(
+                        this,
+                        "We need the permission: RECORD_AUDIO && WRITE_EXTERNAL_STORAGE",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            } else {
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+            }
         }
     }
-}

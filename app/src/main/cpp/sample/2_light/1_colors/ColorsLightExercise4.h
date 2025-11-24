@@ -1,18 +1,18 @@
 //
-// Created by ts on 2024/9/5.
+// Created by tzh on 2025/11/21.
 //
 
-#ifndef LEARNOPENGL_COLORSLIGHT_H
-#define LEARNOPENGL_COLORSLIGHT_H
+#ifndef LEARNOPENGL_COLORSLIGHTEXERCISE4_H
+#define LEARNOPENGL_COLORSLIGHTEXERCISE4_H
+
 
 #include "GLBaseSample.h"
-#include "CameraUtils.h"
 
-class ColorsLight : public GLBaseSample {
+class ColorsLightExercise4 : public GLBaseSample {
 public:
-    ColorsLight() = default;
+    ColorsLightExercise4() =default;
 
-    virtual ~ColorsLight() = default;
+    virtual ~ColorsLightExercise4() = default;
 
     virtual void Create();
 
@@ -26,7 +26,8 @@ private:
     // 光源着色器程序对象
     GLuint m_ProgramObj_Light;
     //光源立方体位置
-    glm::vec3 lightPos = glm::vec3(1.2f, 1.0f, 2.0f);
+    glm::vec3 lightPos = glm::vec3(0.2f, 0.0f, 2.0f);
 };
 
-#endif //LEARNOPENGL_COLORSLIGHT_H
+
+#endif //LEARNOPENGL_COLORSLIGHTEXERCISE4_H

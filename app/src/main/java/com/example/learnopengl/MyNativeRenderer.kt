@@ -38,6 +38,14 @@ class MyNativeRenderer(activity: Activity) : GLSurfaceView.Renderer {
         nativeProgressChanged(progress)
     }
 
+    fun progressChanged2(progress: Int) {
+        nativeProgressChanged2(progress)
+    }
+
+    fun progressChanged3(progress: Int) {
+        nativeProgressChanged3(progress)
+    }
+
     fun moveCallback(x: Float, y: Float) {
         nativeMoveCallback(x, y)
     }
@@ -57,6 +65,8 @@ class MyNativeRenderer(activity: Activity) : GLSurfaceView.Renderer {
      */
     private external fun nativeProcessInput(key: Int)
     private external fun nativeProgressChanged(progress: Int)
+    private external fun nativeProgressChanged2(progress: Int)
+    private external fun nativeProgressChanged3(progress: Int)
 
     private external fun nativeMoveCallback(x: Float, y: Float)
 

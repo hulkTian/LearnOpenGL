@@ -67,6 +67,10 @@
 #include "1_getting_started/7_coordinate/CoordinateSystemsExercise_1.h"
 #include "1_getting_started/7_coordinate/CoordinateSystemsExercise_2.h"
 #include "1_getting_started/7_coordinate/CoordinateSystemsExercise_3.h"
+#include "2_light/1_colors/ColorsLightExercise1.h"
+#include "2_light/1_colors/ColorsLightExercise2.h"
+#include "2_light/1_colors/ColorsLightExercise3.h"
+#include "2_light/1_colors/ColorsLightExercise4.h"
 #include <exception>
 
 struct MyGLException : public std::exception {
@@ -168,6 +172,18 @@ void MyGLRender::SetRenderType(int renderSampleType) {
             break;
         case SAMPLE_TYPE_COLORS_VIEW:
             m_curr_sample = new ColorsAtView();
+            break;
+        case SAMPLE_TYPE_COLORS_VIEW_EXERCISE_1:
+            m_curr_sample = new ColorsLightExercise1();
+            break;
+        case SAMPLE_TYPE_COLORS_VIEW_EXERCISE_2:
+            m_curr_sample = new ColorsLightExercise2();
+            break;
+        case SAMPLE_TYPE_COLORS_VIEW_EXERCISE_3:
+            m_curr_sample = new ColorsLightExercise3();
+            break;
+        case SAMPLE_TYPE_COLORS_VIEW_EXERCISE_4:
+            m_curr_sample = new ColorsLightExercise4();
             break;
         case SAMPLE_TYPE_COLORS_MATERIAL:
             m_curr_sample = new Material();
@@ -377,6 +393,26 @@ void MyGLRender:: ProgressChanged(int i) {
                 "MyGLRender::ProgressChanged() 请注意：你应该忘记初始化你要展示的Sample类型 ，请补上初始化的代码，否则无法渲染");
     } else {
         m_curr_sample->ProgressChanged(i);
+    }
+}
+
+void MyGLRender:: ProgressChanged2(int i) {
+    LOGD("MyGLRender::ProgressChanged2 key = %d", i)
+    if (m_curr_sample == nullptr) {
+        throw MyGLException(
+                "MyGLRender::ProgressChanged2() 请注意：你应该忘记初始化你要展示的Sample类型 ，请补上初始化的代码，否则无法渲染");
+    } else {
+        m_curr_sample->ProgressChanged2(i);
+    }
+}
+
+void MyGLRender:: ProgressChanged3(int i) {
+    LOGD("MyGLRender::ProgressChanged3 key = %d", i)
+    if (m_curr_sample == nullptr) {
+        throw MyGLException(
+                "MyGLRender::ProgressChanged3() 请注意：你应该忘记初始化你要展示的Sample类型 ，请补上初始化的代码，否则无法渲染");
+    } else {
+        m_curr_sample->ProgressChanged3(i);
     }
 }
 

@@ -28,6 +28,10 @@
 #define SAMPLE_TYPE_CAMERA_AUTO_MOVE                                SAMPLE_TYPE + 11
 #define SAMPLE_TYPE_COLORS                                          SAMPLE_TYPE + 12
 #define SAMPLE_TYPE_COLORS_VIEW                                     SAMPLE_TYPE + 13
+#define SAMPLE_TYPE_COLORS_VIEW_EXERCISE_1                          SAMPLE_TYPE_EXERCISE + 13
+#define SAMPLE_TYPE_COLORS_VIEW_EXERCISE_2                          SAMPLE_TYPE_EXERCISE + 14
+#define SAMPLE_TYPE_COLORS_VIEW_EXERCISE_3                          SAMPLE_TYPE_EXERCISE + 15
+#define SAMPLE_TYPE_COLORS_VIEW_EXERCISE_4                          SAMPLE_TYPE_EXERCISE + 16
 #define SAMPLE_TYPE_COLORS_MATERIAL                                 SAMPLE_TYPE + 14
 #define SAMPLE_TYPE_LIGHTING_MAPS_DIFFUSE                           SAMPLE_TYPE + 15
 #define SAMPLE_TYPE_LIGHTING_CASTERS_DIRECTIONAL                    SAMPLE_TYPE + 16
@@ -119,6 +123,14 @@ public:
     virtual void ProgressChanged(int i) {
         seek = i;
         cameraUtils.ProcessMouseScroll(static_cast<float>(i));
+    }
+
+    virtual void ProgressChanged2(int i) {
+        seek2 = i;
+    }
+
+    virtual void ProgressChanged3(int i) {
+        seek3 = i;
     }
 
     virtual void MoveCallback(float x, float y) {
@@ -226,6 +238,8 @@ protected:
     float deltaTime = 0.0f; // 当前帧花费的时间
     // 进度条滑动值范围：0-100
     unsigned int seek = 0;
+    unsigned int seek2 = 0;
+    unsigned int seek3 = 0;
 
     GLuint quadVAO, quadVBO;
     GLuint debuggingVAO, debuggingVBO;

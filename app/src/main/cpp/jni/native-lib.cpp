@@ -47,3 +47,15 @@ Java_com_example_learnopengl_MyNativeRenderer_nativeProgressChanged(JNIEnv *env,
                                                                     jint progress) {
     MyGLRender::GetInstance()->ProgressChanged(progress);
 }
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_example_learnopengl_MyNativeRenderer_nativeProgressChanged2(JNIEnv *env, jobject thiz,
+                                                                    jint progress) {
+    MyGLRender::GetInstance()->ProgressChanged2(progress);
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_example_learnopengl_MyNativeRenderer_nativeProgressChanged3(JNIEnv *env, jobject thiz,
+                                                                    jint progress) {
+    MyGLRender::GetInstance()->ProgressChanged3(progress);
+}

@@ -1,18 +1,18 @@
 //
-// Created by ts on 2024/9/5.
+// Created by tzh on 2025/11/21.
 //
 
-#ifndef LEARNOPENGL_COLORSLIGHT_H
-#define LEARNOPENGL_COLORSLIGHT_H
+#ifndef LEARNOPENGL_COLORSLIGHTEXERCISE1_H
+#define LEARNOPENGL_COLORSLIGHTEXERCISE1_H
+
 
 #include "GLBaseSample.h"
-#include "CameraUtils.h"
 
-class ColorsLight : public GLBaseSample {
+class ColorsLightExercise1 : public GLBaseSample {
 public:
-    ColorsLight() = default;
+    ColorsLightExercise1() =default;
 
-    virtual ~ColorsLight() = default;
+    virtual ~ColorsLightExercise1() = default;
 
     virtual void Create();
 
@@ -29,4 +29,5 @@ private:
     glm::vec3 lightPos = glm::vec3(1.2f, 1.0f, 2.0f);
 };
 
-#endif //LEARNOPENGL_COLORSLIGHT_H
+
+#endif //LEARNOPENGL_COLORSLIGHTEXERCISE1_H

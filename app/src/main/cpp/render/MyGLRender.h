@@ -22,6 +22,8 @@ public:
     void ProcessInput(int i);
 
     void ProgressChanged(int i);
+    void ProgressChanged2(int i);
+    void ProgressChanged3(int i);
 
     void MoveCallback(float x, float y);
 

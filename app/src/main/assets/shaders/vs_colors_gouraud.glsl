@@ -10,6 +10,12 @@ uniform vec3 lightColor;
 uniform vec3 lightPos;
 uniform vec3 viewPos;
 
+uniform float ambientStrength;
+uniform float diffuseStrength;
+uniform float specularStrength;
+
+uniform mat3 normalMatrix; // 预先计算好的法线矩阵
+
 out vec3 LightingColor;
 
 void main()
@@ -19,10 +25,9 @@ void main()
     // gouraud shading
     // ------------------------
     vec3 Position = vec3(model * vec4(aPos, 1.0));
-    vec3 Normal = mat3(transpose(inverse(model))) * aNormal;
+    vec3 Normal = normalMatrix * aNormal;
 
     // ambient
-    float ambientStrength = 0.1;
     vec3 ambient = ambientStrength * lightColor;
 
     // diffuse
@@ -32,7 +37,6 @@ void main()
     vec3 diffuse = diff * lightColor;
 
     // specular
-    float specularStrength = 1.0; // this is set higher to better show the effect of Gouraud shading
     vec3 viewDir = normalize(viewPos - Position);
     vec3 reflectDir = reflect(-lightDir, norm);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32.0);
