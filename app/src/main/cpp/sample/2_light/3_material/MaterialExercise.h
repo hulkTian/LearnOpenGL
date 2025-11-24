@@ -1,19 +1,19 @@
 //
-// Created by ts on 2024/9/10.
+// Created by tzh on 2025/11/24.
 //
 
-#ifndef LEARNOPENGL_MATERIAL_H
-#define LEARNOPENGL_MATERIAL_H
+#ifndef LEARNOPENGL_MATERIALEXERCISE_H
+#define LEARNOPENGL_MATERIALEXERCISE_H
+
 
 #include "GLBaseSample.h"
-#include "CameraUtils.h"
 
-class Material : public GLBaseSample {
+class MaterialExercise : public GLBaseSample {
 
 public:
-    Material() = default;
+    MaterialExercise() = default;
 
-    virtual ~Material() = default;
+    virtual ~MaterialExercise() = default;
 
     virtual void Create();
 
@@ -30,4 +30,5 @@ private:
     glm::vec3 lightPos = glm::vec3(2.2f, 0.0f, 0.0f);
 };
 
-#endif //LEARNOPENGL_MATERIAL_H
+
+#endif //LEARNOPENGL_MATERIALEXERCISE_H

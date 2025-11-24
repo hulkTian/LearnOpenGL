@@ -33,6 +33,7 @@
 #define SAMPLE_TYPE_COLORS_VIEW_EXERCISE_3                          SAMPLE_TYPE_EXERCISE + 15
 #define SAMPLE_TYPE_COLORS_VIEW_EXERCISE_4                          SAMPLE_TYPE_EXERCISE + 16
 #define SAMPLE_TYPE_COLORS_MATERIAL                                 SAMPLE_TYPE + 14
+#define SAMPLE_TYPE_COLORS_MATERIAL_EXERCISE                        SAMPLE_TYPE_EXERCISE + 17
 #define SAMPLE_TYPE_LIGHTING_MAPS_DIFFUSE                           SAMPLE_TYPE + 15
 #define SAMPLE_TYPE_LIGHTING_CASTERS_DIRECTIONAL                    SAMPLE_TYPE + 16
 #define SAMPLE_TYPE_LIGHTING_MERGE                                  SAMPLE_TYPE + 17

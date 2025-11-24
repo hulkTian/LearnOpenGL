@@ -71,6 +71,7 @@
 #include "2_light/1_colors/ColorsLightExercise2.h"
 #include "2_light/1_colors/ColorsLightExercise3.h"
 #include "2_light/1_colors/ColorsLightExercise4.h"
+#include "2_light/3_material/MaterialExercise.h"
 #include <exception>
 
 struct MyGLException : public std::exception {
@@ -187,6 +188,9 @@ void MyGLRender::SetRenderType(int renderSampleType) {
             break;
         case SAMPLE_TYPE_COLORS_MATERIAL:
             m_curr_sample = new Material();
+            break;
+        case SAMPLE_TYPE_COLORS_MATERIAL_EXERCISE:
+            m_curr_sample = new MaterialExercise();
             break;
         case SAMPLE_TYPE_LIGHTING_MAPS_DIFFUSE:
             m_curr_sample = new LightingMapsDiffuse();

@@ -241,6 +241,13 @@ class MainActivity : AppCompatActivity() {
                 .setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY).build()
         )
         addItem(
+            i++, R.mipmap.material,
+            "材质-练习",
+            "使用材质表格控制物体表面颜色",
+            BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_COLORS_MATERIAL_EXERCISE)
+                .setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY).build()
+        )
+        addItem(
             i++, R.mipmap.lighting_diffuse,
             "光照贴图",
             "使用纹理贴图代替材质中的单色分量",

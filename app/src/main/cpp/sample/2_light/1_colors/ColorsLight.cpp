@@ -154,15 +154,6 @@ void ColorsLight::Draw() {
 
     // 模型矩阵，把局部空间坐标系中的顶点，变换到世界空间的坐标系中
     model = glm::mat4(1.0f);
-    /**
-     * 光照练习题：目前，我们的光源是静止的，你可以尝试使用sin或cos函数让光源在场景中来回移动。观察光照随时间的改变能让你更容易理解风氏光照模型。
-     * // 定义圆的半径
-     * float radius = 20.0f;
-     * // 随着时间的变化，遍历圆上的X和Y坐标
-     * float camX = sin(TimeUtils::currentTimeSeconds()) * radius;
-     * float camZ = cos(TimeUtils::currentTimeSeconds()) * radius;
-     * lightPos = glm::vec3 (camX,0.7f,camZ);
-     */
     model = glm::translate(model, lightPos);
     model = glm::scale(model, glm::vec3(0.2f));
     setMat4(m_ProgramObj_Light, "model", model);
