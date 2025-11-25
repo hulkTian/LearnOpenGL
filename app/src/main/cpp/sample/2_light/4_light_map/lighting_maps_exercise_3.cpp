@@ -1,13 +1,8 @@
 //
-// Created by ts on 2024/9/11.
+// Created by tzh on 2025/11/25.
 //
-/**
- * 漫反射和镜面光贴图
- * 在着色器中使用材质贴图的方法和纹理教程中是完全一样的。区别只是把材质中漫反射和镜面反射的颜色向量改为纹理2D采样器。
- * 大多数情况下环境光颜色在几乎所有情况下都等于漫反射颜色，所以漫反射的贴图也可以当作环境光贴图使用。
- */
-#include "lighting_maps_diffuse.h"
 
+#include "lighting_maps_exercise_3.h"
 static float vertices[] = {
         // positions                      // normals                       // texture coords
         -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
@@ -53,7 +48,7 @@ static float vertices[] = {
         -0.5f, 0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f
 };
 
-void LightingMapsDiffuse::Create() {
+void lighting_maps_exercise_3::Create() {
     GLUtils::printGLInfo();
 
     glGenVertexArrays(1, &VAO);
@@ -63,11 +58,13 @@ void LightingMapsDiffuse::Create() {
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
     glBindVertexArray(VAO);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)nullptr);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *) nullptr);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
+                          (void *) (3 * sizeof(float)));
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
+                          (void *) (6 * sizeof(float)));
     glEnableVertexAttribArray(2);
 
     glGenVertexArrays(1, &VAO_light);
@@ -79,7 +76,7 @@ void LightingMapsDiffuse::Create() {
 
     //创建着色器程序,并编译着色器代码
     m_ProgramObj = GLUtils::createProgram("shaders/vs_lighting_maps.glsl",
-                                          "shaders/fs_lighting_maps_diffuse.glsl");
+                                          "shaders/fs_lighting_maps_specular.glsl");
 
     //创建光源的着色器程序
     m_ProgramObj_Light = GLUtils::createProgram("shaders/vs_colors.glsl",
@@ -92,10 +89,13 @@ void LightingMapsDiffuse::Create() {
 
     //加载漫反射贴图
     diffuseMap = GLUtils::loadTgaTexture("textures/container2.png");
+    //加载镜面反射贴图
+    specularMap = GLUtils::loadTgaTexture("textures/lighting_maps_specular_color.png");
 
     // 设置贴图单元
     glUseProgram(m_ProgramObj);
     setInt(m_ProgramObj, "material.diffuse", 0);
+    setInt(m_ProgramObj, "material.specular", 1);
 
     //开启深度测试
     glEnable(GL_DEPTH_TEST);
@@ -104,30 +104,34 @@ void LightingMapsDiffuse::Create() {
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 }
 
-void LightingMapsDiffuse::Draw() {
+void lighting_maps_exercise_3::Draw() {
+    // per-frame time logic
+    // --------------------
     //计算每一帧绘制的时间：先记录当前在开始时间
     float currentFrame = TimeUtils::currentTimeSeconds();
 
     //清除屏幕
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // 设置uniforms和绘制物体前需要激活着色器程序
+    // be sure to activate shader when setting uniforms/drawing objects
     glUseProgram(m_ProgramObj);
     setVec3(m_ProgramObj, "light.position", lightPos);
     setVec3(m_ProgramObj, "viewPos", cameraUtils.Position);
 
     // light properties
-    setVec3(m_ProgramObj, "light.ambient", 0.2f, 0.2f, 0.2f);
-    setVec3(m_ProgramObj, "light.diffuse", 0.5f, 0.5f, 0.5f);
-    setVec3(m_ProgramObj, "light.specular", 1.0f, 1.0f, 1.0f);
+    setVec3(m_ProgramObj, "light.ambient",
+            glm::vec3(0.2f, 0.2f, 0.2f) * static_cast<float>(seek));
+    setVec3(m_ProgramObj, "light.diffuse",
+            glm::vec3(0.5f, 0.5f, 0.5f) * static_cast<float>(seek2));
+    setVec3(m_ProgramObj, "light.specular",
+            glm::vec3(1.0f, 1.0f, 1.0f) * static_cast<float>(seek3));
 
     // material properties
-    setVec3(m_ProgramObj, "material.specular", glm::vec3(0.5f, 0.5f, 0.5f));
-    setFloat(m_ProgramObj, "material.shininess", 64.0f);
+    setFloat(m_ProgramObj, "material.shininess", 32.0f);
 
     // view/projection transformations
-    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom), SCR_WIDTH / SCR_HEIGHT,
-                                            0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(60.0f),
+                                            SCR_WIDTH / SCR_HEIGHT,0.1f, 100.0f);
     glm::mat4 view = cameraUtils.GetViewMatrix();
     setMat4(m_ProgramObj, "projection", projection);
     setMat4(m_ProgramObj, "view", view);
@@ -139,6 +143,9 @@ void LightingMapsDiffuse::Draw() {
     // bind diffuse map
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, diffuseMap);
+    // bind specular map
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, specularMap);
 
     // render the cube
     glBindVertexArray(VAO);
@@ -160,11 +167,13 @@ void LightingMapsDiffuse::Draw() {
     deltaTime = TimeUtils::currentTimeSeconds() - currentFrame;
 }
 
-void LightingMapsDiffuse::Shutdown() {
+void lighting_maps_exercise_3::Shutdown() {
     //关闭顶点属性
     glDeleteVertexArrays(1, &VAO);
     glDeleteVertexArrays(1, &VAO_light);
     glDeleteBuffers(1, &VBO);
+    glDeleteTextures(1, &diffuseMap);
+    glDeleteTextures(1, &specularMap);
     // 释放光源的着色器程序指针
     if (m_ProgramObj_Light) {
         glDeleteProgram(m_ProgramObj_Light);

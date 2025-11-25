@@ -7,8 +7,7 @@ out vec4 FragColor;
 //另外，环境光颜色在几乎所有情况下都等于漫反射颜色，所以也移除了环境光分量
 struct Material {
     sampler2D diffuse;
-    sampler2D specular;
-    sampler2D emission;
+    vec3 specular;
     float shininess;
 };
 
@@ -43,8 +42,8 @@ void main()
     vec3 viewDir = normalize(viewPos - FragPos);
     vec3 reflectDir = reflect(-lightDir, norm);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
-    vec3 specular = light.specular * spec * texture(material.specular, TexCoords).rgb;
+    vec3 specular = light.specular * spec * material.specular;
 
-    vec3 result = ambient + diffuse + specular + vec3(texture(material.emission, TexCoords));
+    vec3 result = ambient + diffuse + specular;
     FragColor = vec4(result, 1.0);
 }

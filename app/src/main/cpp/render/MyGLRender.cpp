@@ -72,6 +72,11 @@
 #include "2_light/1_colors/ColorsLightExercise3.h"
 #include "2_light/1_colors/ColorsLightExercise4.h"
 #include "2_light/3_material/MaterialExercise.h"
+#include "2_light/4_light_map/lighting_maps_specular.h"
+#include "2_light/4_light_map/lighting_maps_exercise_1.h"
+#include "2_light/4_light_map/lighting_maps_exercise_2.h"
+#include "2_light/4_light_map/lighting_maps_exercise_3.h"
+#include "2_light/4_light_map/lighting_maps_exercise_4.h"
 #include <exception>
 
 struct MyGLException : public std::exception {
@@ -194,6 +199,21 @@ void MyGLRender::SetRenderType(int renderSampleType) {
             break;
         case SAMPLE_TYPE_LIGHTING_MAPS_DIFFUSE:
             m_curr_sample = new LightingMapsDiffuse();
+            break;
+        case SAMPLE_TYPE_LIGHTING_MAPS_SPECULAR:
+            m_curr_sample = new lighting_maps_specular();
+            break;
+        case SAMPLE_TYPE_LIGHTING_MAPS_EXERCISE_1:
+            m_curr_sample = new lighting_maps_exercise_1();
+            break;
+        case SAMPLE_TYPE_LIGHTING_MAPS_EXERCISE_2:
+            m_curr_sample = new lighting_maps_exercise_2();
+            break;
+        case SAMPLE_TYPE_LIGHTING_MAPS_EXERCISE_3:
+            m_curr_sample = new lighting_maps_exercise_3();
+            break;
+        case SAMPLE_TYPE_LIGHTING_MAPS_EXERCISE_4:
+            m_curr_sample = new lighting_maps_exercise_4();
             break;
         case SAMPLE_TYPE_LIGHTING_CASTERS_DIRECTIONAL:
             m_curr_sample = new LightCastersDirectional();

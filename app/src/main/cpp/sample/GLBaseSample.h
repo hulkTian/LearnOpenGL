@@ -35,6 +35,11 @@
 #define SAMPLE_TYPE_COLORS_MATERIAL                                 SAMPLE_TYPE + 14
 #define SAMPLE_TYPE_COLORS_MATERIAL_EXERCISE                        SAMPLE_TYPE_EXERCISE + 17
 #define SAMPLE_TYPE_LIGHTING_MAPS_DIFFUSE                           SAMPLE_TYPE + 15
+#define SAMPLE_TYPE_LIGHTING_MAPS_SPECULAR                          SAMPLE_TYPE + 6
+#define SAMPLE_TYPE_LIGHTING_MAPS_EXERCISE_1                        SAMPLE_TYPE_EXERCISE + 18
+#define SAMPLE_TYPE_LIGHTING_MAPS_EXERCISE_2                        SAMPLE_TYPE_EXERCISE + 19
+#define SAMPLE_TYPE_LIGHTING_MAPS_EXERCISE_3                        SAMPLE_TYPE_EXERCISE + 20
+#define SAMPLE_TYPE_LIGHTING_MAPS_EXERCISE_4                        SAMPLE_TYPE_EXERCISE + 21
 #define SAMPLE_TYPE_LIGHTING_CASTERS_DIRECTIONAL                    SAMPLE_TYPE + 16
 #define SAMPLE_TYPE_LIGHTING_MERGE                                  SAMPLE_TYPE + 17
 #define SAMPLE_TYPE_MODEL_LOADING                                   SAMPLE_TYPE + 18

@@ -249,9 +249,57 @@ class MainActivity : AppCompatActivity() {
         )
         addItem(
             i++, R.mipmap.lighting_diffuse,
-            "光照贴图",
-            "使用纹理贴图代替材质中的单色分量",
-            BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_MAPS_DIFFUSE).build()
+            "光照贴图-漫反射贴图",
+            "使用纹理贴图代替材质中的漫反射分量",
+            BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_MAPS_DIFFUSE)
+                .setShowSeekBar1(View.VISIBLE).setTitle1("foV").build()
+        )
+        addItem(
+            i++, R.mipmap.lighting_diffuse,
+            "光照贴图-镜面光贴图",
+            "使用纹理贴图代替材质中的镜面反射分量",
+            BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_MAPS_SPECULAR)
+                .setShowSeekBar1(View.VISIBLE).setTitle1("foV").build()
+        )
+        addItem(
+            i++, R.mipmap.lighting_diffuse,
+            "光照贴图-练习1",
+            "改变光源的环境光、漫反射和镜面反射颜色",
+            BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_MAPS_EXERCISE_1)
+                .setShowSeekBar1(View.VISIBLE).setTitle1("环境光向量")
+                .setShowSeekBar2(View.VISIBLE).setTitle2("漫反射向量")
+                .setShowSeekBar3(View.VISIBLE).setTitle3("镜面强度向量")
+                .build()
+        )
+        addItem(
+            i++, R.mipmap.lighting_diffuse,
+            "光照贴图-练习2",
+            "反转片元中的镜面光贴图，使木头显示金属光泽",
+            BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_MAPS_EXERCISE_2)
+                .setShowSeekBar1(View.VISIBLE).setTitle1("环境光向量")
+                .setShowSeekBar2(View.VISIBLE).setTitle2("漫反射向量")
+                .setShowSeekBar3(View.VISIBLE).setTitle3("镜面强度向量")
+                .build()
+        )
+        addItem(
+            i++, R.mipmap.lighting_diffuse,
+            "光照贴图-练习3",
+            "使用一张彩色的反射光贴图",
+            BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_MAPS_EXERCISE_3)
+                .setShowSeekBar1(View.VISIBLE).setTitle1("环境光向量")
+                .setShowSeekBar2(View.VISIBLE).setTitle2("漫反射向量")
+                .setShowSeekBar3(View.VISIBLE).setTitle3("镜面强度向量")
+                .build()
+        )
+        addItem(
+            i++, R.mipmap.lighting_diffuse,
+            "光照贴图-练习4",
+            "使用自发光贴图",
+            BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_MAPS_EXERCISE_4)
+                .setShowSeekBar1(View.VISIBLE).setTitle1("环境光向量")
+                .setShowSeekBar2(View.VISIBLE).setTitle2("漫反射向量")
+                .setShowSeekBar3(View.VISIBLE).setTitle3("镜面强度向量")
+                .build()
         )
         addItem(
             i++, R.mipmap.light_caster,

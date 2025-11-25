@@ -1,14 +1,18 @@
 //
-// Created by ts on 2024/9/11.
+// Created by tzh on 2025/11/25.
 //
+
+#ifndef LEARNOPENGL_LIGHTING_MAPS_EXERCISE_2_H
+#define LEARNOPENGL_LIGHTING_MAPS_EXERCISE_2_H
+
+
 #include "GLBaseSample.h"
-#include "CameraUtils.h"
 
-class LightingMapsDiffuse : public GLBaseSample {
+class lighting_maps_exercise_2 : public GLBaseSample {
 public:
-    LightingMapsDiffuse() = default;
+    lighting_maps_exercise_2() = default;
 
-    ~LightingMapsDiffuse() = default;
+    ~lighting_maps_exercise_2() = default;
 
     virtual void Create();
 
@@ -26,5 +30,9 @@ private:
 
     //漫反射贴图
     GLuint diffuseMap;
+    //镜面反射贴图
+    GLuint specularMap;
 };
 
+
+#endif //LEARNOPENGL_LIGHTING_MAPS_EXERCISE_2_H
