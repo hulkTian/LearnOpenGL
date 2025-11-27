@@ -43,7 +43,7 @@ private:
     GLuint specularMap;
 
     //场景类型：0 default；1 desert；2 factory；3 horror；4 BIOCHEMICAL LAB
-    int type = 0;
+    int type = 2;
 };
 
 #endif //LEARNOPENGL_MULTIPLE_LIGHTS_H

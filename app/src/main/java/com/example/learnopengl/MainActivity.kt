@@ -332,7 +332,9 @@ class MainActivity : AppCompatActivity() {
             "多光源",
             "在立方体箱子中使用多种光源构建氛围效果",
             BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_MERGE)
-                .setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY).build()
+                .setShowSeekBar1(View.VISIBLE).setTitle1("环境光向量")
+                .setShowSeekBar2(View.VISIBLE).setTitle2("漫反射向量")
+                .setShowSeekBar3(View.VISIBLE).setTitle3("镜面强度向量").build()
         )
         addItem(
             i++, R.mipmap.model_loading,

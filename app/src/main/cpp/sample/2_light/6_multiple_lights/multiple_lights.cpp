@@ -136,14 +136,14 @@ void SetPointLights(GLuint program, const glm::vec3 &ambient,
 
 // 提取设置点光源的通用函数
 void SetPointLights(GLuint program, const glm::vec3 *colors, float constant,
-                    float linear, float quadratic) {
+                    float linear, float quadratic, int seek) {
     int pointLightCount = sizeof(pointLightPositions) / sizeof(pointLightPositions[0]);
     for (int i = 0; i < pointLightCount; ++i) {
         std::string idx = "pointLights[" + std::to_string(i) + "]";
         setVec3(program, idx + ".position", pointLightPositions[i]);
-        setVec3(program, idx + ".ambient", colors[i] * 0.1f);
-        setVec3(program, idx + ".diffuse", colors[i]);
-        setVec3(program, idx + ".specular", colors[i]);
+        setVec3(program, idx + ".ambient", colors[i] * 0.1f * static_cast<float>(seek * 0.01));
+        setVec3(program, idx + ".diffuse", colors[i] * static_cast<float>(seek * 0.01));
+        setVec3(program, idx + ".specular", colors[i]* static_cast<float>(seek * 0.01));
         setFloat(program, idx + ".constant", constant);
         setFloat(program, idx + ".linear", linear);
         setFloat(program, idx + ".quadratic", quadratic);
@@ -187,7 +187,7 @@ void DrawSceneCommon(const GLuint program, const GLuint program_light, CameraUti
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, specularMap);
 
-    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom),
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f),
                                             SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
     glm::mat4 view = cameraUtils.GetViewMatrix();
     setMat4(program, "projection", projection);
@@ -291,12 +291,6 @@ void MultipleLights::Draw() {
     //计算每一帧绘制的时间
     float currentFrame = TimeUtils::currentTimeSeconds();
 
-    // 根据时间变化场景类型，间隔3秒切换一次场景
-    int sceneCount = 5; // 场景总数
-    int newType = static_cast<int>(currentFrame * 10 / 3.0f) % sceneCount;
-    type = newType;
-    LOGD("MultipleLights::Draw type=%d  currentFrame = %f", type, currentFrame)
-
     if (type == 0) {
         DrawDefault();
     }
@@ -384,13 +378,13 @@ void MultipleLights::DrawDesert() {
 
     glm::vec3 pointLightColors[] = {
             glm::vec3(1.0f, 0.6f, 0.0f),
-            glm::vec3(1.0f, 0.9f, 0.0f),
-            glm::vec3(0.0f, 1.0f, 0.0f),
+            glm::vec3(1.0f, 0.0f, 0.0f),
+            glm::vec3(1.0f, 1.0, 0.0),
             glm::vec3(0.2f, 0.2f, 1.0f)
     };
 
     // 设置点光源
-    SetPointLights(m_ProgramObj, pointLightColors, 1.0f, 0.09f, 0.032f);
+    SetPointLights(m_ProgramObj, pointLightColors, 1.0f, 0.09f, 0.032f, seek);
 
     // 设置聚光灯
     SetSpotLight(m_ProgramObj,
@@ -434,7 +428,7 @@ void MultipleLights::DrawFactory() {
             glm::vec3(0.0f, 0.0f, 0.3f),
             glm::vec3(0.4f, 0.4f, 0.4f)
     };
-    SetPointLights(m_ProgramObj, pointLightColors, 1.0f, 0.09f, 0.032f);
+    SetPointLights(m_ProgramObj, pointLightColors, 1.0f, 0.09f, 0.032f, seek);
 
     // 设置聚光灯
     SetSpotLight(m_ProgramObj, cameraUtils.Position, cameraUtils.Front,
@@ -472,7 +466,7 @@ void MultipleLights::DrawHorror() {
             glm::vec3(0.1f, 0.1f, 0.1f),
             glm::vec3(0.3f, 0.1f, 0.1f)
     };
-    SetPointLights(m_ProgramObj, pointLightColors, 1.0f, 0.14f, 0.07f);
+    SetPointLights(m_ProgramObj, pointLightColors, 1.0f, 0.14f, 0.07f, seek);
 
     // 设置聚光灯
     SetSpotLight(m_ProgramObj,
@@ -498,7 +492,6 @@ void MultipleLights::DrawBiochemicalLab() {
     glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // be sure to activate shader when setting uniforms/drawing objects
     glUseProgram(m_ProgramObj);
 
     // 设置定向光
@@ -516,7 +509,7 @@ void MultipleLights::DrawBiochemicalLab() {
             glm::vec3(0.4f, 0.7f, 0.1f),
             glm::vec3(0.4f, 0.7f, 0.1f)
     };
-    SetPointLights(m_ProgramObj, pointLightColors, 1.0f, 0.07f, 0.017f);
+    SetPointLights(m_ProgramObj, pointLightColors, 1.0f, 0.07f, 0.017f, seek);
 
     // 设置聚光灯
     SetSpotLight(m_ProgramObj,
