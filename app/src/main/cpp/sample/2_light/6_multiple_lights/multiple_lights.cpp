@@ -475,7 +475,7 @@ void MultipleLights::DrawHorror() {
     SetPointLights(m_ProgramObj, pointLightColors, 1.0f, 0.14f, 0.07f);
 
     // 设置聚光灯
-    SetSpoxtLight(m_ProgramObj,
+    SetSpotLight(m_ProgramObj,
                  cameraUtils.Position,
                  cameraUtils.Front,
                  glm::vec3(0.0f, 0.0f, 0.0f),
