@@ -117,6 +117,117 @@ static glm::vec3 pointLightPositions[] = {
         glm::vec3(0.0f, 0.0f, -3.0f)
 };
 
+// 提取设置点光源的通用函数
+void SetPointLights(GLuint program, const glm::vec3 &ambient,
+                    const glm::vec3 &diffuse, const glm::vec3 &specular,
+                    float constant, float linear, float quadratic) {
+    int pointLightCount = sizeof(pointLightPositions) / sizeof(pointLightPositions[0]);
+    for (int i = 0; i < pointLightCount; ++i) {
+        std::string idx = "pointLights[" + std::to_string(i) + "]";
+        setVec3(program, idx + ".position", pointLightPositions[i]);
+        setVec3(program, idx + ".ambient", ambient);
+        setVec3(program, idx + ".diffuse", diffuse);
+        setVec3(program, idx + ".specular", specular);
+        setFloat(program, idx + ".constant", constant);
+        setFloat(program, idx + ".linear", linear);
+        setFloat(program, idx + ".quadratic", quadratic);
+    }
+}
+
+// 提取设置点光源的通用函数
+void SetPointLights(GLuint program, const glm::vec3 *colors, float constant,
+                    float linear, float quadratic) {
+    int pointLightCount = sizeof(pointLightPositions) / sizeof(pointLightPositions[0]);
+    for (int i = 0; i < pointLightCount; ++i) {
+        std::string idx = "pointLights[" + std::to_string(i) + "]";
+        setVec3(program, idx + ".position", pointLightPositions[i]);
+        setVec3(program, idx + ".ambient", colors[i] * 0.1f);
+        setVec3(program, idx + ".diffuse", colors[i]);
+        setVec3(program, idx + ".specular", colors[i]);
+        setFloat(program, idx + ".constant", constant);
+        setFloat(program, idx + ".linear", linear);
+        setFloat(program, idx + ".quadratic", quadratic);
+    }
+}
+
+// 设置定向光
+void SetDirLight(GLuint program, const glm::vec3 &direction, const glm::vec3 &ambient,
+                 const glm::vec3 &diffuse, const glm::vec3 &specular) {
+    setVec3(program, "dirLight.direction", direction);
+    setVec3(program, "dirLight.ambient", ambient);
+    setVec3(program, "dirLight.diffuse", diffuse);
+    setVec3(program, "dirLight.specular", specular);
+}
+
+// 设置聚光灯
+void SetSpotLight(GLuint program, const glm::vec3 &position, const glm::vec3 &direction,
+                  const glm::vec3 &ambient, const glm::vec3 &diffuse, const glm::vec3 &specular,
+                  float constant, float linear, float quadratic, float cutOff, float outerCutOff) {
+    setVec3(program, "spotLight.position", position);
+    setVec3(program, "spotLight.direction", direction);
+    setVec3(program, "spotLight.ambient", ambient);
+    setVec3(program, "spotLight.diffuse", diffuse);
+    setVec3(program, "spotLight.specular", specular);
+    setFloat(program, "spotLight.constant", constant);
+    setFloat(program, "spotLight.linear", linear);
+    setFloat(program, "spotLight.quadratic", quadratic);
+    setFloat(program, "spotLight.cutOff", cutOff);
+    setFloat(program, "spotLight.outerCutOff", outerCutOff);
+}
+
+void DrawSceneCommon(const GLuint program, const GLuint program_light, CameraUtils &cameraUtils,
+                     const GLuint cubeVAO, const GLuint lightCubeVAO, const glm::vec3 *colors,
+                     const GLuint diffuseMap, const GLuint specularMap,
+                     float SCR_WIDTH, float SCR_HEIGHT) {
+    setVec3(program, "viewPos", cameraUtils.Position);
+    setFloat(program, "material.shininess", 32.0f);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, diffuseMap);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, specularMap);
+
+    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom),
+                                            SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
+    glm::mat4 view = cameraUtils.GetViewMatrix();
+    setMat4(program, "projection", projection);
+    setMat4(program, "view", view);
+
+    // world transformation
+    glm::mat4 model = glm::mat4(1.0f);
+    setMat4(program, "model", model);
+
+    // render containers
+    glBindVertexArray(cubeVAO);
+    for (unsigned int i = 0; i < 10; i++) {
+        // calculate the model matrix for each object and pass it to shader before drawing
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, cubePositions[i]);
+        float angle = 20.0f * i;
+        model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+        setMat4(program, "model", model);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+    }
+
+    // also draw the lamp object(s)
+    glUseProgram(program_light);
+    setMat4(program_light, "projection", projection);
+    setMat4(program_light, "view", view);
+
+    glBindVertexArray(lightCubeVAO);
+    for (unsigned int i = 0; i < 4; i++) {
+        model = glm::mat4(1.0f);
+        model = glm::translate(model, pointLightPositions[i]);
+        model = glm::scale(model, glm::vec3(0.2f)); // Make it a smaller cube
+        setMat4(program_light, "model", model);
+        // 为每个光源立方体设置颜色
+        setVec3(program_light, "light.ambient", colors[i]);
+        setVec3(program_light, "light.diffuse", colors[i]);
+        setVec3(program_light, "light.specular", colors[i]);
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+    }
+}
+
 void MultipleLights::Create() {
     GLUtils::printGLInfo();
 
@@ -128,7 +239,8 @@ void MultipleLights::Create() {
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *) 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
+                          8 * sizeof(float), (void *) nullptr);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
                           (void *) (3 * sizeof(float)));
@@ -142,7 +254,8 @@ void MultipleLights::Create() {
     // 只需要绑定VBO不用再次设置VBO的数据，因为箱子的VBO数据中已经包含了正确的立方体顶点数据
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     // 设置灯立方体的顶点属性（对我们的灯来说仅仅只有位置数据）
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *) 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
+                          8 * sizeof(float), (void *) nullptr);
     glEnableVertexAttribArray(0);
 
     //创建着色器程序,并编译着色器代码
@@ -178,28 +291,29 @@ void MultipleLights::Draw() {
     //计算每一帧绘制的时间
     float currentFrame = TimeUtils::currentTimeSeconds();
 
-    if (type == 0)
-    {
+    // 根据时间变化场景类型，间隔3秒切换一次场景
+    int sceneCount = 5; // 场景总数
+    int newType = static_cast<int>(currentFrame * 10 / 3.0f) % sceneCount;
+    type = newType;
+    LOGD("MultipleLights::Draw type=%d  currentFrame = %f", type, currentFrame)
+
+    if (type == 0) {
         DrawDefault();
     }
 
-    if (type == 1)
-    {
+    if (type == 1) {
         DrawDesert();
     }
 
-    if (type == 2)
-    {
+    if (type == 2) {
         DrawFactory();
     }
 
-    if (type == 3)
-    {
+    if (type == 3) {
         DrawHorror();
     }
 
-    if (type == 4)
-    {
+    if (type == 4) {
         DrawBiochemicalLab();
     }
 
@@ -208,105 +322,49 @@ void MultipleLights::Draw() {
 }
 
 void MultipleLights::DrawDefault() {
-    // render
-    // ------
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // be sure to activate shader when setting uniforms/drawing objects
     glUseProgram(m_ProgramObj);
 
-    // directional light
-    setVec3(m_ProgramObj, "dirLight.direction", -0.2f, -1.0f, -0.3f);
-    setVec3(m_ProgramObj, "dirLight.ambient", 0.05f, 0.05f, 0.05f);
-    setVec3(m_ProgramObj, "dirLight.diffuse", 0.4f, 0.4f, 0.4f);
-    setVec3(m_ProgramObj, "dirLight.specular", 0.5f, 0.5f, 0.5f);
-    // point light 1
-    setVec3(m_ProgramObj, "pointLights[0].position", pointLightPositions[0]);
-    setVec3(m_ProgramObj, "pointLights[0].ambient", 0.05f, 0.05f, 0.05f);
-    setVec3(m_ProgramObj, "pointLights[0].diffuse", 0.8f, 0.8f, 0.8f);
-    setVec3(m_ProgramObj, "pointLights[0].specular", 1.0f, 1.0f, 1.0f);
-    setFloat(m_ProgramObj, "pointLights[0].constant", 1.0f);
-    setFloat(m_ProgramObj, "pointLights[0].linear", 0.09f);
-    setFloat(m_ProgramObj, "pointLights[0].quadratic", 0.032f);
-    // point light 2
-    setVec3(m_ProgramObj, "pointLights[1].position", pointLightPositions[1]);
-    setVec3(m_ProgramObj, "pointLights[1].ambient", 0.05f, 0.05f, 0.05f);
-    setVec3(m_ProgramObj, "pointLights[1].diffuse", 0.8f, 0.8f, 0.8f);
-    setVec3(m_ProgramObj, "pointLights[1].specular", 1.0f, 1.0f, 1.0f);
-    setFloat(m_ProgramObj, "pointLights[1].constant", 1.0f);
-    setFloat(m_ProgramObj, "pointLights[1].linear", 0.09f);
-    setFloat(m_ProgramObj, "pointLights[1].quadratic", 0.032f);
-    // point light 3
-    setVec3(m_ProgramObj, "pointLights[2].position", pointLightPositions[2]);
-    setVec3(m_ProgramObj, "pointLights[2].ambient", 0.05f, 0.05f, 0.05f);
-    setVec3(m_ProgramObj, "pointLights[2].diffuse", 0.8f, 0.8f, 0.8f);
-    setVec3(m_ProgramObj, "pointLights[2].specular", 1.0f, 1.0f, 1.0f);
-    setFloat(m_ProgramObj, "pointLights[2].constant", 1.0f);
-    setFloat(m_ProgramObj, "pointLights[2].linear", 0.09f);
-    setFloat(m_ProgramObj, "pointLights[2].quadratic", 0.032f);
-    // point light 4
-    setVec3(m_ProgramObj, "pointLights[3].position", pointLightPositions[3]);
-    setVec3(m_ProgramObj, "pointLights[3].ambient", 0.05f, 0.05f, 0.05f);
-    setVec3(m_ProgramObj, "pointLights[3].diffuse", 0.8f, 0.8f, 0.8f);
-    setVec3(m_ProgramObj, "pointLights[3].specular", 1.0f, 1.0f, 1.0f);
-    setFloat(m_ProgramObj, "pointLights[3].constant", 1.0f);
-    setFloat(m_ProgramObj, "pointLights[3].linear", 0.09f);
-    setFloat(m_ProgramObj, "pointLights[3].quadratic", 0.032f);
-    // spotLight
-    setVec3(m_ProgramObj, "spotLight.position", cameraUtils.Position);
-    setVec3(m_ProgramObj, "spotLight.direction", cameraUtils.Front);
-    setVec3(m_ProgramObj, "spotLight.ambient", 0.0f, 0.0f, 0.0f);
-    setVec3(m_ProgramObj, "spotLight.diffuse", 1.0f, 1.0f, 1.0f);
-    setVec3(m_ProgramObj, "spotLight.specular", 1.0f, 1.0f, 1.0f);
-    setFloat(m_ProgramObj, "spotLight.constant", 1.0f);
-    setFloat(m_ProgramObj, "spotLight.linear", 0.09f);
-    setFloat(m_ProgramObj, "spotLight.quadratic", 0.032f);
-    setFloat(m_ProgramObj, "spotLight.cutOff", glm::cos(glm::radians(12.5f)));
-    setFloat(m_ProgramObj, "spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
+    // 设置定向光
+    SetDirLight(m_ProgramObj,
+                glm::vec3(-0.2f, -1.0f, -0.3f),
+                glm::vec3(0.05f, 0.05f, 0.05f),
+                glm::vec3(0.4f, 0.4f, 0.4f),
+                glm::vec3(0.5f, 0.5f, 0.5f)
+    );
 
-    setVec3(m_ProgramObj, "viewPos", cameraUtils.Position);
-    setFloat(m_ProgramObj, "material.shininess", 32.0f);
+    // 设置点光源
+    SetPointLights(m_ProgramObj,
+                   glm::vec3(0.05f, 0.05f, 0.05f),
+                   glm::vec3(0.8f, 0.8f, 0.8f),
+                   glm::vec3(1.0f, 1.0f, 1.0f),
+                   1.0f, 0.09f, 0.032f);
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, diffuseMap);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, specularMap);
+    // 设置聚光灯
+    SetSpotLight(m_ProgramObj,
+                 cameraUtils.Position,
+                 cameraUtils.Front,
+                 glm::vec3(0.0f, 0.0f, 0.0f),
+                 glm::vec3(1.0f, 1.0f, 1.0f),
+                 glm::vec3(1.0f, 1.0f, 1.0f),
+                 1.0f, 0.09f, 0.032f,
+                 glm::cos(glm::radians(12.5f)),
+                 glm::cos(glm::radians(15.0f))
+    );
 
-    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom), SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
-    glm::mat4 view = cameraUtils.GetViewMatrix();
-    setMat4(m_ProgramObj, "projection", projection);
-    setMat4(m_ProgramObj, "view", view);
+    glm::vec3 pointLightColors[] = {
+            glm::vec3(1.0f, 1.0f, 1.0f),
+            glm::vec3(1.0f, 1.0f, 1.0f),
+            glm::vec3(1.0f, 1.0f, 1.0f),
+            glm::vec3(1.0f, 1.0f, 1.0f),
+    };
 
-    // world transformation
-    glm::mat4 model = glm::mat4(1.0f);
-    setMat4(m_ProgramObj, "model", model);
-
-    // render containers
-    glBindVertexArray(cubeVAO);
-    for (unsigned int i = 0; i < 10; i++) {
-        // calculate the model matrix for each object and pass it to shader before drawing
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, cubePositions[i]);
-        float angle = 20.0f * i;
-        model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-        setMat4(m_ProgramObj, "model", model);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-    }
-
-    // also draw the lamp object(s)
-    glUseProgram(m_ProgramObj_Light);
-    setMat4(m_ProgramObj_Light, "projection", projection);
-    setMat4(m_ProgramObj_Light, "view", view);
-
-    glBindVertexArray(lightCubeVAO);
-    for (unsigned int i = 0; i < 4; i++) {
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, pointLightPositions[i]);
-        model = glm::scale(model, glm::vec3(0.2f)); // Make it a smaller cube
-        setMat4(m_ProgramObj_Light, "model", model);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-    }
+    DrawSceneCommon(m_ProgramObj, m_ProgramObj_Light, cameraUtils,
+                    cubeVAO, lightCubeVAO, pointLightColors,
+                    diffuseMap, specularMap,
+                    SCR_WIDTH, SCR_HEIGHT);
 }
 
 // 沙漠效果
@@ -314,8 +372,15 @@ void MultipleLights::DrawDesert() {
     glClearColor(0.75f, 0.52f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // be sure to activate shader when setting uniforms/drawing objects
     glUseProgram(m_ProgramObj);
+
+    // 设置定向光
+    SetDirLight(m_ProgramObj,
+                glm::vec3(-0.2f, -1.0f, -0.3f),
+                glm::vec3(0.3f, 0.24f, 0.14f),
+                glm::vec3(0.7f, 0.42f, 0.26f),
+                glm::vec3(0.5f, 0.5f, 0.5f)
+    );
 
     glm::vec3 pointLightColors[] = {
             glm::vec3(1.0f, 0.6f, 0.0f),
@@ -323,101 +388,27 @@ void MultipleLights::DrawDesert() {
             glm::vec3(0.0f, 1.0f, 0.0f),
             glm::vec3(0.2f, 0.2f, 1.0f)
     };
-    // Directional light
-    setVec3(m_ProgramObj,"dirLight.direction", -0.2f, -1.0f, -0.3f);
-    setVec3(m_ProgramObj,"dirLight.ambient", 0.3f, 0.24f, 0.14f);
-    setVec3(m_ProgramObj,"dirLight.diffuse", 0.7f, 0.42f, 0.26f);
-    setVec3(m_ProgramObj,"dirLight.specular", 0.5f, 0.5f, 0.5f);
-    // Point light 1
-    setVec3(m_ProgramObj,"pointLights[0].position", pointLightPositions[0].x, pointLightPositions[0].y, pointLightPositions[0].z);
-    setVec3(m_ProgramObj,"pointLights[0].ambient", pointLightColors[0].x * 0.1,  pointLightColors[0].y * 0.1,  pointLightColors[0].z * 0.1);
-    setVec3(m_ProgramObj,"pointLights[0].diffuse", pointLightColors[0].x,  pointLightColors[0].y,  pointLightColors[0].z);
-    setVec3(m_ProgramObj,"pointLights[0].specular", pointLightColors[0].x,  pointLightColors[0].y,  pointLightColors[0].z);
-    setFloat(m_ProgramObj, "pointLights[0].constant", 1.0f);
-    setFloat(m_ProgramObj, "pointLights[0].linear", 0.09);
-    setFloat(m_ProgramObj, "pointLights[0].quadratic", 0.032);
-    // Point light 2
-    setVec3(m_ProgramObj,"pointLights[1].position", pointLightPositions[1].x, pointLightPositions[1].y, pointLightPositions[1].z);
-    setVec3(m_ProgramObj,"pointLights[1].ambient", pointLightColors[1].x * 0.1,  pointLightColors[1].y * 0.1,  pointLightColors[1].z * 0.1);
-    setVec3(m_ProgramObj,"pointLights[1].diffuse", pointLightColors[1].x,  pointLightColors[1].y,  pointLightColors[1].z);
-    setVec3(m_ProgramObj,"pointLights[1].specular", pointLightColors[1].x,  pointLightColors[1].y,  pointLightColors[1].z);
-    setFloat(m_ProgramObj, "pointLights[1].constant", 1.0f);
-    setFloat(m_ProgramObj, "pointLights[1].linear", 0.09);
-    setFloat(m_ProgramObj, "pointLights[1].quadratic", 0.032);
-    // Point light 3
-    setVec3(m_ProgramObj,"pointLights[2].position", pointLightPositions[2].x, pointLightPositions[2].y, pointLightPositions[2].z);
-    setVec3(m_ProgramObj,"pointLights[2].ambient", pointLightColors[2].x * 0.1,  pointLightColors[2].y * 0.1,  pointLightColors[2].z * 0.1);
-    setVec3(m_ProgramObj,"pointLights[2].diffuse", pointLightColors[2].x,  pointLightColors[2].y,  pointLightColors[2].z);
-    setVec3(m_ProgramObj,"pointLights[2].specular", pointLightColors[2].x,  pointLightColors[2].y,  pointLightColors[2].z);
-    setFloat(m_ProgramObj, "pointLights[2].constant", 1.0f);
-    setFloat(m_ProgramObj, "pointLights[2].linear", 0.09);
-    setFloat(m_ProgramObj, "pointLights[2].quadratic", 0.032);
-    // Point light 4
-    setVec3(m_ProgramObj,"pointLights[3].position", pointLightPositions[3].x, pointLightPositions[3].y, pointLightPositions[3].z);
-    setVec3(m_ProgramObj,"pointLights[3].ambient", pointLightColors[3].x * 0.1,  pointLightColors[3].y * 0.1,  pointLightColors[3].z * 0.1);
-    setVec3(m_ProgramObj,"pointLights[3].diffuse", pointLightColors[3].x,  pointLightColors[3].y,  pointLightColors[3].z);
-    setVec3(m_ProgramObj,"pointLights[3].specular", pointLightColors[3].x,  pointLightColors[3].y,  pointLightColors[3].z);
-    setFloat(m_ProgramObj, "pointLights[3].constant", 1.0f);
-    setFloat(m_ProgramObj, "pointLights[3].linear", 0.09);
-    setFloat(m_ProgramObj, "pointLights[3].quadratic", 0.032);
-    // SpotLight
-    setVec3(m_ProgramObj,"spotLight.position" ,cameraUtils.Position.x, cameraUtils.Position.y, cameraUtils.Position.z);
-    setVec3(m_ProgramObj,"spotLight.direction", cameraUtils.Front.x, cameraUtils.Front.y, cameraUtils.Front.z);
-    setVec3(m_ProgramObj,"spotLight.ambient", 0.0f, 0.0f, 0.0f);
-    setVec3(m_ProgramObj,"spotLight.diffuse", 0.8f, 0.8f, 0.0f);
-    setVec3(m_ProgramObj,"spotLight.specular", 0.8f, 0.8f, 0.0f);
-    setFloat(m_ProgramObj, "spotLight.constant", 1.0f);
-    setFloat(m_ProgramObj, "spotLight.linear", 0.09);
-    setFloat(m_ProgramObj, "spotLight.quadratic", 0.032);
-    setFloat(m_ProgramObj, "spotLight.cutOff", glm::cos(glm::radians(12.5f)));
-    setFloat(m_ProgramObj, "spotLight.outerCutOff", glm::cos(glm::radians(13.0f)));
 
-    setVec3(m_ProgramObj, "viewPos", cameraUtils.Position);
-    setFloat(m_ProgramObj, "material.shininess", 32.0f);
+    // 设置点光源
+    SetPointLights(m_ProgramObj, pointLightColors, 1.0f, 0.09f, 0.032f);
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, diffuseMap);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, specularMap);
+    // 设置聚光灯
+    SetSpotLight(m_ProgramObj,
+                 cameraUtils.Position,
+                 cameraUtils.Front,
+                 glm::vec3(0.0f, 0.0f, 0.0f),
+                 glm::vec3(0.8f, 0.8f, 0.0f),
+                 glm::vec3(0.8f, 0.8f, 0.0f),
+                 1.0f, 0.09f, 0.032f,
+                 glm::cos(glm::radians(12.5f)),
+                 glm::cos(glm::radians(13.0f))
+    );
 
-    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom), SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
-    glm::mat4 view = cameraUtils.GetViewMatrix();
-    setMat4(m_ProgramObj, "projection", projection);
-    setMat4(m_ProgramObj, "view", view);
-
-    // world transformation
-    glm::mat4 model = glm::mat4(1.0f);
-    setMat4(m_ProgramObj, "model", model);
-
-    // render containers
-    glBindVertexArray(cubeVAO);
-    for (unsigned int i = 0; i < 10; i++) {
-        // calculate the model matrix for each object and pass it to shader before drawing
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, cubePositions[i]);
-        float angle = 20.0f * i;
-        model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-        setMat4(m_ProgramObj, "model", model);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-    }
-
-    // also draw the lamp object(s)
-    glUseProgram(m_ProgramObj_Light);
-    setMat4(m_ProgramObj_Light, "projection", projection);
-    setMat4(m_ProgramObj_Light, "view", view);
-
-    glBindVertexArray(lightCubeVAO);
-    for (unsigned int i = 0; i < 4; i++) {
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, pointLightPositions[i]);
-        model = glm::scale(model, glm::vec3(0.2f)); // Make it a smaller cube
-        setMat4(m_ProgramObj_Light, "model", model);
-        // 为每个光源立方体设置颜色
-        setVec3(m_ProgramObj_Light,"light.ambient", pointLightColors[i]);
-        setVec3(m_ProgramObj_Light,"light.diffuse", pointLightColors[i]);
-        setVec3(m_ProgramObj_Light,"light.specular", pointLightColors[i]);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-    }
+    // 设置共同渲染逻辑
+    DrawSceneCommon(m_ProgramObj, m_ProgramObj_Light, cameraUtils,
+                    cubeVAO, lightCubeVAO, pointLightColors,
+                    diffuseMap, specularMap,
+                    SCR_WIDTH, SCR_HEIGHT);
 }
 
 // 工厂效果
@@ -428,108 +419,35 @@ void MultipleLights::DrawFactory() {
     // be sure to activate shader when setting uniforms/drawing objects
     glUseProgram(m_ProgramObj);
 
+    // 设置定向光
+    SetDirLight(m_ProgramObj,
+                glm::vec3(-0.2f, -1.0f, -0.3f),
+                glm::vec3(0.05f, 0.05f, 0.1f),
+                glm::vec3(0.2f, 0.2f, 0.7f),
+                glm::vec3(0.7f, 0.7f, 0.7f)
+    );
+
+    // 设置点光源
     glm::vec3 pointLightColors[] = {
             glm::vec3(0.2f, 0.2f, 0.6f),
             glm::vec3(0.3f, 0.3f, 0.7f),
             glm::vec3(0.0f, 0.0f, 0.3f),
             glm::vec3(0.4f, 0.4f, 0.4f)
     };
-    // Directional light
-    setVec3(m_ProgramObj,"dirLight.direction", -0.2f, -1.0f, -0.3f);
-    setVec3(m_ProgramObj,"dirLight.ambient", 0.05f, 0.05f, 0.1f);
-    setVec3(m_ProgramObj,"dirLight.diffuse", 0.2f, 0.2f, 0.7f);
-    setVec3(m_ProgramObj,"dirLight.specular", 0.7f, 0.7f, 0.7f);
-    // Point light 1
-    setVec3(m_ProgramObj,"pointLights[0].position", pointLightPositions[0].x, pointLightPositions[0].y, pointLightPositions[0].z);
-    setVec3(m_ProgramObj,"pointLights[0].ambient", pointLightColors[0].x * 0.1,  pointLightColors[0].y * 0.1,  pointLightColors[0].z * 0.1);
-    setVec3(m_ProgramObj,"pointLights[0].diffuse", pointLightColors[0].x,  pointLightColors[0].y,  pointLightColors[0].z);
-    setVec3(m_ProgramObj,"pointLights[0].specular", pointLightColors[0].x,  pointLightColors[0].y,  pointLightColors[0].z);
-    setFloat(m_ProgramObj, "pointLights[0].constant", 1.0f);
-    setFloat(m_ProgramObj, "pointLights[0].linear", 0.09f);
-    setFloat(m_ProgramObj, "pointLights[0].quadratic", 0.032f);
-    // Point light 2
-    setVec3(m_ProgramObj,"pointLights[1].position", pointLightPositions[1].x, pointLightPositions[1].y, pointLightPositions[1].z);
-    setVec3(m_ProgramObj,"pointLights[1].ambient", pointLightColors[1].x * 0.1,  pointLightColors[1].y * 0.1,  pointLightColors[1].z * 0.1);
-    setVec3(m_ProgramObj,"pointLights[1].diffuse", pointLightColors[1].x,  pointLightColors[1].y,  pointLightColors[1].z);
-    setVec3(m_ProgramObj,"pointLights[1].specular", pointLightColors[1].x,  pointLightColors[1].y,  pointLightColors[1].z);
-    setFloat(m_ProgramObj, "pointLights[1].constant", 1.0f);
-    setFloat(m_ProgramObj, "pointLights[1].linear", 0.09f);
-    setFloat(m_ProgramObj, "pointLights[1].quadratic", 0.032f);
-    // Point light 3
-    setVec3(m_ProgramObj,"pointLights[2].position", pointLightPositions[2].x, pointLightPositions[2].y, pointLightPositions[2].z);
-    setVec3(m_ProgramObj,"pointLights[2].ambient", pointLightColors[2].x * 0.1,  pointLightColors[2].y * 0.1,  pointLightColors[2].z * 0.1);
-    setVec3(m_ProgramObj,"pointLights[2].diffuse", pointLightColors[2].x,  pointLightColors[2].y,  pointLightColors[2].z);
-    setVec3(m_ProgramObj,"pointLights[2].specular", pointLightColors[2].x,  pointLightColors[2].y,  pointLightColors[2].z);
-    setFloat(m_ProgramObj, "pointLights[2].constant", 1.0f);
-    setFloat(m_ProgramObj, "pointLights[2].linear", 0.09f);
-    setFloat(m_ProgramObj, "pointLights[2].quadratic", 0.032f);
-    // Point light 4
-    setVec3(m_ProgramObj,"pointLights[3].position", pointLightPositions[3].x, pointLightPositions[3].y, pointLightPositions[3].z);
-    setVec3(m_ProgramObj,"pointLights[3].ambient", pointLightColors[3].x * 0.1,  pointLightColors[3].y * 0.1,  pointLightColors[3].z * 0.1);
-    setVec3(m_ProgramObj,"pointLights[3].diffuse", pointLightColors[3].x,  pointLightColors[3].y,  pointLightColors[3].z);
-    setVec3(m_ProgramObj,"pointLights[3].specular", pointLightColors[3].x,  pointLightColors[3].y,  pointLightColors[3].z);
-    setFloat(m_ProgramObj, "pointLights[3].constant", 1.0f);
-    setFloat(m_ProgramObj, "pointLights[3].linear", 0.09f);
-    setFloat(m_ProgramObj, "pointLights[3].quadratic", 0.032f);
-    // SpotLight
-    setVec3(m_ProgramObj,"spotLight.position" ,cameraUtils.Position.x, cameraUtils.Position.y, cameraUtils.Position.z);
-    setVec3(m_ProgramObj,"spotLight.direction", cameraUtils.Front.x, cameraUtils.Front.y, cameraUtils.Front.z);
-    setVec3(m_ProgramObj,"spotLight.ambient", 0.0f, 0.0f, 0.0f);
-    setVec3(m_ProgramObj,"spotLight.diffuse", 1.0f, 1.0f, 1.0f);
-    setVec3(m_ProgramObj,"spotLight.specular", 1.0f, 1.0f, 1.0f);
-    setFloat(m_ProgramObj, "spotLight.constant", 1.0f);
-    setFloat(m_ProgramObj, "spotLight.linear", 0.09f);
-    setFloat(m_ProgramObj, "spotLight.quadratic", 0.032f);
-    setFloat(m_ProgramObj, "spotLight.cutOff", glm::cos(glm::radians(10.0f)));
-    setFloat(m_ProgramObj, "spotLight.outerCutOff", glm::cos(glm::radians(12.5f)));
+    SetPointLights(m_ProgramObj, pointLightColors, 1.0f, 0.09f, 0.032f);
 
-    setVec3(m_ProgramObj, "viewPos", cameraUtils.Position);
-    setFloat(m_ProgramObj, "material.shininess", 32.0f);
+    // 设置聚光灯
+    SetSpotLight(m_ProgramObj, cameraUtils.Position, cameraUtils.Front,
+                 glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f),
+                 glm::vec3(0.0f, 0.0f, 1.0f), 1.0f, 0.09f, 0.032f,
+                 glm::cos(glm::radians(10.0f)),
+                 glm::cos(glm::radians(15.0f))
+    );
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, diffuseMap);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, specularMap);
-
-    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom), SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
-    glm::mat4 view = cameraUtils.GetViewMatrix();
-    setMat4(m_ProgramObj, "projection", projection);
-    setMat4(m_ProgramObj, "view", view);
-
-    // world transformation
-    glm::mat4 model = glm::mat4(1.0f);
-    setMat4(m_ProgramObj, "model", model);
-
-    // render containers
-    glBindVertexArray(cubeVAO);
-    for (unsigned int i = 0; i < 10; i++) {
-        // calculate the model matrix for each object and pass it to shader before drawing
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, cubePositions[i]);
-        float angle = 20.0f * i;
-        model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-        setMat4(m_ProgramObj, "model", model);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-    }
-
-    // also draw the lamp object(s)
-    glUseProgram(m_ProgramObj_Light);
-    setMat4(m_ProgramObj_Light, "projection", projection);
-    setMat4(m_ProgramObj_Light, "view", view);
-
-    glBindVertexArray(lightCubeVAO);
-    for (unsigned int i = 0; i < 4; i++) {
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, pointLightPositions[i]);
-        model = glm::scale(model, glm::vec3(0.2f)); // Make it a smaller cube
-        setMat4(m_ProgramObj_Light, "model", model);
-        // 为每个光源立方体设置颜色
-        setVec3(m_ProgramObj_Light,"light.ambient", pointLightColors[i]);
-        setVec3(m_ProgramObj_Light,"light.diffuse", pointLightColors[i]);
-        setVec3(m_ProgramObj_Light,"light.specular", pointLightColors[i]);
-
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-    }
+    // 设置共同渲染逻辑
+    DrawSceneCommon(m_ProgramObj, m_ProgramObj_Light, cameraUtils,
+                    cubeVAO, lightCubeVAO, pointLightColors, diffuseMap, specularMap,
+                    SCR_WIDTH, SCR_HEIGHT);
 }
 
 // 恐怖效果
@@ -537,112 +455,44 @@ void MultipleLights::DrawHorror() {
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // be sure to activate shader when setting uniforms/drawing objects
     glUseProgram(m_ProgramObj);
 
+    // 设置定向光
+    SetDirLight(m_ProgramObj,
+                glm::vec3(-0.2f, -1.0f, -0.3f),
+                glm::vec3(0.0f, 0.0f, 0.0f),
+                glm::vec3(0.05f, 0.05f, 0.05f),
+                glm::vec3(0.2f, 0.2f, 0.2f)
+    );
+
+    // 设置点光源
     glm::vec3 pointLightColors[] = {
             glm::vec3(0.1f, 0.1f, 0.1f),
             glm::vec3(0.1f, 0.1f, 0.1f),
             glm::vec3(0.1f, 0.1f, 0.1f),
             glm::vec3(0.3f, 0.1f, 0.1f)
     };
-    // Directional light
-    setVec3(m_ProgramObj,"dirLight.direction", -0.2f, -1.0f, -0.3f);
-    setVec3(m_ProgramObj,"dirLight.ambient", 0.0f, 0.0f, 0.0f);
-    setVec3(m_ProgramObj,"dirLight.diffuse", 0.05f, 0.05f, 0.05f);
-    setVec3(m_ProgramObj,"dirLight.specular", 0.2f, 0.2f, 0.2f);
-    // Point light 1
-    setVec3(m_ProgramObj,"pointLights[0].position", pointLightPositions[0].x, pointLightPositions[0].y, pointLightPositions[0].z);
-    setVec3(m_ProgramObj,"pointLights[0].ambient", pointLightColors[0].x * 0.1,  pointLightColors[0].y * 0.1,  pointLightColors[0].z * 0.1);
-    setVec3(m_ProgramObj,"pointLights[0].diffuse", pointLightColors[0].x,  pointLightColors[0].y,  pointLightColors[0].z);
-    setVec3(m_ProgramObj,"pointLights[0].specular", pointLightColors[0].x,  pointLightColors[0].y,  pointLightColors[0].z);
-    setFloat(m_ProgramObj, "pointLights[0].constant", 1.0f);
-    setFloat(m_ProgramObj, "pointLights[0].linear", 0.14f);
-    setFloat(m_ProgramObj, "pointLights[0].quadratic", 0.07f);
-    // Point light 2
-    setVec3(m_ProgramObj,"pointLights[1].position", pointLightPositions[1].x, pointLightPositions[1].y, pointLightPositions[1].z);
-    setVec3(m_ProgramObj,"pointLights[1].ambient", pointLightColors[1].x * 0.1,  pointLightColors[1].y * 0.1,  pointLightColors[1].z * 0.1);
-    setVec3(m_ProgramObj,"pointLights[1].diffuse", pointLightColors[1].x,  pointLightColors[1].y,  pointLightColors[1].z);
-    setVec3(m_ProgramObj,"pointLights[1].specular", pointLightColors[1].x,  pointLightColors[1].y,  pointLightColors[1].z);
-    setFloat(m_ProgramObj, "pointLights[1].constant", 1.0f);
-    setFloat(m_ProgramObj, "pointLights[1].linear", 0.14f);
-    setFloat(m_ProgramObj, "pointLights[1].quadratic", 0.07f);
-    // Point light 3
-    setVec3(m_ProgramObj,"pointLights[2].position", pointLightPositions[2].x, pointLightPositions[2].y, pointLightPositions[2].z);
-    setVec3(m_ProgramObj,"pointLights[2].ambient", pointLightColors[2].x * 0.1,  pointLightColors[2].y * 0.1,  pointLightColors[2].z * 0.1);
-    setVec3(m_ProgramObj,"pointLights[2].diffuse", pointLightColors[2].x,  pointLightColors[2].y,  pointLightColors[2].z);
-    setVec3(m_ProgramObj,"pointLights[2].specular", pointLightColors[2].x,  pointLightColors[2].y,  pointLightColors[2].z);
-    setFloat(m_ProgramObj, "pointLights[2].constant", 1.0f);
-    setFloat(m_ProgramObj, "pointLights[2].linear", 0.14f);
-    setFloat(m_ProgramObj, "pointLights[2].quadratic", 0.07f);
-    // Point light 4
-    setVec3(m_ProgramObj,"pointLights[3].position", pointLightPositions[3].x, pointLightPositions[3].y, pointLightPositions[3].z);
-    setVec3(m_ProgramObj,"pointLights[3].ambient", pointLightColors[3].x * 0.1,  pointLightColors[3].y * 0.1,  pointLightColors[3].z * 0.1);
-    setVec3(m_ProgramObj,"pointLights[3].diffuse", pointLightColors[3].x,  pointLightColors[3].y,  pointLightColors[3].z);
-    setVec3(m_ProgramObj,"pointLights[3].specular", pointLightColors[3].x,  pointLightColors[3].y,  pointLightColors[3].z);
-    setFloat(m_ProgramObj, "pointLights[3].constant", 1.0f);
-    setFloat(m_ProgramObj, "pointLights[3].linear", 0.14f);
-    setFloat(m_ProgramObj, "pointLights[3].quadratic", 0.07f);
-    // SpotLight
-    setVec3(m_ProgramObj,"spotLight.position" ,cameraUtils.Position.x, cameraUtils.Position.y, cameraUtils.Position.z);
-    setVec3(m_ProgramObj,"spotLight.direction", cameraUtils.Front.x, cameraUtils.Front.y, cameraUtils.Front.z);
-    setVec3(m_ProgramObj,"spotLight.ambient", 0.0f, 0.0f, 0.0f);
-    setVec3(m_ProgramObj,"spotLight.diffuse", 1.0f, 1.0f, 1.0f);
-    setVec3(m_ProgramObj,"spotLight.specular", 1.0f, 1.0f, 1.0f);
-    setFloat(m_ProgramObj, "spotLight.constant", 1.0f);
-    setFloat(m_ProgramObj, "spotLight.linear", 0.09f);
-    setFloat(m_ProgramObj, "spotLight.quadratic", 0.032f);
-    setFloat(m_ProgramObj, "spotLight.cutOff", glm::cos(glm::radians(10.0f)));
-    setFloat(m_ProgramObj, "spotLight.outerCutOff", glm::cos(glm::radians(15.0f)));
+    SetPointLights(m_ProgramObj, pointLightColors, 1.0f, 0.14f, 0.07f);
 
-    setVec3(m_ProgramObj, "viewPos", cameraUtils.Position);
-    setFloat(m_ProgramObj, "material.shininess", 32.0f);
+    // 设置聚光灯
+    SetSpoxtLight(m_ProgramObj,
+                 cameraUtils.Position,
+                 cameraUtils.Front,
+                 glm::vec3(0.0f, 0.0f, 0.0f),
+                 glm::vec3(1.0f, 1.0f, 1.0f),
+                 glm::vec3(1.0f, 1.0f, 1.0f),
+                 1.0f, 0.09f, 0.032f,
+                 glm::cos(glm::radians(10.0f)),
+                 glm::cos(glm::radians(15.0f))
+    );
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, diffuseMap);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, specularMap);
-
-    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom), SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
-    glm::mat4 view = cameraUtils.GetViewMatrix();
-    setMat4(m_ProgramObj, "projection", projection);
-    setMat4(m_ProgramObj, "view", view);
-
-    // world transformation
-    glm::mat4 model = glm::mat4(1.0f);
-    setMat4(m_ProgramObj, "model", model);
-
-    // render containers
-    glBindVertexArray(cubeVAO);
-    for (unsigned int i = 0; i < 10; i++) {
-        // calculate the model matrix for each object and pass it to shader before drawing
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, cubePositions[i]);
-        float angle = 20.0f * i;
-        model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-        setMat4(m_ProgramObj, "model", model);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-    }
-
-    // also draw the lamp object(s)
-    glUseProgram(m_ProgramObj_Light);
-    setMat4(m_ProgramObj_Light, "projection", projection);
-    setMat4(m_ProgramObj_Light, "view", view);
-
-    glBindVertexArray(lightCubeVAO);
-    for (unsigned int i = 0; i < 4; i++) {
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, pointLightPositions[i]);
-        model = glm::scale(model, glm::vec3(0.2f)); // Make it a smaller cube
-        setMat4(m_ProgramObj_Light, "model", model);
-        // 为每个光源立方体设置颜色
-        setVec3(m_ProgramObj_Light,"light.ambient", pointLightColors[i]);
-        setVec3(m_ProgramObj_Light,"light.diffuse", pointLightColors[i]);
-        setVec3(m_ProgramObj_Light,"light.specular", pointLightColors[i]);
-
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-    }
+    // 设置共同渲染逻辑
+    DrawSceneCommon(m_ProgramObj, m_ProgramObj_Light, cameraUtils,
+                    cubeVAO, lightCubeVAO, pointLightColors,
+                    diffuseMap, specularMap,
+                    SCR_WIDTH, SCR_HEIGHT);
 }
+
 // 生物化学实验室效果
 void MultipleLights::DrawBiochemicalLab() {
     glClearColor(0.9f, 0.9f, 0.9f, 1.0f);
@@ -651,108 +501,40 @@ void MultipleLights::DrawBiochemicalLab() {
     // be sure to activate shader when setting uniforms/drawing objects
     glUseProgram(m_ProgramObj);
 
+    // 设置定向光
+    SetDirLight(m_ProgramObj,
+                glm::vec3(-0.2f, -1.0f, -0.3f),
+                glm::vec3(0.5f, 0.5f, 0.5f),
+                glm::vec3(1.0f, 1.0f, 1.0f),
+                glm::vec3(1.0f, 1.0f, 1.0f)
+    );
+
+    // 设置点光源
     glm::vec3 pointLightColors[] = {
             glm::vec3(0.4f, 0.7f, 0.1f),
             glm::vec3(0.4f, 0.7f, 0.1f),
             glm::vec3(0.4f, 0.7f, 0.1f),
             glm::vec3(0.4f, 0.7f, 0.1f)
     };
-    // Directional light
-    setVec3(m_ProgramObj,"dirLight.direction", -0.2f, -1.0f, -0.3f);
-    setVec3(m_ProgramObj,"dirLight.ambient", 0.5f, 0.5f, 0.5f);
-    setVec3(m_ProgramObj,"dirLight.diffuse", 1.0f, 1.0f, 1.0f);
-    setVec3(m_ProgramObj,"dirLight.specular", 1.0f, 1.0f, 1.0f);
-    // Point light 1
-    setVec3(m_ProgramObj,"pointLights[0].position", pointLightPositions[0].x, pointLightPositions[0].y, pointLightPositions[0].z);
-    setVec3(m_ProgramObj,"pointLights[0].ambient", pointLightColors[0].x * 0.1,  pointLightColors[0].y * 0.1,  pointLightColors[0].z * 0.1);
-    setVec3(m_ProgramObj,"pointLights[0].diffuse", pointLightColors[0].x,  pointLightColors[0].y,  pointLightColors[0].z);
-    setVec3(m_ProgramObj,"pointLights[0].specular", pointLightColors[0].x,  pointLightColors[0].y,  pointLightColors[0].z);
-    setFloat(m_ProgramObj, "pointLights[0].constant", 1.0f);
-    setFloat(m_ProgramObj, "pointLights[0].linear", 0.07f);
-    setFloat(m_ProgramObj, "pointLights[0].quadratic", 0.017f);
-    // Point light 2
-    setVec3(m_ProgramObj,"pointLights[1].position", pointLightPositions[1].x, pointLightPositions[1].y, pointLightPositions[1].z);
-    setVec3(m_ProgramObj,"pointLights[1].ambient", pointLightColors[1].x * 0.1,  pointLightColors[1].y * 0.1,  pointLightColors[1].z * 0.1);
-    setVec3(m_ProgramObj,"pointLights[1].diffuse", pointLightColors[1].x,  pointLightColors[1].y,  pointLightColors[1].z);
-    setVec3(m_ProgramObj,"pointLights[1].specular", pointLightColors[1].x,  pointLightColors[1].y,  pointLightColors[1].z);
-    setFloat(m_ProgramObj, "pointLights[1].constant", 1.0f);
-    setFloat(m_ProgramObj, "pointLights[1].linear", 0.07f);
-    setFloat(m_ProgramObj, "pointLights[1].quadratic", 0.017f);
-    // Point light 3
-    setVec3(m_ProgramObj,"pointLights[2].position", pointLightPositions[2].x, pointLightPositions[2].y, pointLightPositions[2].z);
-    setVec3(m_ProgramObj,"pointLights[2].ambient", pointLightColors[2].x * 0.1,  pointLightColors[2].y * 0.1,  pointLightColors[2].z * 0.1);
-    setVec3(m_ProgramObj,"pointLights[2].diffuse", pointLightColors[2].x,  pointLightColors[2].y,  pointLightColors[2].z);
-    setVec3(m_ProgramObj,"pointLights[2].specular", pointLightColors[2].x,  pointLightColors[2].y,  pointLightColors[2].z);
-    setFloat(m_ProgramObj, "pointLights[2].constant", 1.0f);
-    setFloat(m_ProgramObj, "pointLights[2].linear", 0.07f);
-    setFloat(m_ProgramObj, "pointLights[2].quadratic", 0.017f);
-    // Point light 4
-    setVec3(m_ProgramObj,"pointLights[3].position", pointLightPositions[3].x, pointLightPositions[3].y, pointLightPositions[3].z);
-    setVec3(m_ProgramObj,"pointLights[3].ambient", pointLightColors[3].x * 0.1,  pointLightColors[3].y * 0.1,  pointLightColors[3].z * 0.1);
-    setVec3(m_ProgramObj,"pointLights[3].diffuse", pointLightColors[3].x,  pointLightColors[3].y,  pointLightColors[3].z);
-    setVec3(m_ProgramObj,"pointLights[3].specular", pointLightColors[3].x,  pointLightColors[3].y,  pointLightColors[3].z);
-    setFloat(m_ProgramObj, "pointLights[3].constant", 1.0f);
-    setFloat(m_ProgramObj, "pointLights[3].linear", 0.07f);
-    setFloat(m_ProgramObj, "pointLights[3].quadratic", 0.017f);
-    // SpotLight
-    setVec3(m_ProgramObj,"spotLight.position" ,cameraUtils.Position.x, cameraUtils.Position.y, cameraUtils.Position.z);
-    setVec3(m_ProgramObj,"spotLight.direction", cameraUtils.Front.x, cameraUtils.Front.y, cameraUtils.Front.z);
-    setVec3(m_ProgramObj,"spotLight.ambient", 0.0f, 0.0f, 0.0f);
-    setVec3(m_ProgramObj,"spotLight.diffuse", 0.0f, 1.0f, 0.0f);
-    setVec3(m_ProgramObj,"spotLight.specular", 0.0f, 1.0f, 0.0f);
-    setFloat(m_ProgramObj, "spotLight.constant", 1.0f);
-    setFloat(m_ProgramObj, "spotLight.linear", 0.07f);
-    setFloat(m_ProgramObj, "spotLight.quadratic", 0.017f);
-    setFloat(m_ProgramObj, "spotLight.cutOff", glm::cos(glm::radians(7.0f)));
-    setFloat(m_ProgramObj, "spotLight.outerCutOff", glm::cos(glm::radians(10.0f)));
+    SetPointLights(m_ProgramObj, pointLightColors, 1.0f, 0.07f, 0.017f);
 
-    setVec3(m_ProgramObj, "viewPos", cameraUtils.Position);
-    setFloat(m_ProgramObj, "material.shininess", 32.0f);
+    // 设置聚光灯
+    SetSpotLight(m_ProgramObj,
+                 cameraUtils.Position,
+                 cameraUtils.Front,
+                 glm::vec3(0.0f, 0.0f, 0.0f),
+                 glm::vec3(0.0f, 1.0f, 0.0f),
+                 glm::vec3(0.0f, 1.0f, 0.0f),
+                 1.0f, 0.07f, 0.017f,
+                 glm::cos(glm::radians(7.0f)),
+                 glm::cos(glm::radians(10.0f))
+    );
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, diffuseMap);
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, specularMap);
-
-    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom), SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
-    glm::mat4 view = cameraUtils.GetViewMatrix();
-    setMat4(m_ProgramObj, "projection", projection);
-    setMat4(m_ProgramObj, "view", view);
-
-    // world transformation
-    glm::mat4 model = glm::mat4(1.0f);
-    setMat4(m_ProgramObj, "model", model);
-
-    // render containers
-    glBindVertexArray(cubeVAO);
-    for (unsigned int i = 0; i < 10; i++) {
-        // calculate the model matrix for each object and pass it to shader before drawing
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, cubePositions[i]);
-        float angle = 20.0f * i;
-        model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-        setMat4(m_ProgramObj, "model", model);
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-    }
-
-    // also draw the lamp object(s)
-    glUseProgram(m_ProgramObj_Light);
-    setMat4(m_ProgramObj_Light, "projection", projection);
-    setMat4(m_ProgramObj_Light, "view", view);
-
-    glBindVertexArray(lightCubeVAO);
-    for (unsigned int i = 0; i < 4; i++) {
-        model = glm::mat4(1.0f);
-        model = glm::translate(model, pointLightPositions[i]);
-        model = glm::scale(model, glm::vec3(0.2f)); // Make it a smaller cube
-        setMat4(m_ProgramObj_Light, "model", model);
-        // 为每个光源立方体设置颜色
-        setVec3(m_ProgramObj_Light,"light.ambient", pointLightColors[i]);
-        setVec3(m_ProgramObj_Light,"light.diffuse", pointLightColors[i]);
-        setVec3(m_ProgramObj_Light,"light.specular", pointLightColors[i]);
-
-        glDrawArrays(GL_TRIANGLES, 0, 36);
-    }
+    // 设置共同渲染逻辑
+    DrawSceneCommon(m_ProgramObj, m_ProgramObj_Light, cameraUtils,
+                    cubeVAO, lightCubeVAO, pointLightColors,
+                    diffuseMap, specularMap,
+                    SCR_WIDTH, SCR_HEIGHT);
 }
 
 void MultipleLights::Shutdown() {

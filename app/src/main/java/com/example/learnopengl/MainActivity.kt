@@ -331,7 +331,8 @@ class MainActivity : AppCompatActivity() {
             i++, R.mipmap.lights_merge,
             "多光源",
             "在立方体箱子中使用多种光源构建氛围效果",
-            BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_MERGE).build()
+            BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_MERGE)
+                .setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY).build()
         )
         addItem(
             i++, R.mipmap.model_loading,
