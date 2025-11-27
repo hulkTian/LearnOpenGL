@@ -3,7 +3,7 @@
 //
 
 #include "CubeMapsReflection.h"
-
+REGISTER_SAMPLE(SAMPLE_TYPE_CUBE_MAPS_REFLECTION1, CubeMapsReflection)
 static float cubeVertices[] = {
         -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,

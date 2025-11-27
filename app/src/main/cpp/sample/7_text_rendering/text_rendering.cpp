@@ -31,6 +31,8 @@
 
 #include "text_rendering.h"
 
+REGISTER_SAMPLE(SAMPLE_TYPE_TEXT_RENDERING, text_rendering)
+
 void text_rendering::Create()
 {
     // 重要：需要开启混合，否则最后会显示纯色的四边形

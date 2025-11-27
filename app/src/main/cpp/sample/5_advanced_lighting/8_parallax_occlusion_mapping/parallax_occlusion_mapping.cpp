@@ -4,6 +4,8 @@
 
 #include "parallax_occlusion_mapping.h"
 
+REGISTER_SAMPLE(SAMPLE_TYPE_PARALLAX_OCCLUSION_MAPPING, parallax_occlusion_mapping)
+
 void parallax_occlusion_mapping::Create() {
     GLUtils::printGLInfo();
 

@@ -2,12 +2,12 @@
 
 #include "GLBaseSample.h"
 
-class NativeTriangle7 : public GLBaseSample {
+class texture_unit : public GLBaseSample {
 
 public:
-    NativeTriangle7() = default;
+    texture_unit() = default;
 
-    virtual ~NativeTriangle7() = default;
+    virtual ~texture_unit() = default;
 
     virtual void Create();
 

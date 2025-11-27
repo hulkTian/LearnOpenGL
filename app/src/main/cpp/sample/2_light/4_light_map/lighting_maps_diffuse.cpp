@@ -7,7 +7,7 @@
  * 大多数情况下环境光颜色在几乎所有情况下都等于漫反射颜色，所以漫反射的贴图也可以当作环境光贴图使用。
  */
 #include "lighting_maps_diffuse.h"
-
+REGISTER_SAMPLE(SAMPLE_TYPE_LIGHTING_MAPS_DIFFUSE, LightingMapsDiffuse)
 static float vertices[] = {
         // positions                      // normals                       // texture coords
         -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,

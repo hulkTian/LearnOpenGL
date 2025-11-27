@@ -16,6 +16,8 @@
 
 #include "hdr.h"
 
+REGISTER_SAMPLE(SAMPLE_TYPE_HDR, hdr)
+
 void hdr::Create() {
     GLUtils::printGLInfo();
 

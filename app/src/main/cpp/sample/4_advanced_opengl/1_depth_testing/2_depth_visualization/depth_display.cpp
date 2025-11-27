@@ -3,6 +3,7 @@
 //
 
 #include "depth_display.h"
+REGISTER_SAMPLE(SAMPLE_TYPE_DEPTH_DISPLAY, depth_display)
 static float cubeVertices[] = {
         // positions          // texture Coords
         -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,

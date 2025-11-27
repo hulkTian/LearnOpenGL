@@ -116,4 +116,24 @@
         android:layout_marginTop="140dp"
         android:max="100"
         android:min="0" />
+
+    <TextView
+        android:id="@+id/tv_title_4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="890dp"
+        android:layout_marginTop="100dp"
+        android:text="title4"
+        android:textColor="@color/design_default_color_primary"
+        android:textSize="28sp" />
+
+    <androidx.appcompat.widget.AppCompatSeekBar
+        android:id="@+id/sb_seekBar_4"
+        style="@android:style/Widget.Holo.SeekBar"
+        android:layout_width="260dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="890dp"
+        android:layout_marginTop="140dp"
+        android:max="100"
+        android:min="0" />
 </RelativeLayout>

@@ -3,7 +3,7 @@
 //
 
 #include "lighting_maps_specular.h"
-
+REGISTER_SAMPLE(SAMPLE_TYPE_LIGHTING_MAPS_SPECULAR, lighting_maps_specular)
 static float vertices[] = {
         // positions                      // normals                       // texture coords
         -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,

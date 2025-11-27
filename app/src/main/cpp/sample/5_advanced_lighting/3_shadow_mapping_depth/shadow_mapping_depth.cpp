@@ -12,6 +12,8 @@
 
 #include "shadow_mapping_depth.h"
 
+REGISTER_SAMPLE(SAMPLE_TYPE_SHADOW_MAPPING_DEPTH, shadow_mapping_depth)
+
 // lighting info
 // -------------
 static glm::vec3 lightPos(-2.0f, 4.0f, -1.0f);

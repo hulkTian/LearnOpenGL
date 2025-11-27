@@ -4,6 +4,8 @@
 
 #include "ibl_specular.h"
 
+REGISTER_SAMPLE(SAMPLE_TYPE_PBR_IBL_SPECULAR, ibl_specular)
+
 /**
  * 本例在漫反射基础上加上镜面反射效果
  *

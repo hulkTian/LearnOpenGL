@@ -33,6 +33,8 @@
 #include <iostream>
 #include <random>
 
+REGISTER_SAMPLE(SAMPLE_TYPE_SSAO, ssao)
+
 void ssao::Create() {
     GLUtils::printGLInfo();
 

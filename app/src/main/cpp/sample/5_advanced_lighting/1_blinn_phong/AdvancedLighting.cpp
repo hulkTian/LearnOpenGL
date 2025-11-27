@@ -11,6 +11,7 @@
  */
 #include "AdvancedLighting.h"
 
+REGISTER_SAMPLE(SAMPLE_TYPE_ADVANCED_LIGHTING, AdvancedLighting)
 void AdvancedLighting::Create() {
     GLUtils::printGLInfo();
 

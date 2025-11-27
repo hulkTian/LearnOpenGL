@@ -19,6 +19,7 @@
 
 #include "AnitAliasing.h"
 
+REGISTER_SAMPLE(SAMPLE_TYPE_ANIT_ALIASING, AnitAliasing)
 
 void AnitAliasing::Create() {
     GLUtils::printGLInfo();

@@ -1,18 +1,18 @@
 //
-// Created by ts on 2024/9/13.
+// Created by tzh on 2025/11/26.
 //
 
-#ifndef LEARNOPENGL_LIGHTCASTERSDIRECTIONAL_H
-#define LEARNOPENGL_LIGHTCASTERSDIRECTIONAL_H
+#ifndef LEARNOPENGL_LIGHT_CASTERS_DIRECTIONAL_H
+#define LEARNOPENGL_LIGHT_CASTERS_DIRECTIONAL_H
+
 
 #include "GLBaseSample.h"
-#include "CameraUtils.h"
 
-class LightCastersDirectional : public GLBaseSample {
+class light_casters_directional : public GLBaseSample{
 public:
-    LightCastersDirectional() = default;
+    light_casters_directional() = default;
 
-    virtual ~LightCastersDirectional() = default;
+    virtual ~light_casters_directional() = default;
 
     virtual void Create();
 
@@ -34,4 +34,4 @@ private:
 };
 
 
-#endif //LEARNOPENGL_LIGHTCASTERSDIRECTIONAL_H
+#endif //LEARNOPENGL_LIGHT_CASTERS_DIRECTIONAL_H

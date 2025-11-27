@@ -11,6 +11,7 @@
 #include "Instancing.h"
 #include <iostream>
 
+REGISTER_SAMPLE(SAMPLE_TYPE_INSTANCING, Instancing)
 void Instancing::Create() {
     GLUtils::printGLInfo();
 

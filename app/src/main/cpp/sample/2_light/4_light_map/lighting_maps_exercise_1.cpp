@@ -3,7 +3,7 @@
 //
 
 #include "lighting_maps_exercise_1.h"
-
+REGISTER_SAMPLE(SAMPLE_TYPE_LIGHTING_MAPS_EXERCISE_1, lighting_maps_exercise_1)
 static float vertices[] = {
         // positions                      // normals                       // texture coords
         -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
@@ -140,6 +140,7 @@ void lighting_maps_exercise_1::Draw() {
     // world transformation
     glm::mat4 model = glm::mat4(1.0f);
     setMat4(m_ProgramObj, "model", model);
+    setNormalMatrix(m_ProgramObj, "normalMatrix", model);
 
     // bind diffuse map
     glActiveTexture(GL_TEXTURE0);

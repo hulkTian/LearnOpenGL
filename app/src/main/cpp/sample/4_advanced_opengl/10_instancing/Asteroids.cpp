@@ -4,6 +4,7 @@
 
 #include "Asteroids.h"
 
+REGISTER_SAMPLE(SAMPLE_TYPE_INSTANCING_ASTEROIDS, Asteroids)
 void Asteroids::Create() {
     GLUtils::printGLInfo();
 

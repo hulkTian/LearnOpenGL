@@ -36,7 +36,7 @@
  */
 
 #include "CullFace.h"
-
+REGISTER_SAMPLE(SAMPLE_TYPE_CULL_FACE, CullFace)
 //逆时针顶点
 static float cubeVertices[] = {
         // Back face

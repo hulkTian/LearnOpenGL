@@ -25,6 +25,8 @@
 
 #include "deferred_shading.h"
 
+REGISTER_SAMPLE(SAMPLE_TYPE_DEFERRED_SHADING, deferred_shading)
+
 void deferred_shading::Create() {
     GLUtils::printGLInfo();
 

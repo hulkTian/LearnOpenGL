@@ -21,7 +21,7 @@ Java_com_example_learnopengl_MyNativeRenderer_nativeOnDrawFrame(JNIEnv *env, job
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_example_learnopengl_MyNativeRenderer_nativeSetRenderType(JNIEnv *env, jobject thiz,
-                                                                  jint render_sample_type) {
+                                                                  jfloat render_sample_type) {
     MyGLRender::GetInstance()->SetRenderType(render_sample_type);
 }
 extern "C"
@@ -58,4 +58,10 @@ JNIEXPORT void JNICALL
 Java_com_example_learnopengl_MyNativeRenderer_nativeProgressChanged3(JNIEnv *env, jobject thiz,
                                                                     jint progress) {
     MyGLRender::GetInstance()->ProgressChanged3(progress);
+}
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_example_learnopengl_MyNativeRenderer_nativeProgressChanged4(JNIEnv *env, jobject thiz,
+                                                                    jint progress) {
+    MyGLRender::GetInstance()->ProgressChanged4(progress);
 }

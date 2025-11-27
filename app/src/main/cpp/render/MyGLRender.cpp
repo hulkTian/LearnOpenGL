@@ -3,7 +3,7 @@
 //
 
 #include "MyGLRender.h"
-#include "1_getting_started/1_vao_vbo/vao_vbo.h"
+/*#include "1_getting_started/1_vao_vbo/vao_vbo.h"
 #include "1_getting_started/2_ebo/ebo.h"
 #include "1_getting_started/6_transform/Transform.h"
 #include "1_getting_started/7_coordinate/CoordinateSystems.h"
@@ -13,7 +13,6 @@
 #include "2_light/2_base_lighting/ColorsAtView.h"
 #include "2_light/3_material/Material.h"
 #include "2_light/4_light_map/lighting_maps_diffuse.h"
-#include "2_light/5_light_caster/LightCastersDirectional.h"
 #include "3_mesh/ModelLoading.h"
 #include "2_light/6_multiple_lights/multiple_lights.h"
 #include "4_advanced_opengl/1_depth_testing/1_depth_testing/DepthTesting.h"
@@ -54,16 +53,16 @@
 #include "8_debugging/debugging.h"
 #include "9_break_out/Breakout.h"
 #include "10_guest/1_oit/weighted_blended.h"
-#include "1_getting_started/5_texture/NativeTriangle7.h"
-#include "1_getting_started/5_texture/1_texture_warp/texture_warp.h"
+#include "1_getting_started/5_texture/texture_unit.h"
+#include "1_getting_started/5_texture/texture_warp.h"
 #include "1_getting_started/3_triangle_exercise/1_triangle_exercise.h"
 #include "1_getting_started/3_triangle_exercise/2_triangle_exercise.h"
 #include "1_getting_started/4_uniform/uniform.h"
 #include "4_advanced_opengl/1_depth_testing/2_depth_visualization/depth_display.h"
-#include "1_getting_started/5_texture/4_texture_exercise/texture_exercise_1.h"
-#include "1_getting_started/5_texture/4_texture_exercise/texture_exercise_2.h"
-#include "1_getting_started/5_texture/4_texture_exercise/texture_exercise_3.h"
-#include "1_getting_started/5_texture/4_texture_exercise/texture_exercise_4.h"
+#include "1_getting_started/5_texture/texture_exercise_1.h"
+#include "1_getting_started/5_texture/texture_exercise_2.h"
+#include "1_getting_started/5_texture/texture_exercise_3.h"
+#include "1_getting_started/5_texture/texture_exercise_4.h"
 #include "1_getting_started/7_coordinate/CoordinateSystemsExercise_1.h"
 #include "1_getting_started/7_coordinate/CoordinateSystemsExercise_2.h"
 #include "1_getting_started/7_coordinate/CoordinateSystemsExercise_3.h"
@@ -77,6 +76,9 @@
 #include "2_light/4_light_map/lighting_maps_exercise_2.h"
 #include "2_light/4_light_map/lighting_maps_exercise_3.h"
 #include "2_light/4_light_map/lighting_maps_exercise_4.h"
+#include "2_light/5_light_caster/light_casters_directional.h"
+#include "2_light/5_light_caster/light_casters_point.h"*/
+#include "SampleFactory.h"
 #include <exception>
 
 struct MyGLException : public std::exception {
@@ -114,243 +116,182 @@ MyGLRender::~MyGLRender() {
     }
 }
 
-void MyGLRender::SetRenderType(int renderSampleType) {
-    LOGD("MyGLRender::SetRenderType renderSampleType = %d", renderSampleType)
+void MyGLRender::SetRenderType(float renderSampleType) {
+    m_before_sample = m_curr_sample;
+    m_curr_sample = SampleFactory::Instance().Create(renderSampleType);
+    if (!m_curr_sample) {
+        throw MyGLException("未注册该Sample类型");
+    }
+    LOGD("MyGLRender::SetRenderType m_before_sample = %p, m_curr_sample=%p",
+         m_before_sample, m_curr_sample)
+}
+
+/*void MyGLRender::SetRenderType(float renderSampleType) {
+    LOGD("MyGLRender::SetRenderType renderSampleType = %f", renderSampleType)
     LOGD("MyGLRenderContext::SetRenderType 0 m_pBeforeSample = %p", m_before_sample)
     m_before_sample = m_curr_sample;
-    switch (renderSampleType) {
-        case SAMPLE_TYPE_VAO_VBO:
-            m_curr_sample = new vao_vbo();
-            break;
-        case SAMPLE_TYPE_EBO:
-            m_curr_sample = new ebo();
-            break;
-        case SAMPLE_TYPE_VAO_VBO_EXERCISE_1:
-            m_curr_sample = new triangle_exercise_1();
-            break;
-        case SAMPLE_TYPE_VAO_VBO_EXERCISE_2:
-            m_curr_sample = new triangle_exercise_2();
-            break;
-        case SAMPLE_TYPE_UNIFORM:
-            m_curr_sample = new uniform();
-            break;
-        case SAMPLE_TYPE_TEXTURE_WARP:
-            m_curr_sample = new texture_warp();
-            break;
-        case SAMPLE_TYPE_TEXTURE2:
-            m_curr_sample = new NativeTriangle7();
-            break;
-        case SAMPLE_TYPE_TEXTURE_EXERCISE_1:
-            m_curr_sample = new texture_exercise_1();
-            break;
-        case SAMPLE_TYPE_TEXTURE_EXERCISE_2:
-            m_curr_sample = new texture_exercise_2();
-            break;
-        case SAMPLE_TYPE_TEXTURE_EXERCISE_3:
-            m_curr_sample = new texture_exercise_3();
-            break;
-        case SAMPLE_TYPE_TEXTURE_EXERCISE_4:
-            m_curr_sample = new texture_exercise_4();
-            break;
-        case SAMPLE_TYPE_MAT:
-            m_curr_sample = new Transform();
-            break;
-        case SAMPLE_TYPE_COORDINATE:
-            m_curr_sample = new CoordinateSystems();
-            break;
-        case SAMPLE_TYPE_COORDINATE_EXERCISE_1:
-            m_curr_sample = new CoordinateSystemsExercise_1();
-            break;
-        case SAMPLE_TYPE_COORDINATE_EXERCISE_2:
-            m_curr_sample = new CoordinateSystemsExercise_2();
-            break;
-        case SAMPLE_TYPE_COORDINATE_EXERCISE_3:
-            m_curr_sample = new CoordinateSystemsExercise_3();
-            break;
-        case SAMPLE_TYPE_CAMERA:
-            m_curr_sample = new Camera();
-            break;
-        case SAMPLE_TYPE_CAMERA_AUTO_MOVE:
-            m_curr_sample = new CameraAutoMove();
-            break;
-        case SAMPLE_TYPE_COLORS:
-            m_curr_sample = new ColorsLight();
-            break;
-        case SAMPLE_TYPE_COLORS_VIEW:
-            m_curr_sample = new ColorsAtView();
-            break;
-        case SAMPLE_TYPE_COLORS_VIEW_EXERCISE_1:
-            m_curr_sample = new ColorsLightExercise1();
-            break;
-        case SAMPLE_TYPE_COLORS_VIEW_EXERCISE_2:
-            m_curr_sample = new ColorsLightExercise2();
-            break;
-        case SAMPLE_TYPE_COLORS_VIEW_EXERCISE_3:
-            m_curr_sample = new ColorsLightExercise3();
-            break;
-        case SAMPLE_TYPE_COLORS_VIEW_EXERCISE_4:
-            m_curr_sample = new ColorsLightExercise4();
-            break;
-        case SAMPLE_TYPE_COLORS_MATERIAL:
-            m_curr_sample = new Material();
-            break;
-        case SAMPLE_TYPE_COLORS_MATERIAL_EXERCISE:
-            m_curr_sample = new MaterialExercise();
-            break;
-        case SAMPLE_TYPE_LIGHTING_MAPS_DIFFUSE:
-            m_curr_sample = new LightingMapsDiffuse();
-            break;
-        case SAMPLE_TYPE_LIGHTING_MAPS_SPECULAR:
-            m_curr_sample = new lighting_maps_specular();
-            break;
-        case SAMPLE_TYPE_LIGHTING_MAPS_EXERCISE_1:
-            m_curr_sample = new lighting_maps_exercise_1();
-            break;
-        case SAMPLE_TYPE_LIGHTING_MAPS_EXERCISE_2:
-            m_curr_sample = new lighting_maps_exercise_2();
-            break;
-        case SAMPLE_TYPE_LIGHTING_MAPS_EXERCISE_3:
-            m_curr_sample = new lighting_maps_exercise_3();
-            break;
-        case SAMPLE_TYPE_LIGHTING_MAPS_EXERCISE_4:
-            m_curr_sample = new lighting_maps_exercise_4();
-            break;
-        case SAMPLE_TYPE_LIGHTING_CASTERS_DIRECTIONAL:
-            m_curr_sample = new LightCastersDirectional();
-            break;
-        case SAMPLE_TYPE_LIGHTING_MERGE:
-            m_curr_sample = new MultipleLights();
-            break;
-        case SAMPLE_TYPE_MODEL_LOADING:
-            m_curr_sample = new ModelLoading();
-            break;
-        case SAMPLE_TYPE_DEPTH_TESTING:
-            m_curr_sample = new DepthTesting();
-            break;
-        case SAMPLE_TYPE_DEPTH_DISPLAY:
-            m_curr_sample = new depth_display();
-            break;
-        case SAMPLE_TYPE_STENCIL_TESTING:
-            m_curr_sample = new StencilTesting();
-            break;
-        case SAMPLE_TYPE_BLENDING_DISCARD:
-            m_curr_sample = new BlendingDiscard();
-            break;
-        case SAMPLE_TYPE_CULL_FACE:
-            m_curr_sample = new CullFace();
-            break;
-        case SAMPLE_TYPE_FRAME_BUFFERS:
-            m_curr_sample = new FrameBuffers();
-            break;
-        case SAMPLE_TYPE_FRAME_BUFFERS_EXERCISE:
-            m_curr_sample = new FrameBuffersExercise();
-            break;
-        case SAMPLE_TYPE_CUBE_MAPS:
-            m_curr_sample = new CubeMaps();
-            break;
-        case SAMPLE_TYPE_CUBE_MAPS_REFLECTION1:
-            m_curr_sample = new CubeMapsReflection();
-            break;
-        case SAMPLE_TYPE_CUBE_MAPS_REFLECTION2:
-            m_curr_sample = new ReflectionMode();
-            break;
-        case SAMPLE_TYPE_CUBE_MAPS_REFRACTION:
-            m_curr_sample = new CubeMapsRefraction();
-            break;
-        case SAMPLE_TYPE_CUBE_MAPS_EXERCISE:
-            m_curr_sample = new CubeMapsReflectionExercise();
-            break;
-        case SAMPLE_TYPE_CUBE_UNIFORM_BUFFER:
-            m_curr_sample = new AdvancedUbo();
-            break;
-        case SAMPLE_TYPE_GEOMETRY_SHADER:
-            m_curr_sample = new GeometryShaderPoint();
-            break;
-        case SAMPLE_TYPE_INSTANCING:
-            m_curr_sample = new Instancing();
-            break;
-        case SAMPLE_TYPE_INSTANCING_ASTEROIDS:
-            m_curr_sample = new Asteroids();
-            break;
-        case SAMPLE_TYPE_ANIT_ALIASING:
-            m_curr_sample = new AnitAliasing();
-            break;
-        case SAMPLE_TYPE_ADVANCED_LIGHTING:
-            m_curr_sample = new AdvancedLighting();
-            break;
-        case SAMPLE_TYPE_ADVANCED_LIGHTING_GAMMA_CORRECTED:
-            m_curr_sample = new gamma_correction();
-            break;
-        case SAMPLE_TYPE_SHADOW_MAPPING_DEPTH:
-            m_curr_sample = new shadow_mapping_depth();
-            break;
-        case SAMPLE_TYPE_SHADOW_MAPPING_BASE:
-            m_curr_sample = new shadow_mapping_base();
-            break;
-        case SAMPLE_TYPE_NORMAL_MAPPING:
-            m_curr_sample = new normal_mapping();
-            break;
-        case SAMPLE_TYPE_PARALLAX_MAPPING:
-            m_curr_sample = new parallax_mapping();
-            break;
-        case SAMPLE_TYPE_STEEP_PARALLAX_MAPPING:
-            m_curr_sample = new steep_parallax_mapping();
-            break;
-        case SAMPLE_TYPE_PARALLAX_OCCLUSION_MAPPING:
-            m_curr_sample = new parallax_occlusion_mapping();
-            break;
-        case SAMPLE_TYPE_HDR:
-            m_curr_sample = new hdr();
-            break;
-        case SAMPLE_TYPE_BLOOM:
-            m_curr_sample = new bloom();
-            break;
-        case SAMPLE_TYPE_DEFERRED_SHADING:
-            m_curr_sample = new deferred_shading();
-            break;
-        case SAMPLE_TYPE_SSAO:
-            m_curr_sample = new ssao();
-            break;
-        case SAMPLE_TYPE_PBR_LIGHTING:
-            m_curr_sample = new pbr_lighting();
-            break;
-        case SAMPLE_TYPE_PBR_LIGHTING_TEXTURED:
-            m_curr_sample = new lighting_textured();
-            break;
-        case SAMPLE_TYPE_PBR_IBL_IRRADIANCE_CONVERSION:
-            m_curr_sample = new ibl_irradiance_conversion();
-            break;
-        case SAMPLE_TYPE_PBR_IBL_IRRADIANCE:
-            m_curr_sample = new ibl_irradiance();
-            break;
-        case SAMPLE_TYPE_PBR_IBL_SPECULAR:
-            m_curr_sample = new ibl_specular();
-            break;
-        case SAMPLE_TYPE_PBR_IBL_SPECULAR_TEXTURED:
-            m_curr_sample = new ibl_specular_textured();
-            break;
-        case SAMPLE_TYPE_TEXT_RENDERING:
-            m_curr_sample = new text_rendering();
-            break;
-        case SAMPLE_TYPE_DEBUGGING:
-            m_curr_sample = new debugging();
-            break;
-        case SAMPLE_TYPE_BREAK_OUT:
-            m_curr_sample = new Breakout();
-            break;
-        case SAMPLE_TYPE_WEIGHTED_BLENDED_OIT:
-            m_curr_sample = new weighted_blended();
-            break;
-        default:
-            break;
+
+    if (renderSampleType == SAMPLE_TYPE_VAO_VBO) {
+        m_curr_sample = new vao_vbo();
+    } else if (renderSampleType == SAMPLE_TYPE_EBO) {
+        m_curr_sample = new ebo();
+    } else if (renderSampleType == SAMPLE_TYPE_VAO_VBO_EXERCISE_1) {
+        m_curr_sample = new triangle_exercise_1();
+    } else if (renderSampleType == SAMPLE_TYPE_VAO_VBO_EXERCISE_2) {
+        m_curr_sample = new triangle_exercise_2();
+    } else if (renderSampleType == SAMPLE_TYPE_UNIFORM) {
+        m_curr_sample = new uniform();
+    } else if (renderSampleType == SAMPLE_TYPE_TEXTURE_WARP) {
+        m_curr_sample = new texture_warp();
+    } else if (renderSampleType == SAMPLE_TYPE_TEXTURE_UNIT) {
+        m_curr_sample = new texture_unit();
+    } else if (renderSampleType == SAMPLE_TYPE_TEXTURE_EXERCISE_1) {
+        m_curr_sample = new texture_exercise_1();
+    } else if (renderSampleType == SAMPLE_TYPE_TEXTURE_EXERCISE_2) {
+        m_curr_sample = new texture_exercise_2();
+    } else if (renderSampleType == SAMPLE_TYPE_TEXTURE_EXERCISE_3) {
+        m_curr_sample = new texture_exercise_3();
+    } else if (renderSampleType == SAMPLE_TYPE_TEXTURE_EXERCISE_4) {
+        m_curr_sample = new texture_exercise_4();
+    } else if (renderSampleType == SAMPLE_TYPE_MAT) {
+        m_curr_sample = new Transform();
+    } else if (renderSampleType == SAMPLE_TYPE_COORDINATE) {
+        m_curr_sample = new CoordinateSystems();
+    } else if (renderSampleType == SAMPLE_TYPE_COORDINATE_EXERCISE_1) {
+        m_curr_sample = new CoordinateSystemsExercise_1();
+    } else if (renderSampleType == SAMPLE_TYPE_COORDINATE_EXERCISE_2) {
+        m_curr_sample = new CoordinateSystemsExercise_2();
+    } else if (renderSampleType == SAMPLE_TYPE_COORDINATE_EXERCISE_3) {
+        m_curr_sample = new CoordinateSystemsExercise_3();
+    } else if (renderSampleType == SAMPLE_TYPE_CAMERA) {
+        m_curr_sample = new Camera();
+    } else if (renderSampleType == SAMPLE_TYPE_CAMERA_AUTO_MOVE) {
+        m_curr_sample = new CameraAutoMove();
+    } else if (renderSampleType == SAMPLE_TYPE_COLORS) {
+        m_curr_sample = new ColorsLight();
+    } else if (renderSampleType == SAMPLE_TYPE_COLORS_VIEW) {
+        m_curr_sample = new ColorsAtView();
+    } else if (renderSampleType == SAMPLE_TYPE_COLORS_VIEW_EXERCISE_1) {
+        m_curr_sample = new ColorsLightExercise1();
+    } else if (renderSampleType == SAMPLE_TYPE_COLORS_VIEW_EXERCISE_2) {
+        m_curr_sample = new ColorsLightExercise2();
+    } else if (renderSampleType == SAMPLE_TYPE_COLORS_VIEW_EXERCISE_3) {
+        m_curr_sample = new ColorsLightExercise3();
+    } else if (renderSampleType == SAMPLE_TYPE_COLORS_VIEW_EXERCISE_4) {
+        m_curr_sample = new ColorsLightExercise4();
+    } else if (renderSampleType == SAMPLE_TYPE_COLORS_MATERIAL) {
+        m_curr_sample = new Material();
+    } else if (renderSampleType == SAMPLE_TYPE_COLORS_MATERIAL_EXERCISE) {
+        m_curr_sample = new MaterialExercise();
+    } else if (renderSampleType == SAMPLE_TYPE_LIGHTING_MAPS_DIFFUSE) {
+        m_curr_sample = new LightingMapsDiffuse();
+    } else if (renderSampleType == SAMPLE_TYPE_LIGHTING_MAPS_SPECULAR) {
+        m_curr_sample = new lighting_maps_specular();
+    } else if (renderSampleType == SAMPLE_TYPE_LIGHTING_MAPS_EXERCISE_1) {
+        m_curr_sample = new lighting_maps_exercise_1();
+    } else if (renderSampleType == SAMPLE_TYPE_LIGHTING_MAPS_EXERCISE_2) {
+        m_curr_sample = new lighting_maps_exercise_2();
+    } else if (renderSampleType == SAMPLE_TYPE_LIGHTING_MAPS_EXERCISE_3) {
+        m_curr_sample = new lighting_maps_exercise_3();
+    } else if (renderSampleType == SAMPLE_TYPE_LIGHTING_MAPS_EXERCISE_4) {
+        m_curr_sample = new lighting_maps_exercise_4();
+    } else if (renderSampleType == SAMPLE_TYPE_LIGHTING_CASTERS_DIRECTIONAL) {
+        m_curr_sample = new light_casters_directional();
+    } else if (renderSampleType == SAMPLE_TYPE_LIGHTING_CASTERS_POINT) {
+        m_curr_sample = new light_casters_point();
+    } else if (renderSampleType == SAMPLE_TYPE_LIGHTING_MERGE) {
+        m_curr_sample = new MultipleLights();
+    } else if (renderSampleType == SAMPLE_TYPE_MODEL_LOADING) {
+        m_curr_sample = new ModelLoading();
+    } else if (renderSampleType == SAMPLE_TYPE_DEPTH_TESTING) {
+        m_curr_sample = new DepthTesting();
+    } else if (renderSampleType == SAMPLE_TYPE_DEPTH_DISPLAY) {
+        m_curr_sample = new depth_display();
+    } else if (renderSampleType == SAMPLE_TYPE_STENCIL_TESTING) {
+        m_curr_sample = new StencilTesting();
+    } else if (renderSampleType == SAMPLE_TYPE_BLENDING_DISCARD) {
+        m_curr_sample = new BlendingDiscard();
+    } else if (renderSampleType == SAMPLE_TYPE_CULL_FACE) {
+        m_curr_sample = new CullFace();
+    } else if (renderSampleType == SAMPLE_TYPE_FRAME_BUFFERS) {
+        m_curr_sample = new FrameBuffers();
+    } else if (renderSampleType == SAMPLE_TYPE_FRAME_BUFFERS_EXERCISE) {
+        m_curr_sample = new FrameBuffersExercise();
+    } else if (renderSampleType == SAMPLE_TYPE_CUBE_MAPS) {
+        m_curr_sample = new CubeMaps();
+    } else if (renderSampleType == SAMPLE_TYPE_CUBE_MAPS_REFLECTION1) {
+        m_curr_sample = new CubeMapsReflection();
+    } else if (renderSampleType == SAMPLE_TYPE_CUBE_MAPS_REFLECTION2) {
+        m_curr_sample = new ReflectionMode();
+    } else if (renderSampleType == SAMPLE_TYPE_CUBE_MAPS_REFLECTION) {
+        m_curr_sample = new CubeMapsRefraction();
+    } else if (renderSampleType == SAMPLE_TYPE_CUBE_MAPS_EXERCISE) {
+        m_curr_sample = new CubeMapsReflectionExercise();
+    } else if (renderSampleType == SAMPLE_TYPE_CUBE_UNIFORM_BUFFER) {
+        m_curr_sample = new AdvancedUbo();
+    } else if (renderSampleType == SAMPLE_TYPE_GEOMETRY_SHADER) {
+        m_curr_sample = new GeometryShaderPoint();
+    } else if (renderSampleType == SAMPLE_TYPE_INSTANCING) {
+        m_curr_sample = new Instancing();
+    } else if (renderSampleType == SAMPLE_TYPE_INSTANCING_ASTEROIDS) {
+        m_curr_sample = new Asteroids();
+    } else if (renderSampleType == SAMPLE_TYPE_ANIT_ALIASING) {
+        m_curr_sample = new AnitAliasing();
+    } else if (renderSampleType == SAMPLE_TYPE_ADVANCED_LIGHTING) {
+        m_curr_sample = new AdvancedLighting();
+    } else if (renderSampleType == SAMPLE_TYPE_ADVANCED_LIGHTING_GAMMA_CORRECTED) {
+        m_curr_sample = new gamma_correction();
+    } else if (renderSampleType == SAMPLE_TYPE_SHADOW_MAPPING_DEPTH) {
+        m_curr_sample = new shadow_mapping_depth();
+    } else if (renderSampleType == SAMPLE_TYPE_SHADOW_MAPPING_BASE) {
+        m_curr_sample = new shadow_mapping_base();
+    } else if (renderSampleType == SAMPLE_TYPE_NORMAL_MAPPING) {
+        m_curr_sample = new normal_mapping();
+    } else if (renderSampleType == SAMPLE_TYPE_PARALLAX_MAPPING) {
+        m_curr_sample = new parallax_mapping();
+    } else if (renderSampleType == SAMPLE_TYPE_STEEP_PARALLAX_MAPPING) {
+        m_curr_sample = new steep_parallax_mapping();
+    } else if (renderSampleType == SAMPLE_TYPE_PARALLAX_OCCLUSION_MAPPING) {
+        m_curr_sample = new parallax_occlusion_mapping();
+    } else if (renderSampleType == SAMPLE_TYPE_HDR) {
+        m_curr_sample = new hdr();
+    } else if (renderSampleType == SAMPLE_TYPE_BLOOM) {
+        m_curr_sample = new bloom();
+    } else if (renderSampleType == SAMPLE_TYPE_DEFERRED_SHADING) {
+        m_curr_sample = new deferred_shading();
+    } else if (renderSampleType == SAMPLE_TYPE_SSAO) {
+        m_curr_sample = new ssao();
+    } else if (renderSampleType == SAMPLE_TYPE_PBR_LIGHTING) {
+        m_curr_sample = new pbr_lighting();
+    } else if (renderSampleType == SAMPLE_TYPE_PBR_LIGHTING_TEXTURED) {
+        m_curr_sample = new lighting_textured();
+    } else if (renderSampleType == SAMPLE_TYPE_PBR_IBL_IRRADIANCE_CONVERSION) {
+        m_curr_sample = new ibl_irradiance_conversion();
+    } else if (renderSampleType == SAMPLE_TYPE_PBR_IBL_IRRADIANCE) {
+        m_curr_sample = new ibl_irradiance();
+    } else if (renderSampleType == SAMPLE_TYPE_PBR_IBL_SPECULAR) {
+        m_curr_sample = new ibl_specular();
+    } else if (renderSampleType == SAMPLE_TYPE_PBR_IBL_SPECULAR_TEXTURED) {
+        m_curr_sample = new ibl_specular_textured();
+    } else if (renderSampleType == SAMPLE_TYPE_TEXT_RENDERING) {
+        m_curr_sample = new text_rendering();
+    } else if (renderSampleType == SAMPLE_TYPE_DEBUGGING) {
+        m_curr_sample = new debugging();
+    } else if (renderSampleType == SAMPLE_TYPE_BREAK_OUT) {
+        m_curr_sample = new Breakout();
+    } else if (renderSampleType == SAMPLE_TYPE_WEIGHTED_BLENDED_OIT) {
+        m_curr_sample = new weighted_blended();
+    } else {
+        // do nothing
     }
+
     if (m_curr_sample == nullptr) {
         throw MyGLException(
                 "MyGLRender::SetRenderType() 请注意：你应该忘记初始化你要展示的Sample类型 ，请补上初始化的代码，否则无法渲染");
     }
     LOGD("MyGLRender::SetRenderType m_before_sample = %p, m_curr_sample=%p",
          m_before_sample, m_curr_sample)
-}
+}*/
 
 void MyGLRender::OnSurfaceCreated(JNIEnv *env, jobject assetManager) {
     LOGD("MyGLRender::OnSurfaceCreated")
@@ -437,6 +378,16 @@ void MyGLRender:: ProgressChanged3(int i) {
                 "MyGLRender::ProgressChanged3() 请注意：你应该忘记初始化你要展示的Sample类型 ，请补上初始化的代码，否则无法渲染");
     } else {
         m_curr_sample->ProgressChanged3(i);
+    }
+}
+
+void MyGLRender:: ProgressChanged4(int i) {
+    LOGD("MyGLRender::ProgressChanged4 key = %d", i)
+    if (m_curr_sample == nullptr) {
+        throw MyGLException(
+                "MyGLRender::ProgressChanged3() 请注意：你应该忘记初始化你要展示的Sample类型 ，请补上初始化的代码，否则无法渲染");
+    } else {
+        m_curr_sample->ProgressChanged4(i);
     }
 }
 

@@ -3,6 +3,7 @@
 //
 
 #include "lighting_maps_exercise_3.h"
+REGISTER_SAMPLE(SAMPLE_TYPE_LIGHTING_MAPS_EXERCISE_3, lighting_maps_exercise_3)
 static float vertices[] = {
         // positions                      // normals                       // texture coords
         -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,

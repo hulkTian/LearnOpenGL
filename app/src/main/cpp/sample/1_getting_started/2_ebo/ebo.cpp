@@ -4,6 +4,7 @@
 ///本例用于展示EBO的基本使用流程
 
 #include "ebo.h"
+REGISTER_SAMPLE(SAMPLE_TYPE_EBO, ebo)
 
 void ebo::Create() {
     // 打印当前设备信息

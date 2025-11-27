@@ -4,7 +4,7 @@
 
 #include "ModelLoading.h"
 #include "Model.h"
-
+REGISTER_SAMPLE(SAMPLE_TYPE_MODEL_LOADING, ModelLoading)
 // positions of the point lights
 static glm::vec3 pointLightPositions[] = {
         glm::vec3(0.7f, 0.2f, 2.0f),

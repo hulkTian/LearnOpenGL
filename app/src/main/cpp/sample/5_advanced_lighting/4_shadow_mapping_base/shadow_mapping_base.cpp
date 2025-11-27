@@ -11,6 +11,8 @@
 
 #include "shadow_mapping_base.h"
 
+REGISTER_SAMPLE(SAMPLE_TYPE_SHADOW_MAPPING_BASE, shadow_mapping_base)
+
 void shadow_mapping_base::Create() {
     GLUtils::printGLInfo();
 

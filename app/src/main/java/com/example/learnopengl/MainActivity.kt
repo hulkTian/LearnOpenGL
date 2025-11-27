@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity() {
             i++, R.mipmap.texture_unit,
             "纹理单元",
             "通过纹理单元让多个纹理显示在一个图形上",
-            BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_TEXTURE_MIPMAP)
+            BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_TEXTURE_UNIT)
                 .setShowClickLayout(View.GONE).build()
         )
         addItem(
@@ -303,9 +303,29 @@ class MainActivity : AppCompatActivity() {
         )
         addItem(
             i++, R.mipmap.light_caster,
-            "投光物",
+            "投光物-平行光",
             "在立方体箱子中使用平行光效果",
-            BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_CASTERS_DIRECTIONAL).build()
+            BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_CASTERS_DIRECTIONAL)
+                .setShowSeekBar1(View.VISIBLE).setTitle1("环境光向量")
+                .setShowSeekBar2(View.VISIBLE).setTitle2("漫反射向量")
+                .setShowSeekBar3(View.VISIBLE).setTitle3("镜面强度向量")
+                .build()
+        )
+        addItem(
+            i++, R.mipmap.light_caster,
+            "投光物-点光源",
+            "在立方体箱子中使用点光源效果",
+            BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_CASTERS_POINT)
+                .setShowSeekBar1(View.VISIBLE).setTitle1("环境光向量")
+                .setShowSeekBar2(View.VISIBLE).setTitle2("漫反射向量")
+                .setShowSeekBar3(View.VISIBLE).setTitle3("镜面强度向量")
+                .build()
+        )
+        addItem(
+            i++, R.mipmap.light_caster,
+            "投光物-聚光源",
+            "在立方体箱子中使用聚光效果",
+            BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_LIGHTING_CASTERS_SPOT).build()
         )
         addItem(
             i++, R.mipmap.lights_merge,
@@ -475,7 +495,7 @@ class MainActivity : AppCompatActivity() {
             i++, R.mipmap.steep_parallax_mapping,
             "高级光照-陡峭视差映射",
             "解决普通视差贴图计算中存在的陡峭的高度导致的不真实的问题",
-            BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_STEEP_PARALLAX_MAPPING)
+            BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_PARALLAX_OCCLUSION_MAPPING)
                 .setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY).build()
         )
         addItem(
@@ -490,14 +510,16 @@ class MainActivity : AppCompatActivity() {
             "高级光照-HDR",
             "使用高精度颜色缓冲获取更丰富的色彩还原",
             BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_HDR)
-                .setShowBooleanButton(View.VISIBLE).setShowSeekBar1(View.VISIBLE).setTitle1("foV").build()
+                .setShowBooleanButton(View.VISIBLE).setShowSeekBar1(View.VISIBLE).setTitle1("foV")
+                .build()
         )
         addItem(
             i++, R.mipmap.bloom,
             "高级光照-泛光",
             "使用高斯模糊实现泛光效果",
             BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_BLOOM)
-                .setShowBooleanButton(View.VISIBLE).setShowSeekBar1(View.VISIBLE).setTitle1("foV").build()
+                .setShowBooleanButton(View.VISIBLE).setShowSeekBar1(View.VISIBLE).setTitle1("foV")
+                .build()
         )
         addItem(
             i++, R.mipmap.deferred_shading,
@@ -527,7 +549,8 @@ class MainActivity : AppCompatActivity() {
             i++, R.mipmap.pbr_hdr_conversion,
             "高级光照-PBR和HDR",
             "HDR 环境贴图转换为立方体贴图，并将直接光照的PBR球体显示在立方体贴图中",
-            BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_PBR_IBL_IRRADIANCE_CONVERSION).build()
+            BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_PBR_IBL_IRRADIANCE_CONVERSION)
+                .build()
         )
         addItem(
             i++, R.mipmap.pbr_ibl,
@@ -558,7 +581,8 @@ class MainActivity : AppCompatActivity() {
             i++, R.mipmap.text_rendering,
             "文本渲染",
             "使用FreeType库渲染文本",
-            BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_TEXT_RENDERING).setShowClickLayout(View.GONE).build()
+            BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_TEXT_RENDERING)
+                .setShowClickLayout(View.GONE).build()
         )
         addItem(
             i++, R.mipmap.break_out,

@@ -22,6 +22,8 @@
  */
 #include "normal_mapping.h"
 
+REGISTER_SAMPLE(SAMPLE_TYPE_NORMAL_MAPPING, normal_mapping)
+
 void normal_mapping::Create() {
     GLUtils::printGLInfo();
 

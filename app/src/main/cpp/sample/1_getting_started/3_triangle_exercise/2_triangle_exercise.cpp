@@ -4,6 +4,7 @@
 //通过绘制两个不同的三角形，了解多个VAO和VBO的使用方式
 
 #include "2_triangle_exercise.h"
+REGISTER_SAMPLE(SAMPLE_TYPE_VAO_VBO_EXERCISE_2, triangle_exercise_2)
 
 static float first_vertices[] = {
         -0.9f, -0.5f, 0.0f,  // left

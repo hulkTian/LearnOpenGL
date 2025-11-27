@@ -13,6 +13,8 @@
 #include "debugging.h"
 #include "stb_image.h"
 
+REGISTER_SAMPLE(SAMPLE_TYPE_DEBUGGING, debugging)
+
 void GL_APIENTRY glDebugOutput(GLenum source, GLenum type, GLuint id, GLenum severity,
                                         GLsizei length, const GLchar *message, void *userParam)
 {

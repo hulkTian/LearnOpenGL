@@ -6,87 +6,89 @@
 #define LEARNOPENGL_GLBASESAMPLE_H
 
 // 这些定义和Java层的 IMyNativeRendererType 类对应起来
-#define SAMPLE_TYPE                                                 100
-#define SAMPLE_TYPE_EXERCISE                                        1000
-#define SAMPLE_TYPE_VAO_VBO                                         SAMPLE_TYPE + 0
-#define SAMPLE_TYPE_EBO                                             SAMPLE_TYPE + 1
-#define SAMPLE_TYPE_VAO_VBO_EXERCISE_1                              SAMPLE_TYPE + 2
-#define SAMPLE_TYPE_VAO_VBO_EXERCISE_2                              SAMPLE_TYPE + 3
-#define SAMPLE_TYPE_UNIFORM                                         SAMPLE_TYPE + 4
-#define SAMPLE_TYPE_TEXTURE_WARP                                    SAMPLE_TYPE + 5
-#define SAMPLE_TYPE_TEXTURE2                                        SAMPLE_TYPE + 7
-#define SAMPLE_TYPE_TEXTURE_EXERCISE_1                              SAMPLE_TYPE_EXERCISE + 5
-#define SAMPLE_TYPE_TEXTURE_EXERCISE_2                              SAMPLE_TYPE_EXERCISE + 6
-#define SAMPLE_TYPE_TEXTURE_EXERCISE_3                              SAMPLE_TYPE_EXERCISE + 7
-#define SAMPLE_TYPE_TEXTURE_EXERCISE_4                              SAMPLE_TYPE_EXERCISE + 8
-#define SAMPLE_TYPE_MAT                                             SAMPLE_TYPE + 8
-#define SAMPLE_TYPE_COORDINATE                                      SAMPLE_TYPE + 9
-#define SAMPLE_TYPE_COORDINATE_EXERCISE_1                           SAMPLE_TYPE_EXERCISE + 9
-#define SAMPLE_TYPE_COORDINATE_EXERCISE_2                           SAMPLE_TYPE_EXERCISE + 10
-#define SAMPLE_TYPE_COORDINATE_EXERCISE_3                           SAMPLE_TYPE_EXERCISE + 11
-#define SAMPLE_TYPE_CAMERA                                          SAMPLE_TYPE + 10
-#define SAMPLE_TYPE_CAMERA_AUTO_MOVE                                SAMPLE_TYPE + 11
-#define SAMPLE_TYPE_COLORS                                          SAMPLE_TYPE + 12
-#define SAMPLE_TYPE_COLORS_VIEW                                     SAMPLE_TYPE + 13
-#define SAMPLE_TYPE_COLORS_VIEW_EXERCISE_1                          SAMPLE_TYPE_EXERCISE + 13
-#define SAMPLE_TYPE_COLORS_VIEW_EXERCISE_2                          SAMPLE_TYPE_EXERCISE + 14
-#define SAMPLE_TYPE_COLORS_VIEW_EXERCISE_3                          SAMPLE_TYPE_EXERCISE + 15
-#define SAMPLE_TYPE_COLORS_VIEW_EXERCISE_4                          SAMPLE_TYPE_EXERCISE + 16
-#define SAMPLE_TYPE_COLORS_MATERIAL                                 SAMPLE_TYPE + 14
-#define SAMPLE_TYPE_COLORS_MATERIAL_EXERCISE                        SAMPLE_TYPE_EXERCISE + 17
-#define SAMPLE_TYPE_LIGHTING_MAPS_DIFFUSE                           SAMPLE_TYPE + 15
-#define SAMPLE_TYPE_LIGHTING_MAPS_SPECULAR                          SAMPLE_TYPE + 6
-#define SAMPLE_TYPE_LIGHTING_MAPS_EXERCISE_1                        SAMPLE_TYPE_EXERCISE + 18
-#define SAMPLE_TYPE_LIGHTING_MAPS_EXERCISE_2                        SAMPLE_TYPE_EXERCISE + 19
-#define SAMPLE_TYPE_LIGHTING_MAPS_EXERCISE_3                        SAMPLE_TYPE_EXERCISE + 20
-#define SAMPLE_TYPE_LIGHTING_MAPS_EXERCISE_4                        SAMPLE_TYPE_EXERCISE + 21
-#define SAMPLE_TYPE_LIGHTING_CASTERS_DIRECTIONAL                    SAMPLE_TYPE + 16
-#define SAMPLE_TYPE_LIGHTING_MERGE                                  SAMPLE_TYPE + 17
-#define SAMPLE_TYPE_MODEL_LOADING                                   SAMPLE_TYPE + 18
-#define SAMPLE_TYPE_DEPTH_TESTING                                   SAMPLE_TYPE + 19
-#define SAMPLE_TYPE_DEPTH_DISPLAY                                   SAMPLE_TYPE + 191
-#define SAMPLE_TYPE_STENCIL_TESTING                                 SAMPLE_TYPE + 20
-#define SAMPLE_TYPE_BLENDING_DISCARD                                SAMPLE_TYPE + 21
-#define SAMPLE_TYPE_CULL_FACE                                       SAMPLE_TYPE + 22
-#define SAMPLE_TYPE_FRAME_BUFFERS                                   SAMPLE_TYPE + 23
-#define SAMPLE_TYPE_FRAME_BUFFERS_EXERCISE                          SAMPLE_TYPE + 24
-#define SAMPLE_TYPE_CUBE_MAPS                                       SAMPLE_TYPE + 25
-#define SAMPLE_TYPE_CUBE_MAPS_REFLECTION1                           SAMPLE_TYPE + 26
-#define SAMPLE_TYPE_CUBE_MAPS_REFLECTION2                           SAMPLE_TYPE + 27
-#define SAMPLE_TYPE_CUBE_MAPS_REFRACTION                            SAMPLE_TYPE + 28
-#define SAMPLE_TYPE_CUBE_MAPS_EXERCISE                              SAMPLE_TYPE + 29
-#define SAMPLE_TYPE_CUBE_UNIFORM_BUFFER                             SAMPLE_TYPE + 30
-#define SAMPLE_TYPE_GEOMETRY_SHADER                                 SAMPLE_TYPE + 31
-#define SAMPLE_TYPE_INSTANCING                                      SAMPLE_TYPE + 32
-#define SAMPLE_TYPE_INSTANCING_ASTEROIDS                            SAMPLE_TYPE + 33
-#define SAMPLE_TYPE_ANIT_ALIASING                                   SAMPLE_TYPE + 34
-#define SAMPLE_TYPE_ADVANCED_LIGHTING                               SAMPLE_TYPE + 35
-#define SAMPLE_TYPE_ADVANCED_LIGHTING_GAMMA_CORRECTED               SAMPLE_TYPE + 36
-#define SAMPLE_TYPE_SHADOW_MAPPING_DEPTH                            SAMPLE_TYPE + 37
-#define SAMPLE_TYPE_SHADOW_MAPPING_BASE                             SAMPLE_TYPE + 38
-#define SAMPLE_TYPE_NORMAL_MAPPING                                  SAMPLE_TYPE + 39
-#define SAMPLE_TYPE_PARALLAX_MAPPING                                SAMPLE_TYPE + 40
-#define SAMPLE_TYPE_STEEP_PARALLAX_MAPPING                          SAMPLE_TYPE + 41
-#define SAMPLE_TYPE_PARALLAX_OCCLUSION_MAPPING                      SAMPLE_TYPE + 42
-#define SAMPLE_TYPE_HDR                                             SAMPLE_TYPE + 43
-#define SAMPLE_TYPE_BLOOM                                           SAMPLE_TYPE + 44
-#define SAMPLE_TYPE_DEFERRED_SHADING                                SAMPLE_TYPE + 45
-#define SAMPLE_TYPE_SSAO                                            SAMPLE_TYPE + 46
-#define SAMPLE_TYPE_PBR_LIGHTING                                    SAMPLE_TYPE + 47
-#define SAMPLE_TYPE_PBR_LIGHTING_TEXTURED                           SAMPLE_TYPE + 48
-#define SAMPLE_TYPE_PBR_IBL_IRRADIANCE_CONVERSION                   SAMPLE_TYPE + 49
-#define SAMPLE_TYPE_PBR_IBL_IRRADIANCE                              SAMPLE_TYPE + 50
-#define SAMPLE_TYPE_PBR_IBL_SPECULAR                                SAMPLE_TYPE + 51
-#define SAMPLE_TYPE_PBR_IBL_SPECULAR_TEXTURED                       SAMPLE_TYPE + 52
-#define SAMPLE_TYPE_TEXT_RENDERING                                  SAMPLE_TYPE + 53
-#define SAMPLE_TYPE_DEBUGGING                                       SAMPLE_TYPE + 54
-#define SAMPLE_TYPE_BREAK_OUT                                       SAMPLE_TYPE + 55
-#define SAMPLE_TYPE_WEIGHTED_BLENDED_OIT                            SAMPLE_TYPE + 56
+// GLBaseSample.h
+#define SAMPLE_TYPE                                                 100.0f
+#define SAMPLE_TYPE_VAO_VBO                                         (SAMPLE_TYPE + 1.0f)
+#define SAMPLE_TYPE_EBO                                             (SAMPLE_TYPE + 2.0f)
+#define SAMPLE_TYPE_VAO_VBO_EXERCISE_1                              (SAMPLE_TYPE + 3.1f)
+#define SAMPLE_TYPE_VAO_VBO_EXERCISE_2                              (SAMPLE_TYPE + 3.2f)
+#define SAMPLE_TYPE_UNIFORM                                         (SAMPLE_TYPE + 4.0f)
+#define SAMPLE_TYPE_TEXTURE_WARP                                    (SAMPLE_TYPE + 5.1f)
+#define SAMPLE_TYPE_TEXTURE_UNIT                                    (SAMPLE_TYPE + 5.2f)
+#define SAMPLE_TYPE_TEXTURE_EXERCISE_1                              (SAMPLE_TYPE + 5.3f)
+#define SAMPLE_TYPE_TEXTURE_EXERCISE_2                              (SAMPLE_TYPE + 5.4f)
+#define SAMPLE_TYPE_TEXTURE_EXERCISE_3                              (SAMPLE_TYPE + 5.5f)
+#define SAMPLE_TYPE_TEXTURE_EXERCISE_4                              (SAMPLE_TYPE + 5.6f)
+#define SAMPLE_TYPE_MAT                                             (SAMPLE_TYPE + 6.0f)
+#define SAMPLE_TYPE_COORDINATE                                      (SAMPLE_TYPE + 7.0f)
+#define SAMPLE_TYPE_COORDINATE_EXERCISE_1                           (SAMPLE_TYPE + 7.1f)
+#define SAMPLE_TYPE_COORDINATE_EXERCISE_2                           (SAMPLE_TYPE + 7.2f)
+#define SAMPLE_TYPE_COORDINATE_EXERCISE_3                           (SAMPLE_TYPE + 7.3f)
+#define SAMPLE_TYPE_CAMERA                                          (SAMPLE_TYPE + 8.0f)
+#define SAMPLE_TYPE_CAMERA_AUTO_MOVE                                (SAMPLE_TYPE + 8.1f)
+#define SAMPLE_TYPE_COLORS                                          (SAMPLE_TYPE + 9.0f)
+#define SAMPLE_TYPE_COLORS_VIEW_EXERCISE_1                          (SAMPLE_TYPE + 9.1f)
+#define SAMPLE_TYPE_COLORS_VIEW_EXERCISE_2                          (SAMPLE_TYPE + 9.2f)
+#define SAMPLE_TYPE_COLORS_VIEW_EXERCISE_3                          (SAMPLE_TYPE + 9.3f)
+#define SAMPLE_TYPE_COLORS_VIEW_EXERCISE_4                          (SAMPLE_TYPE + 9.4f)
+#define SAMPLE_TYPE_COLORS_VIEW                                     (SAMPLE_TYPE + 10.0f)
+#define SAMPLE_TYPE_COLORS_MATERIAL                                 (SAMPLE_TYPE + 11.0f)
+#define SAMPLE_TYPE_COLORS_MATERIAL_EXERCISE                        (SAMPLE_TYPE + 11.1f)
+#define SAMPLE_TYPE_LIGHTING_MAPS_DIFFUSE                           (SAMPLE_TYPE + 12.0f)
+#define SAMPLE_TYPE_LIGHTING_MAPS_SPECULAR                          (SAMPLE_TYPE + 12.1f)
+#define SAMPLE_TYPE_LIGHTING_MAPS_EXERCISE_1                        (SAMPLE_TYPE + 12.2f)
+#define SAMPLE_TYPE_LIGHTING_MAPS_EXERCISE_2                        (SAMPLE_TYPE + 12.3f)
+#define SAMPLE_TYPE_LIGHTING_MAPS_EXERCISE_3                        (SAMPLE_TYPE + 12.4f)
+#define SAMPLE_TYPE_LIGHTING_MAPS_EXERCISE_4                        (SAMPLE_TYPE + 12.5f)
+#define SAMPLE_TYPE_LIGHTING_CASTERS_DIRECTIONAL                    (SAMPLE_TYPE + 13.0f)
+#define SAMPLE_TYPE_LIGHTING_CASTERS_POINT                          (SAMPLE_TYPE + 13.1f)
+#define SAMPLE_TYPE_LIGHTING_CASTERS_SPOT                           (SAMPLE_TYPE + 13.2f)
+#define SAMPLE_TYPE_LIGHTING_MERGE                                  (SAMPLE_TYPE + 14.0f)
+#define SAMPLE_TYPE_MODEL_LOADING                                   (SAMPLE_TYPE + 15.0f)
+#define SAMPLE_TYPE_DEPTH_TESTING                                   (SAMPLE_TYPE + 16.0f)
+#define SAMPLE_TYPE_DEPTH_DISPLAY                                   (SAMPLE_TYPE + 16.1f)
+#define SAMPLE_TYPE_STENCIL_TESTING                                 (SAMPLE_TYPE + 17.0f)
+#define SAMPLE_TYPE_BLENDING_DISCARD                                (SAMPLE_TYPE + 18.0f)
+#define SAMPLE_TYPE_CULL_FACE                                       (SAMPLE_TYPE + 19.0f)
+#define SAMPLE_TYPE_FRAME_BUFFERS                                   (SAMPLE_TYPE + 20.0f)
+#define SAMPLE_TYPE_FRAME_BUFFERS_EXERCISE                          (SAMPLE_TYPE + 20.1f)
+#define SAMPLE_TYPE_CUBE_MAPS                                       (SAMPLE_TYPE + 21.0f)
+#define SAMPLE_TYPE_CUBE_MAPS_REFLECTION1                           (SAMPLE_TYPE + 21.1f)
+#define SAMPLE_TYPE_CUBE_MAPS_REFLECTION2                           (SAMPLE_TYPE + 21.2f)
+#define SAMPLE_TYPE_CUBE_MAPS_REFLECTION                            (SAMPLE_TYPE + 21.3f)
+#define SAMPLE_TYPE_CUBE_MAPS_EXERCISE                              (SAMPLE_TYPE + 21.4f)
+#define SAMPLE_TYPE_CUBE_UNIFORM_BUFFER                             (SAMPLE_TYPE + 22.0f)
+#define SAMPLE_TYPE_GEOMETRY_SHADER                                 (SAMPLE_TYPE + 23.0f)
+#define SAMPLE_TYPE_INSTANCING                                      (SAMPLE_TYPE + 24.0f)
+#define SAMPLE_TYPE_INSTANCING_ASTEROIDS                            (SAMPLE_TYPE + 24.1f)
+#define SAMPLE_TYPE_ANIT_ALIASING                                   (SAMPLE_TYPE + 25.0f)
+#define SAMPLE_TYPE_ADVANCED_LIGHTING                               (SAMPLE_TYPE + 26.0f)
+#define SAMPLE_TYPE_ADVANCED_LIGHTING_GAMMA_CORRECTED               (SAMPLE_TYPE + 27.0f)
+#define SAMPLE_TYPE_SHADOW_MAPPING_DEPTH                            (SAMPLE_TYPE + 28.0f)
+#define SAMPLE_TYPE_SHADOW_MAPPING_BASE                             (SAMPLE_TYPE + 29.0f)
+#define SAMPLE_TYPE_NORMAL_MAPPING                                  (SAMPLE_TYPE + 30.0f)
+#define SAMPLE_TYPE_PARALLAX_MAPPING                                (SAMPLE_TYPE + 31.0f)
+#define SAMPLE_TYPE_STEEP_PARALLAX_MAPPING                          (SAMPLE_TYPE + 32.0f)
+#define SAMPLE_TYPE_PARALLAX_OCCLUSION_MAPPING                      (SAMPLE_TYPE + 33.0f)
+#define SAMPLE_TYPE_HDR                                             (SAMPLE_TYPE + 34.0f)
+#define SAMPLE_TYPE_BLOOM                                           (SAMPLE_TYPE + 35.0f)
+#define SAMPLE_TYPE_DEFERRED_SHADING                                (SAMPLE_TYPE + 36.0f)
+#define SAMPLE_TYPE_SSAO                                            (SAMPLE_TYPE + 37.0f)
+#define SAMPLE_TYPE_PBR_LIGHTING                                    (SAMPLE_TYPE + 38.0f)
+#define SAMPLE_TYPE_PBR_LIGHTING_TEXTURED                           (SAMPLE_TYPE + 39.0f)
+#define SAMPLE_TYPE_PBR_IBL_IRRADIANCE_CONVERSION                   (SAMPLE_TYPE + 40.0f)
+#define SAMPLE_TYPE_PBR_IBL_IRRADIANCE                              (SAMPLE_TYPE + 41.0f)
+#define SAMPLE_TYPE_PBR_IBL_SPECULAR                                (SAMPLE_TYPE + 42.0f)
+#define SAMPLE_TYPE_PBR_IBL_SPECULAR_TEXTURED                       (SAMPLE_TYPE + 43.0f)
+#define SAMPLE_TYPE_TEXT_RENDERING                                  (SAMPLE_TYPE + 44.0f)
+#define SAMPLE_TYPE_DEBUGGING                                       (SAMPLE_TYPE + 45.0f)
+#define SAMPLE_TYPE_BREAK_OUT                                       (SAMPLE_TYPE + 46.0f)
+#define SAMPLE_TYPE_WEIGHTED_BLENDED_OIT                            (SAMPLE_TYPE + 47.0f)
 
 #define DEFAULT_OGL_ASSETS_DIR "/data/data/com.example.learnopengl"
 
 #include <GLUtils.h>
-
+#include "SampleFactory.h"
 #include "CameraUtils.h"
 
 class GLBaseSample {
@@ -137,6 +139,10 @@ public:
 
     virtual void ProgressChanged3(int i) {
         seek3 = i;
+    }
+
+    virtual void ProgressChanged4(int i) {
+        seek4 = i;
     }
 
     virtual void MoveCallback(float x, float y) {
@@ -246,9 +252,18 @@ protected:
     unsigned int seek = 0;
     unsigned int seek2 = 0;
     unsigned int seek3 = 0;
+    unsigned int seek4 = 0;
 
     GLuint quadVAO, quadVBO;
     GLuint debuggingVAO, debuggingVBO;
 };
 
+#define REGISTER_SAMPLE(TYPE, CLASS) \
+    namespace { \
+        struct CLASS##Register { \
+            CLASS##Register() { \
+                SampleFactory::Instance().Register(TYPE, [](){ return new CLASS(); }); \
+            } \
+        } CLASS##RegisterInstance; \
+    }
 #endif //LEARNOPENGL_GLBASESAMPLE_H

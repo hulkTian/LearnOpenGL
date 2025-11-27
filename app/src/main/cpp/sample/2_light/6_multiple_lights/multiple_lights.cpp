@@ -50,6 +50,8 @@
 
 #include "multiple_lights.h"
 
+REGISTER_SAMPLE(SAMPLE_TYPE_LIGHTING_MERGE, MultipleLights)
+
 static float vertices[] = {
         // positions          // normals           // texture coords
         -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,

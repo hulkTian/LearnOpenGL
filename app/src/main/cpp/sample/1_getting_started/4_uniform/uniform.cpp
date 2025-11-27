@@ -4,6 +4,7 @@
 //使用uniform定义一个颜色变量，再循环渲染过程中随着时间设置颜色变量的值
 
 #include "uniform.h"
+REGISTER_SAMPLE(SAMPLE_TYPE_UNIFORM, uniform)
 
 void uniform::Create() {
     GLUtils::printGLInfo();

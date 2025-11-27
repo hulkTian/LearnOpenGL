@@ -24,6 +24,8 @@
 
 #include "ibl_irradiance_conversion.h"
 
+REGISTER_SAMPLE(SAMPLE_TYPE_PBR_IBL_IRRADIANCE_CONVERSION, ibl_irradiance_conversion)
+
 void ibl_irradiance_conversion::Create() {
     GLUtils::printGLInfo();
 

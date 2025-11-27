@@ -5,7 +5,7 @@
 #include "ColorsLightExercise2.h"
 #include "glm/ext/matrix_clip_space.hpp"
 #include "glm/ext/matrix_transform.hpp"
-
+REGISTER_SAMPLE(SAMPLE_TYPE_COLORS_VIEW_EXERCISE_2, ColorsLightExercise2)
 // 3D盒子顶点坐标和纹理坐标
 // 6个面 x 每个面有2个三角形组成 x 每个三角形有3个顶点
 static float vertices[] = {

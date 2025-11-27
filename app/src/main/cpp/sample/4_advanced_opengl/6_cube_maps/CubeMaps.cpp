@@ -24,7 +24,7 @@
  */
 
 #include "CubeMaps.h"
-
+REGISTER_SAMPLE(SAMPLE_TYPE_CUBE_MAPS, CubeMaps)
 static float cubeVertices[] = {
         // positions          // texture Coords
         -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,

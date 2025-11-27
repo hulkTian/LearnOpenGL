@@ -7,6 +7,8 @@
 
 #include "vao_vbo.h"
 
+REGISTER_SAMPLE(SAMPLE_TYPE_VAO_VBO, vao_vbo)
+
 void vao_vbo::Create() {
     // 打印当前设备信息
     GLUtils::printGLInfo();

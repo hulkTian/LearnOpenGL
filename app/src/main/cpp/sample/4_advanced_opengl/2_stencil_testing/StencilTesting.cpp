@@ -30,7 +30,7 @@
  * GL_INVERT	按位翻转当前的模板缓冲值
  */
 #include "StencilTesting.h"
-
+REGISTER_SAMPLE(SAMPLE_TYPE_STENCIL_TESTING, StencilTesting)
 static float cubeVertices[] = {
         // positions          // texture Coords
         -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,

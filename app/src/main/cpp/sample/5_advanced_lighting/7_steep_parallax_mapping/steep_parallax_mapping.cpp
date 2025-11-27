@@ -8,6 +8,8 @@
 
 #include "steep_parallax_mapping.h"
 
+REGISTER_SAMPLE(SAMPLE_TYPE_STEEP_PARALLAX_MAPPING, steep_parallax_mapping)
+
 void steep_parallax_mapping::Create() {
     GLUtils::printGLInfo();
 

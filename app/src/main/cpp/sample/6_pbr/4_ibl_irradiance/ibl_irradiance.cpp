@@ -9,6 +9,8 @@
 
 #include "ibl_irradiance.h"
 
+REGISTER_SAMPLE(SAMPLE_TYPE_PBR_IBL_IRRADIANCE, ibl_irradiance)
+
 void ibl_irradiance::Create() {
     GLUtils::printGLInfo();
 

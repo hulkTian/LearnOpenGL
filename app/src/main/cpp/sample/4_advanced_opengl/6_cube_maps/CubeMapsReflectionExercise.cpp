@@ -3,7 +3,7 @@
 //
 
 #include "CubeMapsReflectionExercise.h"
-
+REGISTER_SAMPLE(SAMPLE_TYPE_CUBE_MAPS_EXERCISE, CubeMapsReflectionExercise)
 static float skyboxVertices[] = {
         // positions
         -1.0f, 1.0f, -1.0f,

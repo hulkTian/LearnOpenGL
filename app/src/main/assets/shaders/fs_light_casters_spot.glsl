@@ -53,14 +53,14 @@ void main()
     float theta = dot(lightDir, normalize(-light.direction));
     float epsilon = (light.cutOff - light.outerCutOff);
     float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
-    diffuse  *= intensity;
+    diffuse *= intensity;
     specular *= intensity;
 
-    // attenuation
-    float distance    = length(light.position - FragPos);
+    // 聚光也会根据距离衰减，所以这里也要计算距离衰减
+    float distance = length(light.position - FragPos);
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
-    ambient  *= attenuation;
-    diffuse   *= attenuation;
+    ambient *= attenuation;
+    diffuse *= attenuation;
     specular *= attenuation;
 
     vec3 result = ambient + diffuse + specular;

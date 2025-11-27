@@ -26,7 +26,7 @@ class MyNativeRenderer(activity: Activity) : GLSurfaceView.Renderer {
         nativeOnDrawFrame()
     }
 
-    fun setRendererType(renderSampleType: Int) {
+    fun setRendererType(renderSampleType: Float) {
         nativeSetRenderType(renderSampleType)
     }
 
@@ -46,6 +46,10 @@ class MyNativeRenderer(activity: Activity) : GLSurfaceView.Renderer {
         nativeProgressChanged3(progress)
     }
 
+    fun progressChanged4(progress: Int) {
+        nativeProgressChanged4(progress)
+    }
+
     fun moveCallback(x: Float, y: Float) {
         nativeMoveCallback(x, y)
     }
@@ -57,7 +61,7 @@ class MyNativeRenderer(activity: Activity) : GLSurfaceView.Renderer {
     private external fun nativeOnSurfaceCreated(assetManager: AssetManager)
     private external fun nativeOnSurfaceChanged(width: Int, height: Int)
     private external fun nativeOnDrawFrame()
-    private external fun nativeSetRenderType(renderSampleType: Int)
+    private external fun nativeSetRenderType(renderSampleType: Float)
     private external fun nativeOnDestroy()
 
     /**
@@ -67,6 +71,7 @@ class MyNativeRenderer(activity: Activity) : GLSurfaceView.Renderer {
     private external fun nativeProgressChanged(progress: Int)
     private external fun nativeProgressChanged2(progress: Int)
     private external fun nativeProgressChanged3(progress: Int)
+    private external fun nativeProgressChanged4(progress: Int)
 
     private external fun nativeMoveCallback(x: Float, y: Float)
 

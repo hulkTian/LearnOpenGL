@@ -5,6 +5,8 @@
 #include "Breakout.h"
 #include "ResourceManager.h"
 
+REGISTER_SAMPLE(SAMPLE_TYPE_BREAK_OUT, Breakout)
+
 void Breakout::Create()
 {
     // OpenGL configuration

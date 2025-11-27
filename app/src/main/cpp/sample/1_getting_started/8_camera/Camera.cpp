@@ -25,7 +25,7 @@
 #include "Camera.h"
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
-
+REGISTER_SAMPLE(SAMPLE_TYPE_CAMERA, Camera)
 // 3D盒子顶点坐标和纹理坐标
 // 6个面 x 每个面有2个三角形组成 x 每个三角形有3个顶点
 static float vertices[] = {

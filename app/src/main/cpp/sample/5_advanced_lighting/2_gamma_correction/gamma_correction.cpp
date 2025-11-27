@@ -22,6 +22,8 @@
 
 #include "gamma_correction.h"
 
+REGISTER_SAMPLE(SAMPLE_TYPE_ADVANCED_LIGHTING_GAMMA_CORRECTED, gamma_correction)
+
 // lighting info
 // -------------
 static glm::vec3 lightPositions[] = {

@@ -2,17 +2,18 @@
 // Created by ts on 2024/12/18.
 //
 
-#include "texture_exercise_1.h"
+#include "texture_exercise_4.h"
+REGISTER_SAMPLE(SAMPLE_TYPE_TEXTURE_EXERCISE_4, texture_exercise_4)
 
-void texture_exercise_1::Create() {
+void texture_exercise_4::Create() {
     GLUtils::printGLInfo();
 
     float  vertices[] = {
             //      ---- 位置 ----          ---- 颜色 ----                   - 纹理坐标 -
-            0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   0.0f, 1.0f,
-            0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   0.0f, 0.0f,
-            -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   1.0f, 0.0f,
-            -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   1.0f, 1.0f
+            0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // 右上
+            0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // 右下
+            -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // 左下
+            -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // 左上
     };
 
     unsigned int indices[] = {
@@ -34,7 +35,7 @@ void texture_exercise_1::Create() {
 
     //创建着色器程序,并编译着色器代码
     m_ProgramObj = GLUtils::createProgram("shaders/vs_texture_warp.glsl",
-                                          "shaders/fs_triangle7.glsl");
+                                          "shaders/fs_texture_exercise_4.glsl");
 
     if (!m_ProgramObj) {
         LOGD("Could not create program")
@@ -44,7 +45,7 @@ void texture_exercise_1::Create() {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 }
 
-void texture_exercise_1::Draw() {
+void texture_exercise_4::Draw() {
     //清除屏幕
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -54,6 +55,9 @@ void texture_exercise_1::Draw() {
     //指定纹理位置
     glUniform1i(glGetUniformLocation(m_ProgramObj, "texture1"), 0);
     glUniform1i(glGetUniformLocation(m_ProgramObj, "texture2"), 1);
+
+    //将进度值传入到片段着色器，作为纹理混合的参数
+    setFloat(m_ProgramObj, "mixValue", 0.01f * static_cast<float>(seek));
 
     //激活纹理单元，给绑定的纹理设置一个位置标签，这时第一个纹理，纹理单元值是0
     glActiveTexture(GL_TEXTURE0);
@@ -70,8 +74,10 @@ void texture_exercise_1::Draw() {
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
-void texture_exercise_1::Shutdown() {
+void texture_exercise_4::Shutdown() {
     //关闭顶点属性
     glDeleteVertexArrays(1, &VAO);
+    glDeleteTextures(1, &texture1);
+    glDeleteTextures(1, &texture2);
     GLBaseSample::Shutdown();
 }

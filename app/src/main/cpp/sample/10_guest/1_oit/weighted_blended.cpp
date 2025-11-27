@@ -13,6 +13,8 @@
 
 #include "weighted_blended.h"
 
+REGISTER_SAMPLE(SAMPLE_TYPE_WEIGHTED_BLENDED_OIT, weighted_blended)
+
 glm::mat4 calculate_model_matrix(const glm::vec3& position, const glm::vec3& rotation = glm::vec3(0.0f), const glm::vec3& scale = glm::vec3(1.0f));
 
 void weighted_blended::Create() {

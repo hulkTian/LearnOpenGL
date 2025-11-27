@@ -11,6 +11,8 @@
 
 #include "pbr_lighting.h"
 
+REGISTER_SAMPLE(SAMPLE_TYPE_PBR_LIGHTING, pbr_lighting)
+
 void pbr_lighting::Create() {
     GLUtils::printGLInfo();
 

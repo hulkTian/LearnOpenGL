@@ -8,6 +8,8 @@
 
 #include "lighting_textured.h"
 
+REGISTER_SAMPLE(SAMPLE_TYPE_PBR_LIGHTING_TEXTURED, lighting_textured)
+
 void lighting_textured::Create() {
     GLUtils::printGLInfo();
 

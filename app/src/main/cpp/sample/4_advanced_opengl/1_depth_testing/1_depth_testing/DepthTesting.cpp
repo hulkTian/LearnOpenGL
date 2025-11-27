@@ -32,7 +32,7 @@
  */
 
 #include "DepthTesting.h"
-
+REGISTER_SAMPLE(SAMPLE_TYPE_DEPTH_TESTING, DepthTesting)
 static float cubeVertices[] = {
         // positions          // texture Coords
         -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,

@@ -1,18 +1,10 @@
 //
-// Created by ts on 2024/9/13.
+// Created by tzh on 2025/11/26.
 //
+
+#include "light_casters_point.h"
+REGISTER_SAMPLE(SAMPLE_TYPE_LIGHTING_CASTERS_POINT, light_casters_point)
 /**
- * 将光投射(Cast)到物体的光源叫做投光物(Light Caster)。
- *
- *
- * 平行光：
- * 当一个光源处于很远的地方时，来自光源的每条光线就会近似于互相平行。
- * 当我们使用一个假设光源处于无限远处的模型时，它就被称为【定向光】，因为它的所有光线都有着相同的方向，它与光源的位置是没有关系的。
- *
- * 注意：目前使用的光照计算需求一个从片段至光源的光线方向，但人们更习惯定义定向光为一个从光源出发的全局方向。
- * 所以我们需要对全局光照方向向量取反来改变它的方向，它现在是一个指向光源的方向向量了。
- * vec3 lightDir = normalize(-light.direction);
- *
  * 点光源：
  * 点光源是处于世界中某一个位置的光源，它会朝着所有方向发光，但光线会随着距离逐渐衰减。
  * 随着光线传播距离的增长逐渐削减光的强度通常叫做衰减(Attenuation)。
@@ -22,18 +14,7 @@
  * 一次项会与距离值相乘，以线性的方式减少强度。
  * 二次项会与距离的平方相乘，让光源以二次递减的方式减少强度。二次项在距离比较小的时候影响会比一次项小很多，但当距离值比较大的时候它就会比一次项更大了。
  * 正确地设定它们的值取决于很多因素：环境、希望光覆盖的距离、光的类型等。
- *
- * 聚光：
- * 聚光是位于环境中某个位置的光源，这样的结果就是只有在聚光方向的特定半径内的物体才会被照亮，其它的物体都会保持黑暗。
- *
- * OpenGL中聚光是用一个世界空间位置、一个方向和一个切光角(Cutoff Angle)来表示的，切光角指定了聚光的半径。
- *
- * 平滑/软化边缘
- * 为了创建一种看起来边缘平滑的聚光，我们需要模拟聚光有一个内圆锥(Inner Cone)和一个外圆锥(Outer Cone)。
- * 一个片段处于内外圆锥之间，将会给它计算出一个0.0到1.0之间的强度值。
  */
-
-#include "LightCastersDirectional.h"
 
 static float vertices[] = {
         // positions                      // normals                       // texture coords
@@ -93,7 +74,7 @@ static glm::vec3 cubePositions[] = {
         glm::vec3(-1.3f, 1.0f, -1.5f)
 };
 
-void LightCastersDirectional::Create() {
+void light_casters_point::Create() {
     GLUtils::printGLInfo();
 
     glGenVertexArrays(1, &cubeVAO);
@@ -104,7 +85,8 @@ void LightCastersDirectional::Create() {
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *) 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
+                          8 * sizeof(float), (void *) nullptr);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
                           (void *) (3 * sizeof(float)));
@@ -118,15 +100,13 @@ void LightCastersDirectional::Create() {
     // 只需要绑定VBO不用再次设置VBO的数据，因为箱子的VBO数据中已经包含了正确的立方体顶点数据
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     // 设置灯立方体的顶点属性（对我们的灯来说仅仅只有位置数据）
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *) 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
+                          8 * sizeof(float), (void *) nullptr);
     glEnableVertexAttribArray(0);
 
     //创建着色器程序,并编译着色器代码
-    /*m_ProgramObj = GLUtils::createProgram("shaders/vs_light_casters.glsl",
-                                          "shaders/fs_light_casters.glsl");*/
-    //聚光着色器
     m_ProgramObj = GLUtils::createProgram("shaders/vs_light_casters.glsl",
-                                          "shaders/fs_light_flashlight.glsl");
+                                          "shaders/fs_light_casters_point.glsl");
 
     //创建光源的着色器程序
     m_ProgramObj_Light = GLUtils::createProgram("shaders/vs_colors.glsl",
@@ -153,56 +133,38 @@ void LightCastersDirectional::Create() {
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 }
 
-void LightCastersDirectional::Draw() {
+void light_casters_point::Draw() {
     //计算每一帧绘制的时间：先记录当前在开始时间
     float currentFrame = TimeUtils::currentTimeSeconds();
 
     //清除屏幕
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // be sure to activate shader when setting uniforms/drawing objects
     glUseProgram(m_ProgramObj);
 
-    /*setVec3(m_ProgramObj, "light.direction", -0.2f, -1.0f, -0.3f);
+    setVec3(m_ProgramObj, "light.direction", -0.2f, -1.0f, -0.3f);
     setVec3(m_ProgramObj, "light.position", lightPos);
-    setVec3(m_ProgramObj, "viewPos", camera.Position);
-
-    // light properties
-    setVec3(m_ProgramObj,"light.ambient", 0.2f, 0.2f, 0.2f);
-    setVec3(m_ProgramObj,"light.diffuse", 0.5f, 0.5f, 0.5f);
-    setVec3(m_ProgramObj,"light.specular", 1.0f, 1.0f, 1.0f);
-
-    // 点光源常数项
-    setFloat(m_ProgramObj,"light.constant", 1.0f);
-    setFloat(m_ProgramObj,"light.linear", 0.09f);
-    setFloat(m_ProgramObj,"light.quadratic", 0.032f);*/
-
-    // 聚光源
-    // 手电筒的位置与观察位置相同
-    setVec3(m_ProgramObj, "light.direction", cameraUtils.Front);//聚光的指向向量
-    // 聚光的方向向量需要光的位置和片段位置相减计算得出
-    setVec3(m_ProgramObj, "light.position", cameraUtils.Position);
-    //设置切光角的余玄值和θ（光源方向和光的指向的夹角）进行比较可以节省GPU的计算消耗
-    setFloat(m_ProgramObj, "light.cutOff", glm::cos(glm::radians(12.5f)));
-    setFloat(m_ProgramObj, "light.outerCutOff", glm::cos(glm::radians(25.0f)));
     setVec3(m_ProgramObj, "viewPos", cameraUtils.Position);
 
     // light properties
-    setVec3(m_ProgramObj, "light.ambient", 0.1f, 0.1f, 0.1f);
-    // we configure the diffuse intensity slightly higher; the right lighting conditions differ with each lighting method and environment.
-    // each environment and lighting type requires some tweaking to get the best out of your environment.
-    setVec3(m_ProgramObj, "light.diffuse", 0.8f, 0.8f, 0.8f);
-    setVec3(m_ProgramObj, "light.specular", 1.0f, 1.0f, 1.0f);
-    setFloat(m_ProgramObj, "light.constant", 1.0f);
-    setFloat(m_ProgramObj, "light.linear", 0.09f);
-    setFloat(m_ProgramObj, "light.quadratic", 0.032f);
+    setVec3(m_ProgramObj, "light.ambient",
+            glm::vec3(0.2f, 0.2f, 0.2f) * static_cast<float>(seek * 0.01));
+    setVec3(m_ProgramObj, "light.diffuse",
+            glm::vec3(0.5f, 0.5f, 0.5f) * static_cast<float>(seek2 * 0.01));
+    setVec3(m_ProgramObj, "light.specular",
+            glm::vec3(1.0f, 1.0f, 1.0f) * static_cast<float>(seek3 * 0.01));
 
-    // material properties
+    // 距离为50的点光源常数项
+    setFloat(m_ProgramObj,"light.constant", 1.0f);
+    setFloat(m_ProgramObj,"light.linear", 0.09f);
+    setFloat(m_ProgramObj,"light.quadratic", 0.032f);
+
+    // 反光度
     setFloat(m_ProgramObj, "material.shininess", 32.0f);
 
     // view/projection transformations
-    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom), SCR_WIDTH / SCR_HEIGHT, 0.1f,
-                                            100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(60.0f),
+                                            SCR_WIDTH / SCR_HEIGHT,0.1f,100.0f);
     setMat4(m_ProgramObj, "projection", projection);
     setMat4(m_ProgramObj, "view", cameraUtils.GetViewMatrix());
 
@@ -226,6 +188,8 @@ void LightCastersDirectional::Draw() {
         float angle = 20.0f * i;
         model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
         setMat4(m_ProgramObj, "model", model);
+        // 计算世界空间法线矩阵，并传给着色器
+        setNormalMatrix(m_ProgramObj, "normalMatrix", model);
 
         glDrawArrays(GL_TRIANGLES, 0, 36);
     }
@@ -245,7 +209,7 @@ void LightCastersDirectional::Draw() {
     deltaTime = TimeUtils::currentTimeSeconds() - currentFrame;
 }
 
-void LightCastersDirectional::Shutdown() {
+void light_casters_point::Shutdown() {
     //关闭顶点属性
     glDeleteVertexArrays(1, &cubeVAO);
     glDeleteVertexArrays(1, &lightCubeVAO);

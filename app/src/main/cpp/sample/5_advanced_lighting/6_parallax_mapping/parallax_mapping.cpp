@@ -14,6 +14,8 @@
 
 #include "parallax_mapping.h"
 
+REGISTER_SAMPLE(SAMPLE_TYPE_PARALLAX_MAPPING, parallax_mapping)
+
 void parallax_mapping::Create() {
     GLUtils::printGLInfo();
 

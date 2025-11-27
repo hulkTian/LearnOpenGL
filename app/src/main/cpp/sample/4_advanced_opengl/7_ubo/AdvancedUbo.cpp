@@ -38,7 +38,7 @@
 
 #include "AdvancedUbo.h"
 #include "glm/gtc/type_ptr.hpp"
-
+REGISTER_SAMPLE(SAMPLE_TYPE_CUBE_UNIFORM_BUFFER, AdvancedUbo)
 static float cubeVertices[] = {
         // positions
         -0.5f, -0.5f, -0.5f,

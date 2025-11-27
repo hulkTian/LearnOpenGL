@@ -3,7 +3,7 @@
 //
 
 #include "Material.h"
-
+REGISTER_SAMPLE(SAMPLE_TYPE_COLORS_MATERIAL, Material)
 static float vertices[] = {
         -0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
         0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,

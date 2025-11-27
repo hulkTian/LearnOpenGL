@@ -183,6 +183,11 @@ static void setMat3(GLuint programId, const std::string &name, const glm::mat3 &
     glUniformMatrix3fv(glGetUniformLocation(programId, name.c_str()), 1, GL_FALSE, &mat[0][0]);
 }
 
+static void setNormalMatrix(GLuint programId, const std::string &name, const glm::mat4 &model) {
+    glUniformMatrix3fv(glGetUniformLocation(programId, name.c_str()), 1,
+                       GL_FALSE, &glm::transpose(glm::inverse(glm::mat3(model)))[0][0]);
+}
+
 static void setMat4(GLuint programId, const std::string &name, const glm::mat4 &mat) {
     glUniformMatrix4fv(glGetUniformLocation(programId, name.c_str()), 1, GL_FALSE, &mat[0][0]);
 }

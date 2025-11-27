@@ -20,6 +20,8 @@
 
 #include "bloom.h"
 
+REGISTER_SAMPLE(SAMPLE_TYPE_BLOOM, bloom)
+
 void bloom::Create() {
     GLUtils::printGLInfo();
 

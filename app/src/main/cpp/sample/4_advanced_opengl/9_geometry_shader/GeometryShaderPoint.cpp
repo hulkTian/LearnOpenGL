@@ -3,7 +3,7 @@
 //
 
 #include "GeometryShaderPoint.h"
-
+REGISTER_SAMPLE(SAMPLE_TYPE_GEOMETRY_SHADER, GeometryShaderPoint)
 static float points[] = {
         -0.5f,  0.5f, // 左上
         0.5f,  0.5f, // 右上

@@ -6,7 +6,7 @@
  */
 
 #include "ReflectionMode.h"
-
+REGISTER_SAMPLE(SAMPLE_TYPE_CUBE_MAPS_REFLECTION2, ReflectionMode)
 static float skyboxVertices[] = {
         // positions
         -1.0f, 1.0f, -1.0f,

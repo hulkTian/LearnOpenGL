@@ -4,6 +4,7 @@
 // 使用glDrawArrays按照默认顺序绘制两个相连的三角形
 
 #include "1_triangle_exercise.h"
+REGISTER_SAMPLE(SAMPLE_TYPE_VAO_VBO_EXERCISE_1, triangle_exercise_1)
 
 void triangle_exercise_1::Create() {
     GLUtils::printGLInfo();

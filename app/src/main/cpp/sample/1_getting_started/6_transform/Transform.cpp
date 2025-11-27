@@ -6,7 +6,7 @@
 #include "Transform.h"
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
-
+REGISTER_SAMPLE(SAMPLE_TYPE_MAT, Transform)
 
 
 void Transform::Create() {

@@ -3,6 +3,7 @@
 //
 
 #include "texture_warp.h"
+REGISTER_SAMPLE(SAMPLE_TYPE_TEXTURE_WARP, texture_warp)
 
 void texture_warp::Create() {
     GLUtils::printGLInfo();

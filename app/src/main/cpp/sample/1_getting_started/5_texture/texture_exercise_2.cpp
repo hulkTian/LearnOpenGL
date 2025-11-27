@@ -1,21 +1,19 @@
-// 这个例子使用了纹理相关知识。
-// 包括纹理坐标、加载纹理图片、纹理对象生成、配置纹理的环绕和过滤、使用多级渐远纹理。
-// 纹理坐标范围和分辨率无关，一般在00到11的范围内；
-// 如果想调整图片方向可以变换纹理坐标
-// 如果想取纹理的一部分，可以定义纹理坐标范围到想要的区域
-// 提供调节纹理坐标和环绕方式和过滤方式可以实现很多效果
+//
+// Created by ts on 2024/12/18.
+//
 
-#include "NativeTriangle7.h"
+#include "texture_exercise_2.h"
+REGISTER_SAMPLE(SAMPLE_TYPE_TEXTURE_EXERCISE_2, texture_exercise_2)
 
-void NativeTriangle7::Create() {
+void texture_exercise_2::Create() {
     GLUtils::printGLInfo();
 
     float  vertices[] = {
             //      ---- 位置 ----          ---- 颜色 ----                   - 纹理坐标 -
-            0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // 右上
-            0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // 右下
+            0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   2.0f, 2.0f,   // 右上
+            0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   2.0f, 0.0f,   // 右下
             -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // 左下
-            -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // 左上
+            -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 2.0f    // 左上
     };
 
     unsigned int indices[] = {
@@ -28,10 +26,12 @@ void NativeTriangle7::Create() {
     VAO = GLUtils::setUpVAOAndVBO(vertices, sizeof(vertices), indices, sizeof(indices) ,pointer);
 
     //load texture1
-    texture1 = GLUtils::loadTgaTexture("textures/container.jpg");
+    texture1 = GLUtils::loadTgaTexture("textures/container.jpg", GL_RGBA, GL_RGBA,GL_UNSIGNED_BYTE,
+                                         true, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_NEAREST, GL_LINEAR);
 
     //load texture1
-    texture2 = GLUtils::loadTgaTexture("textures/awesomeface.png");
+    texture2 = GLUtils::loadTgaTexture("textures/awesomeface.png", GL_RGBA, GL_RGBA,GL_UNSIGNED_BYTE,
+                                         true, GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR);
 
     //创建着色器程序,并编译着色器代码
     m_ProgramObj = GLUtils::createProgram("shaders/vs_texture_warp.glsl",
@@ -45,7 +45,7 @@ void NativeTriangle7::Create() {
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 }
 
-void NativeTriangle7::Draw() {
+void texture_exercise_2::Draw() {
     //清除屏幕
     glClear(GL_COLOR_BUFFER_BIT);
 
@@ -71,8 +71,10 @@ void NativeTriangle7::Draw() {
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
-void NativeTriangle7::Shutdown() {
+void texture_exercise_2::Shutdown() {
     //关闭顶点属性
     glDeleteVertexArrays(1, &VAO);
+    glDeleteTextures(1, &texture1);
+    glDeleteTextures(1, &texture2);
     GLBaseSample::Shutdown();
 }

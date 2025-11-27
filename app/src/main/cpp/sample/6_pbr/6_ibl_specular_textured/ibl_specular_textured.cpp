@@ -4,6 +4,8 @@
 
 #include "ibl_specular_textured.h"
 
+REGISTER_SAMPLE(SAMPLE_TYPE_PBR_IBL_SPECULAR_TEXTURED, ibl_specular_textured)
+
 void ibl_specular_textured::Create() {
     // configure global opengl state
     // -----------------------------

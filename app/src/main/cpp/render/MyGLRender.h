@@ -17,13 +17,14 @@ class MyGLRender {
     ~MyGLRender();
 
 public:
-    void SetRenderType(int renderSampleType);
+    void SetRenderType(float renderSampleType);
 
     void ProcessInput(int i);
 
     void ProgressChanged(int i);
     void ProgressChanged2(int i);
     void ProgressChanged3(int i);
+    void ProgressChanged4(int i);
 
     void MoveCallback(float x, float y);
 
