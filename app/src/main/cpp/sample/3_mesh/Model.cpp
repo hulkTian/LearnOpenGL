@@ -9,15 +9,17 @@
 #include "assimp/port/AndroidJNI/AndroidJNIIOSystem.h"
 
 void Model::Draw(GLuint programId) {
-    for (unsigned int i = 0; i < meshes.size(); i++)
-        meshes[i].Draw(programId);
+    for (auto & mesh : meshes)
+        mesh.Draw(programId);
 }
 
 void Model::loadModel(string const &path) {
     Assimp::Importer importer;
-    // 后期处理指令：aiProcess_Triangulate 将不是三角形图元的形状转为三角形；aiProcess_FlipUVs 反转纹理y轴；aiProcess_CalcTangentSpace 计算切线和副切线
-    const aiScene *scene = importer.ReadFile(path,
-                                             aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
+    // 后期处理指令：aiProcess_Triangulate 将不是三角形图元的形状转为三角形；
+    // aiProcess_FlipUVs 反转纹理y轴；aiProcess_CalcTangentSpace 计算切线和副切线
+    const aiScene *scene = importer.ReadFile(path, aiProcess_Triangulate
+                                                   | aiProcess_GenSmoothNormals |
+                                                   aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
     // 判断场景和根节点是否为空，检查flag标记判断数据是否加载完整
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
         LOGE("Model::loadModel path=%s, assimpError=%s", path.c_str(), importer.GetErrorString())
@@ -31,10 +33,12 @@ void Model::loadModel(string const &path) {
 
 //递归处理所有节点
 void Model::processNode(aiNode *node, const aiScene *scene) {
-    LOGI("Model::processNode start node->mNumMeshes = %d node->mNumChildren = %d", node->mNumMeshes, node->mNumChildren)
-    // 处理节点所有的网格（如果有的话）
+    LOGI("Model::processNode start node->mNumMeshes = %d node->mNumChildren = %d", node->mNumMeshes,
+         node->mNumChildren)
+    // 处理当前节点所有的网格（如果有的话）
     for (unsigned int i = 0; i < node->mNumMeshes; i++) {
         aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
+        // 解析网格，并加入到模型的网格列表中
         meshes.push_back(processMesh(mesh, scene));
     }
 
@@ -58,16 +62,16 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
 
     // 处理顶点位置、法线和纹理坐标
     for (unsigned int i = 0; i < mesh->mNumVertices; i++) {
-        Vertex vertex;
+        Vertex vertex{};
 
-        // 获取单个顶点数据
+        // 解析单个顶点数据
         glm::vec3 vector;
         vector.x = mesh->mVertices[i].x;
         vector.y = mesh->mVertices[i].y;
         vector.z = mesh->mVertices[i].z;
         vertex.Position = vector;
 
-        // 获取每个顶点对应的法线数据
+        // 解析每个顶点对应的法线数据
         if (mesh->HasNormals()) {
             vector.x = mesh->mNormals[i].x;
             vector.y = mesh->mNormals[i].y;
@@ -84,6 +88,7 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
         } else {
             vertex.TexCoords = glm::vec2(0.0f, 0.0f);
         }
+        // 解析切线和副切线
         if (mesh->mTangents) {
             // tangent
             vector.x = mesh->mTangents[i].x;
@@ -113,35 +118,47 @@ Mesh Model::processMesh(aiMesh *mesh, const aiScene *scene) {
     if (mesh->mMaterialIndex >= 0) {
         aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
         // 1. diffuse maps
-        vector<Texture> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+        vector<Texture> diffuseMaps = loadMaterialTextures(material,
+                                                           aiTextureType_DIFFUSE,
+                                                           "texture_diffuse");
         textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
         // 2. specular maps
-        vector<Texture> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+        vector<Texture> specularMaps = loadMaterialTextures(material,
+                                                            aiTextureType_SPECULAR,
+                                                            "texture_specular");
         textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
         // 3. normal maps
         // Assimp的aiTextureType_NORMAL并不会加载它的法线贴图，而aiTextureType_HEIGHT却能，所以我们经常这样加载它们：
-        std::vector<Texture> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
+        std::vector<Texture> normalMaps = loadMaterialTextures(material,
+                                                               aiTextureType_HEIGHT,
+                                                               "texture_normal");
         textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
         // 4. height maps，反射贴图放在这里
-        std::vector<Texture> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
+        std::vector<Texture> heightMaps = loadMaterialTextures(material,
+                                                               aiTextureType_AMBIENT,
+                                                               "texture_height");
         textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
     }
 
-    return Mesh(vertices, indices, textures);
+    return {vertices, indices, textures};
 }
 
 // 一个材质对象的内部对每种纹理类型都存储了一个纹理位置数组。不同的纹理类型都以 aiTextureType_ 为前缀。
-vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type, string typeName) {
-    LOGI("Model::loadMaterialTextures type = %s count = %d", typeName.c_str(), mat->GetTextureCount(type))
+vector<Texture>
+Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type, const string &typeName) {
+    LOGI("Model::loadMaterialTextures type = %s count = %d", typeName.c_str(),
+         mat->GetTextureCount(type))
     vector<Texture> textures;
     // 优化：加载纹理时判断纹理路径是否与已经加载的纹理路径相同，如果相同，则跳过纹理的加载，直接使用定位到的纹理结构体为网格的纹理。
     for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
         aiString str;
         mat->GetTexture(type, i, &str);
+        LOGI("Model::loadMaterialTextures loading texture: %s", str.C_Str())
         bool skip = false;
-        for (unsigned int j = 0; j < textures_loaded.size(); j++) {
-            if (std::strcmp(textures_loaded[j].path.data, str.C_Str()) == 0) {
-                textures.push_back(textures_loaded[j]);
+        // 检查该纹理是否已经被加载过
+        for (auto &tex: textures_loaded) {
+            if (std::strcmp(tex.path.data, str.C_Str()) == 0) {
+                textures.push_back(tex);
                 skip = true;
                 break;
             }
@@ -161,7 +178,7 @@ vector<Texture> Model::loadMaterialTextures(aiMaterial *mat, aiTextureType type,
 }
 
 // 加载纹理
-unsigned int TextureFromFile(const string path, const string &directory) {
+unsigned int TextureFromFile(const string &path, const string &directory) {
 
     string filename = string(path);
     filename = directory + '/' + filename;
@@ -174,9 +191,10 @@ unsigned int TextureFromFile(const string path, const string &directory) {
 
         // 根据文件地址，使用stb_img加载纹理贴图文件
         int width, height, nrComponents;
-        unsigned char *data = stbi_load(filename.c_str(), &width, &height, &nrComponents, 0);
+        unsigned char *data = stbi_load(filename.c_str(), &width, &height,
+                                        &nrComponents, 0);
         if (data) {
-            GLenum format;
+            GLint format = 0;
             if (nrComponents == 1)
                 format = GL_RED;
             else if (nrComponents == 3)
@@ -186,7 +204,8 @@ unsigned int TextureFromFile(const string path, const string &directory) {
 
             // 加载纹理贴身数据并绑定到之前生成的纹理对象
             glBindTexture(GL_TEXTURE_2D, textureID);
-            glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+            glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0,
+                         format, GL_UNSIGNED_BYTE,data);
             glGenerateMipmap(GL_TEXTURE_2D); // 创建多级渐远纹理
 
             // 配置纹理采样参数

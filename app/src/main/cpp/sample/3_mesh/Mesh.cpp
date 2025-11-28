@@ -9,7 +9,7 @@
 #include "Mesh.h"
 #include "GLUtils.h"
 
-Mesh::Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures){
+Mesh::Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures) {
     this->vertices = vertices;
     this->indices = indices;
     this->textures = textures;
@@ -26,34 +26,43 @@ void Mesh::setupMesh() {
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), &vertices[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex),
+                 &vertices[0], GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int),
+                 &indices[0],GL_STATIC_DRAW);
 
     // 顶点位置
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
+                          sizeof(Vertex), (void *) nullptr);
     // 顶点法线
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                          (void *) offsetof(Vertex, Normal));
     // 顶点纹理坐标
     glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                          (void *) offsetof(Vertex, TexCoords));
 
     // vertex tangent
     glEnableVertexAttribArray(3);
-    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Tangent));
+    glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                          (void *) offsetof(Vertex, Tangent));
     // vertex bitangent
     glEnableVertexAttribArray(4);
-    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
+    glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                          (void *) offsetof(Vertex, Bitangent));
     // ids
     glEnableVertexAttribArray(5);
-    glVertexAttribIPointer(5, 4, GL_INT, sizeof(Vertex), (void*)offsetof(Vertex, m_BoneIDs));
+    glVertexAttribIPointer(5, 4, GL_INT, sizeof(Vertex),
+                           (void *) offsetof(Vertex, m_BoneIDs));
 
     // weights
     glEnableVertexAttribArray(6);
-    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, m_Weights));
+    glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                          (void *) offsetof(Vertex, m_Weights));
 
     glBindVertexArray(0);
 }
@@ -63,23 +72,22 @@ void Mesh::setupMesh() {
  * 接下来我们查找对应的采样器，将它的位置值设置为当前激活的纹理单元，并绑定纹理。
  */
 void Mesh::Draw(GLuint programId) {
-    unsigned int diffuseNr  = 1;
+    unsigned int diffuseNr = 1;
     unsigned int specularNr = 1;
-    unsigned int normalNr   = 1;
-    unsigned int heightNr   = 1;
-    for(unsigned int i = 0; i < textures.size(); i++)
-    {
+    unsigned int normalNr = 1;
+    unsigned int heightNr = 1;
+    for (unsigned int i = 0; i < textures.size(); i++) {
         glActiveTexture(GL_TEXTURE0 + i); // 在绑定之前激活相应的纹理单元
         // 获取纹理序号（diffuse_textureN 中的 N）
         string number;
         string name = textures[i].type;
-        if(name == "texture_diffuse")
+        if (name == "texture_diffuse")
             number = to_string(diffuseNr++);
-        else if(name == "texture_specular")
+        else if (name == "texture_specular")
             number = to_string(specularNr++);
-        else if(name == "texture_normal")
+        else if (name == "texture_normal")
             number = to_string(normalNr++);
-        else if(name == "texture_height")
+        else if (name == "texture_height")
             number = to_string(heightNr++);
 
         setInt(programId, ("material." + name + number).c_str(), i);

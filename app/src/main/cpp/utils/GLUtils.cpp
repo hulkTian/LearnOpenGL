@@ -225,7 +225,7 @@ GLUtils::createProgram(const char *vertexPath, const char *fragmentPath, const c
         checkGlError("glAttachShader");
 
         //绑定几何着色器对象到着色器程序
-        if (geometryShader) {
+        if (geometryShader != 0) {
             glAttachShader(programId, geometryShader);
             checkGlError("glAttachShader");
         } else {

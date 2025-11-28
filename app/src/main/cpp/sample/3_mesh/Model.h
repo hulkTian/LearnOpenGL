@@ -24,7 +24,7 @@
 #include <vector>
 using namespace std;
 
-unsigned int TextureFromFile(const std::string path, const string &directory);
+unsigned int TextureFromFile(const std::string& path, const string &directory);
 
 class Model {
 public:
@@ -48,7 +48,7 @@ private:
 
     Mesh processMesh(aiMesh *mesh, const aiScene *scene);
 
-    vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, string typeName);
+    vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, const string& typeName);
 };
 
 #endif //LEARNOPENGL_MODEL_H

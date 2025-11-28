@@ -4,6 +4,8 @@
 
 #include "ModelLoading.h"
 #include "Model.h"
+#include "stb_image.h"
+
 REGISTER_SAMPLE(SAMPLE_TYPE_MODEL_LOADING, ModelLoading)
 // positions of the point lights
 static glm::vec3 pointLightPositions[] = {
@@ -18,7 +20,9 @@ void ModelLoading::Create() {
 
     //TODO 先把 model 文件夹拷贝到 /data/user/0/com.example.learnopengl/objects 路径下，然后可以选择你要加载的模型
     std::string path(DEFAULT_OGL_ASSETS_DIR);
-    ourModel = Model(path + "/objects/nanosuit/nanosuit.obj");
+    //ourModel = Model(path + "/objects/nanosuit/nanosuit.obj");
+    stbi_set_flip_vertically_on_load(true);
+    ourModel = Model(path + "/objects/backpack/backpack.obj");
 
     //创建着色器程序,并编译着色器代码
     m_ProgramObj = GLUtils::createProgram("shaders/vs_model_loading.glsl",
@@ -75,7 +79,8 @@ void ModelLoading::Draw() {
     setFloat(m_ProgramObj, "pointLights[1].quadratic", 0.032f);
 
     // view/projection transformations
-    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom), SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom),
+                                            SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
     glm::mat4 view = cameraUtils.GetViewMatrix();
     setMat4(m_ProgramObj, "projection", projection);
     setMat4(m_ProgramObj, "view", view);
@@ -88,6 +93,7 @@ void ModelLoading::Draw() {
     model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
     model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));	// it's a bit too big for our scene, so scale it down
     setMat4(m_ProgramObj, "model", model);
+    setNormalMatrix(m_ProgramObj, "normalMatrix", model);
     ourModel.Draw(m_ProgramObj);
 
     // 按照模型的轮廓，渲染比模型稍微大一点的区域，这个区域启动模板测试，只保留不等于1的片段，并且禁止更新模板缓冲
