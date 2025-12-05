@@ -7,6 +7,7 @@
 
 
 #include "FrameBuffersExercise.h"
+
 REGISTER_SAMPLE(SAMPLE_TYPE_FRAME_BUFFERS_EXERCISE, FrameBuffersExercise)
 static float cubeVertices[] = {
         // positions          // texture Coords
@@ -66,13 +67,13 @@ static float planeVertices[] = {
 
 static float quadVertices[] = { // vertex attributes for a quad that fills the entire screen in Normalized Device Coordinates. NOTE that this plane is now much smaller and at the top of the screen
         // positions   // texCoords
-        0.4f,  1.0f,  0.0f, 1.0f,
-        0.4f,  0.6f,  0.0f, 0.0f,
-        1.0f,  0.6f,  1.0f, 0.0f,
+        0.4f, 1.0f, 0.0f, 1.0f,
+        0.4f, 0.6f, 0.0f, 0.0f,
+        1.0f, 0.6f, 1.0f, 0.0f,
 
-        0.4f,  1.0f,  0.0f, 1.0f,
-        1.0f,  0.6f,  1.0f, 0.0f,
-        1.0f,  1.0f,  1.0f, 1.0f
+        0.4f, 1.0f, 0.0f, 1.0f,
+        1.0f, 0.6f, 1.0f, 0.0f,
+        1.0f, 1.0f, 1.0f, 1.0f
 };
 
 void FrameBuffersExercise::Create() {
@@ -85,7 +86,8 @@ void FrameBuffersExercise::Create() {
     glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), &cubeVertices, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
+                          5 * sizeof(float), (void *) nullptr);
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
                           (void *) (3 * sizeof(float)));
@@ -97,9 +99,11 @@ void FrameBuffersExercise::Create() {
     glBindBuffer(GL_ARRAY_BUFFER, planeVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(planeVertices), &planeVertices, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
+                          5 * sizeof(float), (void *) nullptr);
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE,
+                          5 * sizeof(float),
                           (void *) (3 * sizeof(float)));
     glBindVertexArray(0);
 
@@ -110,18 +114,19 @@ void FrameBuffersExercise::Create() {
     glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void *) 0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE,
+                          4 * sizeof(float), (void *) nullptr);
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float),
-                          (void *) (2 * sizeof(float)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE,
+                          4 * sizeof(float), (void *) (2 * sizeof(float)));
 
     // load textures
     cubeTexture = GLUtils::loadTgaTexture("textures/container.jpg", GL_RGBA,
-                                          GL_RGBA, GL_UNSIGNED_BYTE,false,
+                                          GL_RGBA, GL_UNSIGNED_BYTE, false,
                                           GL_REPEAT, GL_REPEAT,
                                           GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
     floorTexture = GLUtils::loadTgaTexture("textures/metal.png", GL_RGBA,
-                                           GL_RGBA, GL_UNSIGNED_BYTE,false,
+                                           GL_RGBA, GL_UNSIGNED_BYTE, false,
                                            GL_REPEAT, GL_REPEAT,
                                            GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
 
@@ -148,20 +153,24 @@ void FrameBuffersExercise::Create() {
     // 生成纹理附件
     glGenTextures(1, &texColorBuffer);
     glBindTexture(GL_TEXTURE_2D, texColorBuffer);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, SCR_WIDTH, SCR_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, SCR_WIDTH,
+                 SCR_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE,nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     // 将纹理附件附加到当前绑定的帧缓冲对象
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texColorBuffer, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                           GL_TEXTURE_2D, texColorBuffer, 0);
 
     // 生成渲染缓冲对象附件
     glGenRenderbuffers(1, &rbo);
     glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, SCR_WIDTH, SCR_HEIGHT);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8,
+                          SCR_WIDTH, SCR_HEIGHT);
 
     // 将渲染缓冲对象附件附加到当前绑定的帧缓冲对象
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
+                              GL_RENDERBUFFER, rbo);
 
     // 检查帧缓冲是否完整
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
@@ -196,7 +205,8 @@ void FrameBuffersExercise::Draw() {
     glm::mat4 view = cameraUtils.GetViewMatrix();
     cameraUtils.Yaw -= 180.0f;//恢复摄像机Yaw角
     cameraUtils.ProcessMouseMovement(0, 0, true);
-    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom), SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom),
+                                            SCR_WIDTH / SCR_HEIGHT,0.1f, 100.0f);
     setMat4(m_ProgramObj, "view", view);
     setMat4(m_ProgramObj, "projection", projection);
     // cubes
@@ -247,12 +257,14 @@ void FrameBuffersExercise::Draw() {
     glBindVertexArray(0);
 
     // now draw the mirror quad with screen texture
+    // disable depth test so screen-space quad isn't discarded due to depth test.
     // --------------------------------------------
-    glDisable(GL_DEPTH_TEST); // disable depth test so screen-space quad isn't discarded due to depth test.
+    glDisable(GL_DEPTH_TEST);
 
     glUseProgram(m_ProgramObj_screen);
     glBindVertexArray(quadVAO);
-    glBindTexture(GL_TEXTURE_2D, texColorBuffer);	// use the color attachment texture as the texture of the quad plane
+    // use the color attachment texture as the texture of the quad plane
+    glBindTexture(GL_TEXTURE_2D,texColorBuffer);
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
     // 计算每一帧绘制的时间，再计算当前帧结束时间

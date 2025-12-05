@@ -6,7 +6,7 @@
  * 缓冲帧：颜色缓冲，深度缓冲，模板缓冲，这些缓冲结合起来叫做帧缓冲(Framebuffer)。
  *
  * 帧缓冲的工作过程：
- * 1.创建帧缓冲；
+ * 1.创建帧缓冲对象；
  * 2.绑定并激活帧缓冲；
  * 3.构建完整的帧缓冲；
  * 4.检查帧缓冲是否完整；
@@ -15,7 +15,7 @@
  * 6.删除帧缓冲；
  *
  * 一个完整的帧缓冲需要满足一下的条件：
- * 1.附加至少一个缓冲（颜色、深度、模板）；
+ * 1.至少有一个缓冲（颜色、深度、模板）；
  * 2.至少有一个颜色附件（Attachment）；
  * 3.所有的附件都必须是完整的（保留了内存）；
  * 4.每个缓冲都应该有相同的样本数（sample）；
@@ -56,72 +56,73 @@
  */
 
 #include "FrameBuffers.h"
+
 REGISTER_SAMPLE(SAMPLE_TYPE_FRAME_BUFFERS, FrameBuffers)
 static float cubeVertices[] = {
         // positions          // texture Coords
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-        0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+        0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
+        0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+        0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
 
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+        0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+        0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
+        0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
+        -0.5f, 0.5f, 0.5f, 0.0f, 1.0f,
+        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
 
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        -0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+        -0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+        -0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
 
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+        0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+        0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+        0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+        0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+        0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+        0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
 
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
+        0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
+        0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+        0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
+        -0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
+        -0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
 
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
+        0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
+        0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+        0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
+        -0.5f, 0.5f, 0.5f, 0.0f, 0.0f,
+        -0.5f, 0.5f, -0.5f, 0.0f, 1.0f
 };
 
 static float planeVertices[] = {
-        // positions          // texture Coords
-        5.0f, -0.5f,  5.0f,  2.0f, 0.0f,
-        -5.0f, -0.5f,  5.0f,  0.0f, 0.0f,
-        -5.0f, -0.5f, -5.0f,  0.0f, 2.0f,
+        // positions                      // texture Coords
+        5.0f, -0.5f, 5.0f, 2.0f, 0.0f,
+        -5.0f, -0.5f, 5.0f, 0.0f, 0.0f,
+        -5.0f, -0.5f, -5.0f, 0.0f, 2.0f,
 
-        5.0f, -0.5f,  5.0f,  2.0f, 0.0f,
-        -5.0f, -0.5f, -5.0f,  0.0f, 2.0f,
-        5.0f, -0.5f, -5.0f,  2.0f, 2.0f
+        5.0f, -0.5f, 5.0f, 2.0f, 0.0f,
+        -5.0f, -0.5f, -5.0f, 0.0f, 2.0f,
+        5.0f, -0.5f, -5.0f, 2.0f, 2.0f
 };
 
 static float quadVertices[] = {
-        // positions   // texCoords
-        -1.0f,  1.0f,  0.0f, 1.0f,
-        -1.0f, -1.0f,  0.0f, 0.0f,
-        1.0f, -1.0f,  1.0f, 0.0f,
+        // positions           // texCoords
+        -1.0f, 1.0f, 0.0f, 1.0f,
+        -1.0f, -1.0f, 0.0f, 0.0f,
+        1.0f, -1.0f, 1.0f, 0.0f,
 
-        -1.0f,  1.0f,  0.0f, 1.0f,
-        1.0f, -1.0f,  1.0f, 0.0f,
-        1.0f,  1.0f,  1.0f, 1.0f
+        -1.0f, 1.0f, 0.0f, 1.0f,
+        1.0f, -1.0f, 1.0f, 0.0f,
+        1.0f, 1.0f, 1.0f, 1.0f
 };
 
 void FrameBuffers::Create() {
@@ -134,7 +135,8 @@ void FrameBuffers::Create() {
     glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), &cubeVertices, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
+                          5 * sizeof(float), (void *) nullptr);
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
                           (void *) (3 * sizeof(float)));
@@ -146,7 +148,8 @@ void FrameBuffers::Create() {
     glBindBuffer(GL_ARRAY_BUFFER, planeVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(planeVertices), &planeVertices, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
+                          5 * sizeof(float), (void *) nullptr);
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
                           (void *) (3 * sizeof(float)));
@@ -159,24 +162,26 @@ void FrameBuffers::Create() {
     glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE,
+                          4 * sizeof(float), (void *) nullptr);
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float),
+                          (void *) (2 * sizeof(float)));
 
     // load textures
     cubeTexture = GLUtils::loadTgaTexture("textures/container.jpg", GL_RGBA,
-                                          GL_RGBA, GL_UNSIGNED_BYTE,false,
+                                          GL_RGBA, GL_UNSIGNED_BYTE, false,
                                           GL_REPEAT, GL_REPEAT,
                                           GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
     floorTexture = GLUtils::loadTgaTexture("textures/metal.png", GL_RGBA,
-                                           GL_RGBA, GL_UNSIGNED_BYTE,false,
+                                           GL_RGBA, GL_UNSIGNED_BYTE, false,
                                            GL_REPEAT, GL_REPEAT,
                                            GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
 
     m_ProgramObj = GLUtils::createProgram("shaders/vs_depth_testing.glsl",
                                           "shaders/fs_depth_testing.glsl");
     m_ProgramObj_screen = GLUtils::createProgram("shaders/vs_frame_buffers.glsl",
-                                          "shaders/fs_frame_buffers.glsl");
+                                                 "shaders/fs_frame_buffers.glsl");
 
     if (!m_ProgramObj || !m_ProgramObj_screen) {
         LOGD("Could not create program")
@@ -191,25 +196,32 @@ void FrameBuffers::Create() {
 
     // 创建一个帧缓冲
     glGenFramebuffers(1, &framebuffer);
+    // 绑定帧缓冲后，所有的后续的帧缓冲操作都将作用到这个帧缓冲上
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
 
     // 生成纹理附件
-    glGenTextures(1, &texColorBuffer);
-    glBindTexture(GL_TEXTURE_2D, texColorBuffer);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, SCR_WIDTH, SCR_HEIGHT, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+    glGenTextures(1, &texColorBuffer);// 创建纹理对象
+    glBindTexture(GL_TEXTURE_2D, texColorBuffer);// 绑定纹理对象
+    // 为纹理对象分配内存
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,SCR_WIDTH, SCR_HEIGHT,
+                 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+    // 设置纹理参数
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
     // 将纹理附件附加到当前绑定的帧缓冲对象
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texColorBuffer, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
+                           GL_TEXTURE_2D, texColorBuffer, 0);
 
     // 生成渲染缓冲对象附件
     glGenRenderbuffers(1, &rbo);
     glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, SCR_WIDTH, SCR_HEIGHT);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8,
+                          SCR_WIDTH, SCR_HEIGHT);
 
     // 将渲染缓冲对象附件附加到当前绑定的帧缓冲对象
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT,
+                              GL_RENDERBUFFER, rbo);
 
     // 检查帧缓冲是否完整
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
@@ -228,13 +240,15 @@ void FrameBuffers::Draw() {
     // 第一处理阶段(Pass)
     glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // 我们现在不使用模板缓冲
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    // 我们现在不使用模板缓冲
     glEnable(GL_DEPTH_TEST);
 
     glUseProgram(m_ProgramObj);
     glm::mat4 model = glm::mat4(1.0f);
     glm::mat4 view = cameraUtils.GetViewMatrix();
-    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom), SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom),
+                                            SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
     setMat4(m_ProgramObj, "view", view);
     setMat4(m_ProgramObj, "projection", projection);
     // cubes
@@ -242,27 +256,27 @@ void FrameBuffers::Draw() {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, cubeTexture);
     model = glm::translate(model, glm::vec3(-1.0f, 0.0f, -1.0f));
-    setMat4(m_ProgramObj,"model", model);
+    setMat4(m_ProgramObj, "model", model);
     glDrawArrays(GL_TRIANGLES, 0, 36);
     model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3(2.0f, 0.0f, 0.0f));
-    setMat4(m_ProgramObj,"model", model);
+    setMat4(m_ProgramObj, "model", model);
     glDrawArrays(GL_TRIANGLES, 0, 36);
     // floor
     glBindVertexArray(planeVAO);
     glBindTexture(GL_TEXTURE_2D, floorTexture);
-    setMat4(m_ProgramObj,"model", glm::mat4(1.0f));
+    setMat4(m_ProgramObj, "model", glm::mat4(1.0f));
     glDrawArrays(GL_TRIANGLES, 0, 6);
     glBindVertexArray(0);
 
     // 第二处理阶段
     glBindFramebuffer(GL_FRAMEBUFFER, 0); // 返回默认
+    glDisable(GL_DEPTH_TEST);
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
     glUseProgram(m_ProgramObj_screen);
     glBindVertexArray(quadVAO);
-    glDisable(GL_DEPTH_TEST);
     glBindTexture(GL_TEXTURE_2D, texColorBuffer);
     glDrawArrays(GL_TRIANGLES, 0, 6);
 

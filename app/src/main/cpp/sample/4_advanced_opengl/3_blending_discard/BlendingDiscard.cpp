@@ -206,7 +206,8 @@ void BlendingDiscard::Create() {
 
     // 开启混合
     glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
 
     //设置清屏颜色
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -219,9 +220,9 @@ void BlendingDiscard::Draw() {
     // sort the transparent windows before rendering
     // ---------------------------------------------
     std::map<float, glm::vec3> sorted;
-    for (unsigned int i = 0; i < vegetation.size(); i++) {
-        float distance = glm::length(cameraUtils.Position - vegetation[i]);
-        sorted[distance] = vegetation[i];
+    for (auto i : vegetation) {
+        float distance = glm::length(cameraUtils.Position - i);
+        sorted[distance] = i;
     }
 
     //清除屏幕和深度缓冲

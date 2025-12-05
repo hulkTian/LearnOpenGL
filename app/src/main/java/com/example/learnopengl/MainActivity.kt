@@ -350,7 +350,7 @@ class MainActivity : AppCompatActivity() {
         )
         addItem(
             i++, R.mipmap.depth_display,
-            "模板测试可视化",
+            "深度测试可视化",
             "将深度值作为颜色输出",
             BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_DEPTH_DISPLAY).build()
         )

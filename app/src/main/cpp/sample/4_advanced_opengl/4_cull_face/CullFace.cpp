@@ -207,7 +207,7 @@ void CullFace::Create() {
 }
 
 void CullFace::Draw() {
-//计算每一帧绘制的时间：先记录当前在开始时间
+    //计算每一帧绘制的时间：先记录当前在开始时间
     float currentFrame = TimeUtils::currentTimeSeconds();
 
     //清除屏幕和深度缓冲
@@ -218,7 +218,8 @@ void CullFace::Draw() {
 
     glm::mat4 model = glm::mat4(1.0f);
     glm::mat4 view = cameraUtils.GetViewMatrix();
-    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom), SCR_WIDTH / SCR_WIDTH, 0.1f,
+    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom),
+                                            SCR_WIDTH / SCR_WIDTH, 0.1f,
                                             100.0f);
     setMat4(m_ProgramObj, "view", view);
     setMat4(m_ProgramObj, "projection", projection);
@@ -235,7 +236,7 @@ void CullFace::Draw() {
     setMat4(m_ProgramObj, "model", model);
     glDrawArrays(GL_TRIANGLES, 0, 36);
     // floor
-    glDisable(GL_CULL_FACE);
+    glDisable(GL_CULL_FACE); // 绘制地面时关闭面剔除，避免地面消失
     glBindVertexArray(planeVAO);
     glBindTexture(GL_TEXTURE_2D, floorTexture);
     setMat4(m_ProgramObj, "model", glm::mat4(1.0f));

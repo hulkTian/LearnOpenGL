@@ -244,8 +244,8 @@ protected:
     /**
      * 屏幕宽高
      */
-    float SCR_WIDTH = 2208.0f;
-    float SCR_HEIGHT = 1756.0f;
+    float SCR_WIDTH = 2560.0f;
+    float SCR_HEIGHT = 1312.0f;
     CameraUtils cameraUtils = CameraUtils(glm::vec3(0.0f, 0.0f,  3.0f));
     float deltaTime = 0.0f; // 当前帧花费的时间
     // 进度条滑动值范围：0-100

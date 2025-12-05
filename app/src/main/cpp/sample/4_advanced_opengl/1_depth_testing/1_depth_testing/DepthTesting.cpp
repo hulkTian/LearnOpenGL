@@ -32,6 +32,7 @@
  */
 
 #include "DepthTesting.h"
+
 REGISTER_SAMPLE(SAMPLE_TYPE_DEPTH_TESTING, DepthTesting)
 static float cubeVertices[] = {
         // positions          // texture Coords
@@ -98,7 +99,8 @@ void DepthTesting::Create() {
     glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), &cubeVertices, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
+                          5 * sizeof(float), (void *) nullptr);
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
                           (void *) (3 * sizeof(float)));
@@ -110,7 +112,8 @@ void DepthTesting::Create() {
     glBindBuffer(GL_ARRAY_BUFFER, planeVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(planeVertices), &planeVertices, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
+                          5 * sizeof(float), (void *) nullptr);
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
                           (void *) (3 * sizeof(float)));
@@ -119,11 +122,11 @@ void DepthTesting::Create() {
     // load textures
     // 纹理过滤和环绕参数需要单独设置，地面纹理要使用GL_REPEAT
     cubeTexture = GLUtils::loadTgaTexture("textures/marble.png", GL_RGBA,
-                                          GL_RGBA, GL_UNSIGNED_BYTE,false,
+                                          GL_RGBA, GL_UNSIGNED_BYTE, false,
                                           GL_REPEAT, GL_REPEAT,
                                           GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
     floorTexture = GLUtils::loadTgaTexture("textures/metal.png", GL_RGBA,
-                                           GL_RGBA, GL_UNSIGNED_BYTE,false,
+                                           GL_RGBA, GL_UNSIGNED_BYTE, false,
                                            GL_REPEAT, GL_REPEAT,
                                            GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
 
@@ -160,9 +163,8 @@ void DepthTesting::Draw() {
 
     glm::mat4 model = glm::mat4(1.0f);
     glm::mat4 view = cameraUtils.GetViewMatrix();
-    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom), SCR_WIDTH / SCR_WIDTH,
-                                            0.1f,
-                                            100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom),
+                                            SCR_WIDTH / SCR_WIDTH, 0.1f, 100.0f);
     setMat4(m_ProgramObj, "view", view);
     setMat4(m_ProgramObj, "projection", projection);
 

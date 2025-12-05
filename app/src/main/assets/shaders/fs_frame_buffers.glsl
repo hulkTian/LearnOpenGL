@@ -8,7 +8,8 @@ in vec2 TexCoords;
 uniform sampler2D screenTexture;
 
 void normal() {
-    FragColor = texture(screenTexture, TexCoords);
+    vec3 col = texture(screenTexture, TexCoords).rgb;
+    FragColor = vec4(col, 1.0);
 }
 
 // 相反效果
@@ -69,14 +70,11 @@ void kernel() {
     );*/
 
     vec3 sampleTex[9];
+    vec3 col = vec3(0.0);
     for (int i = 0; i < 9; i++)
     {
         // 获取当前像素和周围像素的纹理颜色
         sampleTex[i] = vec3(texture(screenTexture, TexCoords.st + offsets[i]));
-    }
-    vec3 col = vec3(0.0);
-    for (int i = 0; i < 9; i++)
-    {
         // 这个核取了8个周围像素值，将它们乘以-1，而把当前的像素乘以9，实现锐化效果
         col += sampleTex[i] * kernel[i];
     }
@@ -87,6 +85,6 @@ void kernel() {
 void main()
 {
     //normal();
-    //kernel();
-    grayscale();
+    kernel();
+    //grayscale();
 }
