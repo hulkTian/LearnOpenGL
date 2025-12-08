@@ -55,7 +55,8 @@ GLuint GLUtils::setUpVAOAndVBO(const float *vertices, const GLsizeiptr vSize, co
         if (i > 0) {
             offset += sizeof(float) * pointer[i - 1];
         }
-        glVertexAttribPointer(i, pointer[i], GL_FLOAT, GL_FALSE, stride, reinterpret_cast<const void *>(offset));
+        glVertexAttribPointer(i, pointer[i], GL_FLOAT, GL_FALSE, stride,
+                              reinterpret_cast<const void *>(offset));
         glEnableVertexAttribArray(i);
     }
 
@@ -355,7 +356,7 @@ GLuint GLUtils::loadTgaTexture(const char *fileName, GLint internalformat, GLenu
 
         // 当配置环绕方式为GL_CLAMP_TO_BORDER时，需要设置边框颜色
         if (texture_warp_s == GL_CLAMP_TO_BORDER || texture_warp_t == GL_CLAMP_TO_BORDER) {
-            GLfloat borderColor[] = { 1.0f, 1.0f, 0.0f, 1.0f };
+            GLfloat borderColor[] = {1.0f, 1.0f, 0.0f, 1.0f};
             glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
         }
 
@@ -469,8 +470,8 @@ GLuint GLUtils::loadCubemap(const std::vector<std::string> faces, const bool fli
             }
 
             // 为每个面加载纹理数据
-            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB,
-                         GL_UNSIGNED_BYTE, imageData);
+            glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB,
+                         width, height, 0, GL_RGB,GL_UNSIGNED_BYTE, imageData);
             // 为当前绑定的纹理对象设置环绕、过滤方式
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);

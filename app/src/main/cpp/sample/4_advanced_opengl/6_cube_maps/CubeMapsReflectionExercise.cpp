@@ -68,7 +68,8 @@ void CubeMapsReflectionExercise::Create() {
     glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *) 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
+                          3 * sizeof(float), (void *) nullptr);
 
     // load textures
     cubemapTexture = GLUtils::loadCubemap(faces, false);
@@ -91,7 +92,7 @@ void CubeMapsReflectionExercise::Create() {
     setInt(m_ProgramObj, "skybox", 0);
     glUseProgram(m_ProgramObj_mode);
     // todo 模型已经使用了前面三个位置，所以天空盒子贴图纹理放到第4个位置
-    setInt(m_ProgramObj_mode, "skybox", 3);
+    setInt(m_ProgramObj_mode, "skybox", 4);
 
     glEnable(GL_DEPTH_TEST);
 }
@@ -107,7 +108,7 @@ void CubeMapsReflectionExercise::Draw() {
     // draw model
     glUseProgram(m_ProgramObj_mode);
     // 天空盒子纹理绑定给模型
-    glActiveTexture(GL_TEXTURE3);
+    glActiveTexture(GL_TEXTURE4);
     glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
     // 添加平行光
     setVec3(m_ProgramObj_mode, "dirLight.direction", 0.0f, 0.0f, 1.0f);
@@ -120,7 +121,8 @@ void CubeMapsReflectionExercise::Draw() {
     // 摄像机位置，和法向量一起计算出反射方向，作为获取天空纹理的方向向量
     setVec3(m_ProgramObj_mode, "cameraPos", cameraUtils.Position);
 
-    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom), SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom),
+                                            SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
     glm::mat4 view = cameraUtils.GetViewMatrix();
     setMat4(m_ProgramObj_mode, "projection", projection);
     setMat4(m_ProgramObj_mode, "view", view);
@@ -129,6 +131,7 @@ void CubeMapsReflectionExercise::Draw() {
     model = glm::translate(model, glm::vec3(0.0f, -0.7f, 0.0f));
     model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
     setMat4(m_ProgramObj_mode, "model", model);
+    setNormalMatrix(m_ProgramObj_mode, "normalMatrix", model);
     ourModel.Draw(m_ProgramObj_mode);
 
     // draw skybox as last

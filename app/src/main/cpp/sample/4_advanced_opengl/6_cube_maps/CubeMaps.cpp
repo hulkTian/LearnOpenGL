@@ -134,7 +134,7 @@ void CubeMaps::Create() {
     glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), &cubeVertices, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)nullptr);
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 
@@ -146,7 +146,7 @@ void CubeMaps::Create() {
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *) 0);
 
-    // load textures
+    // 加载立方体贴图纹理
     cubemapTexture = GLUtils::loadCubemap(faces, false);
     cubeTexture = GLUtils::loadTgaTexture("textures/container.jpg", GL_RGBA,
                                           GL_RGBA, GL_UNSIGNED_BYTE,false,
@@ -180,11 +180,12 @@ void CubeMaps::Draw() {
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // draw scene as normal
+    // 绘制立方体箱子
     glUseProgram(m_ProgramObj_cube);
     glm::mat4 model = glm::mat4(1.0f);
     glm::mat4 view = cameraUtils.GetViewMatrix();
-    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom), SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom),
+                                            SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
     setMat4(m_ProgramObj_cube, "model", model);
     setMat4(m_ProgramObj_cube, "view", view);
     setMat4(m_ProgramObj_cube, "projection", projection);
@@ -195,19 +196,22 @@ void CubeMaps::Draw() {
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
 
-    // draw skybox as last
+    // 最后绘制天空盒子
+    // 深度测试函数改为 GL_LEQUAL，这样当天空盒子的深度值小于等于cube的深度值时也会通过测试，所以会丢弃天空盒子不可见的部分
     glDepthFunc(GL_LEQUAL);
     glUseProgram(m_ProgramObj);
-    view = glm::mat4(glm::mat3(cameraUtils.GetViewMatrix())); // remove translation from the view matrix
+    // remove translation from the view matrix
+    view = glm::mat4(glm::mat3(cameraUtils.GetViewMatrix()));
     setMat4(m_ProgramObj, "view", view);
     setMat4(m_ProgramObj, "projection", projection);
     // skybox cube
     glBindVertexArray(skyboxVAO);
-    glActiveTexture(GL_TEXTURE0);
+    //glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
     glDrawArrays(GL_TRIANGLES, 0, 36);
     glBindVertexArray(0);
-    glDepthFunc(GL_LESS); // set depth function back to default
+    // set depth function back to default
+    glDepthFunc(GL_LESS);
 
     // 计算每一帧绘制的时间，再计算当前帧结束时间
     deltaTime = TimeUtils::currentTimeSeconds() - currentFrame;

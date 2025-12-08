@@ -9,9 +9,11 @@ uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 
+uniform mat3 normalMatrix;
+
 void main()
 {
-    Normal = mat3(transpose(inverse(model))) * aNormal;
+    Normal = normalMatrix * aNormal;
     Position = vec3(model * vec4(aPos, 1.0));
     gl_Position = projection * view * model * vec4(aPos, 1.0);
 }

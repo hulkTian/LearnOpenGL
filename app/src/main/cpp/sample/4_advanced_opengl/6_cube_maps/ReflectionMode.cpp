@@ -93,7 +93,7 @@ void ReflectionMode::Create() {
     glUseProgram(m_ProgramObj);
     setInt(m_ProgramObj, "skybox", 0);
     glUseProgram(m_ProgramObj_mode);
-    setInt(m_ProgramObj_mode, "skybox", 0);
+    setInt(m_ProgramObj_mode, "skybox", 3);
 
     glEnable(GL_DEPTH_TEST);
 }
@@ -109,13 +109,14 @@ void ReflectionMode::Draw() {
     // draw model
     glUseProgram(m_ProgramObj_mode);
     // 天空盒子纹理绑定给模型
-    glActiveTexture(GL_TEXTURE0);
+    glActiveTexture(GL_TEXTURE3);
     glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
 
     // 摄像机位置，和法向量一起计算出反射方向，作为获取天空纹理的方向向量
     setVec3(m_ProgramObj_mode, "cameraPos", cameraUtils.Position);
 
-    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom), SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom),
+                                            SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
     glm::mat4 view = cameraUtils.GetViewMatrix();
     setMat4(m_ProgramObj_mode, "projection", projection);
     setMat4(m_ProgramObj_mode, "view", view);
