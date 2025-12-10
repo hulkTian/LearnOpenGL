@@ -4,7 +4,8 @@
 
 /**
  * Uniform缓冲对象(Uniform Buffer Object)：
- * OpenGL提供的缓冲工具，可以使用glGenBuffers来创建它，将它绑定到GL_UNIFORM_BUFFER缓冲目标，并将所有相关的uniform数据存入缓冲。
+ * OpenGL提供的缓冲工具，可以使用glGenBuffers来创建它，将它绑定到 GL_UNIFORM_BUFFER 缓冲目标，并将所有相关的uniform数据存入缓冲。
+ * 这样可以减少多次设置uniform变量的开销。
  *
  * Uniform块布局：
  * layout (std140) uniform ExampleBlock
@@ -93,7 +94,8 @@ void AdvancedUbo::Create() {
     glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), &cubeVertices, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *) 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
+                          3 * sizeof(float), (void *) nullptr);
 
     // build and compile shaders
     // -------------------------
@@ -115,29 +117,33 @@ void AdvancedUbo::Create() {
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
 
-    // configure a uniform buffer object
+    // 配置Uniform缓冲对象
     // ---------------------------------
-    // first. We get the relevant block indices
+    // 首先，获取Uniform块的索引
     unsigned int uniformBlockIndexRed = glGetUniformBlockIndex(m_program_red, "Matrices");
     unsigned int uniformBlockIndexGreen = glGetUniformBlockIndex(m_program_green, "Matrices");
     unsigned int uniformBlockIndexBlue = glGetUniformBlockIndex(m_program_blue, "Matrices");
     unsigned int uniformBlockIndexYellow = glGetUniformBlockIndex(m_program_yellow, "Matrices");
-    // then we link each shader's uniform block to this uniform binding point
+    // 接着将这些块链接到绑定点1
     glUniformBlockBinding(m_program_red, uniformBlockIndexRed, 1);
     glUniformBlockBinding(m_program_green, uniformBlockIndexGreen, 1);
     glUniformBlockBinding(m_program_blue, uniformBlockIndexBlue, 1);
     glUniformBlockBinding(m_program_yellow, uniformBlockIndexYellow, 1);
     // Now actually create the buffer
     glGenBuffers(1, &uboMatrices);
+    // 将该缓冲绑定到 GL_UNIFORM_BUFFER 目标
     glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
-    glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), NULL, GL_STATIC_DRAW);
+    // 分配足够的内存来存储两个4x4矩阵（投影和视图矩阵）
+    glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(glm::mat4), nullptr, GL_STATIC_DRAW);
+    // 解绑缓冲
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
-    // define the range of the buffer that links to a uniform binding point
+    // 最后，将该缓冲对象绑定到绑定点1上，可以使用 glBindBufferBase 或 glBindBufferRange
+    // glBindBufferBase 会绑定整个缓冲对象，而 glBindBufferRange 允许我们指定一个子范围
     // glBindBufferBase(GL_UNIFORM_BUFFER, 1, uboMatrices);
     glBindBufferRange(GL_UNIFORM_BUFFER, 1, uboMatrices, 0, 2 * sizeof(glm::mat4));
 
-    // store the projection matrix (we only do this once now) (note: we're not using zoom anymore by changing the FoV)
-    glm::mat4 projection = glm::perspective(45.0f, 2208.0f / 1682.0f, 0.1f, 100.0f);
+    // 设置投影矩阵（在循环外只需设置一次），因为投影矩阵在整个应用程序生命周期中通常保持不变
+    glm::mat4 projection = glm::perspective(45.0f, SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
     glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
     glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(glm::mat4), glm::value_ptr(projection));
     glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -151,7 +157,7 @@ void AdvancedUbo::Draw() {
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    // set the view and projection matrix in the uniform block - we only have to do this once per loop iteration.
+    // 更新视图矩阵部分的UBO，因为视图矩阵每帧都会变化
     glm::mat4 view = cameraUtils.GetViewMatrix();
     glBindBuffer(GL_UNIFORM_BUFFER, uboMatrices);
     glBufferSubData(GL_UNIFORM_BUFFER, sizeof(glm::mat4), sizeof(glm::mat4), glm::value_ptr(view));

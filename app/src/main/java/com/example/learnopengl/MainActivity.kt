@@ -416,6 +416,30 @@ class MainActivity : AppCompatActivity() {
             BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_CUBE_MAPS_EXERCISE).build()
         )
         addItem(
+            i++, R.mipmap.advanced_glsl_point_size,
+            "GLSL内建变量 gl_PointSize",
+            "设置点的大小为裁剪空间位置的Z值，点离摄像机越远点越大",
+            BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_ADVANCED_GLSL_POINT_SIZE).build()
+        )
+        addItem(
+            i++, R.mipmap.advanced_glsl_frag_coord,
+            "GLSL内建变量 gl_FragCoord",
+            "通过片段的窗口坐标实现屏幕渐变色效果",
+            BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_ADVANCED_GLSL_FRAGCOORD).build()
+        )
+        addItem(
+            i++, R.mipmap.advanced_glsl_front_facing,
+            "GLSL内建变量 gl_FrontFacing",
+            "根据片元是正面还是背面渲染不同的颜色",
+            BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_ADVANCED_GLSL_FRONT_FACING).build()
+        )
+        addItem(
+            i++, R.mipmap.advanced_glsl_front_facing,
+            "GLSL内建变量 gl_FragDepth",
+            "修改片元的深度值实现简单的深度效果",
+            BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_ADVANCED_GLSL_FRAG_DEPTH).build()
+        )
+        addItem(
             i++, R.mipmap.ubo,
             "Uniform Buffer Object",
             "在多个着色器中使用Uniform 缓冲对象存储的顶点数据",
