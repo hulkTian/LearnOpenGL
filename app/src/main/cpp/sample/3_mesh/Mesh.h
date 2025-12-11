@@ -53,6 +53,7 @@ public:
     vector<Texture> textures;
     Mesh(vector<Vertex> vertices, vector<unsigned int> indices, vector<Texture> textures);
     void Draw(GLuint programId);
+    void Delete();
 
 private:
     unsigned int VAO,VBO,EBO;

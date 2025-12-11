@@ -222,18 +222,21 @@ GLUtils::createProgram(const char *vertexPath, const char *fragmentPath, const c
         }
 
         //绑定顶点着色器对象到着色器程序
+        LOGI("attach vertex shader to program")
         glAttachShader(programId, vertexShader);
         checkGlError("glAttachShader");
 
         //绑定几何着色器对象到着色器程序
         if (geometryShader != 0) {
+            LOGI("attach geometry shader to program")
             glAttachShader(programId, geometryShader);
             checkGlError("glAttachShader");
         } else {
-            LOGV("geometry shader object is null")
+            LOGE("geometry shader object is null")
         }
 
         //绑定片元着色器对象到着色器程序
+        LOGI("attach fragment shader to program")
         glAttachShader(programId, fragmentShader);
         checkGlError("glAttachShader");
 

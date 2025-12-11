@@ -36,6 +36,11 @@ public:
 
     void Draw(GLuint programId);
 
+    void Delete() {
+        for (auto & mesh : meshes)
+            mesh.Delete();
+    }
+
 private:
     // 优化：将加载过的纹理储存在另一个vector中，在模型类的顶部声明为一个私有变量：
     vector<Texture> textures_loaded;

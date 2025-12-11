@@ -434,7 +434,7 @@ class MainActivity : AppCompatActivity() {
             BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_ADVANCED_GLSL_FRONT_FACING).build()
         )
         addItem(
-            i++, R.mipmap.advanced_glsl_front_facing,
+            i++, R.mipmap.advanced_glsl_frag_depth,
             "GLSL内建变量 gl_FragDepth",
             "修改片元的深度值实现简单的深度效果",
             BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_ADVANCED_GLSL_FRAG_DEPTH).build()
@@ -447,11 +447,31 @@ class MainActivity : AppCompatActivity() {
                 .setShowClickLayout(View.GONE).build()
         )
         addItem(
-            i++, R.mipmap.ubo,
-            "几何着色器",
-            "几何着色器的基本使用方式",
+            i++, R.mipmap.geometry_shader_point,
+            "几何着色器-点到线条",
+            "使用几何着色器将点扩展为线条",
             BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_GEOMETRY_SHADER)
                 .setShowClickLayout(View.GONE).build()
+        )
+        addItem(
+            i++, R.mipmap.geometry_shader_triangle_strip,
+            "几何着色器-点到三角形带",
+            "使用几何着色器将点扩展为三角形带",
+            BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_GEOMETRY_SHADER_TRIANGLE_STRIP)
+                .setShowClickLayout(View.GONE).build()
+        )
+        addItem(
+            i++, R.mipmap.geometry_shader_explode,
+            "几何着色器-爆破效果",
+            "使用几何着色器实现爆破效果",
+            BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_GEOMETRY_SHADER_EXPLODE)
+                .setShowSeekBar1(View.VISIBLE).setTitle1("偏移距离").build()
+        )
+        addItem(
+            i++, R.mipmap.geometry_shader_normal,
+            "几何着色器-法向量可视化",
+            "使用几何着色器实现法向量可视化效果",
+            BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_GEOMETRY_SHADER_NORMAL).build()
         )
         addItem(
             i++, R.mipmap.instancing,

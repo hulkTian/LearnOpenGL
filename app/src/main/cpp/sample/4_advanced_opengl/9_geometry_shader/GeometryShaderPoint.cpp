@@ -2,6 +2,17 @@
 // Created by ts on 2024/10/14.
 //
 
+/**
+ * 几何着色器(Geometry Shader) 示例-点扩展为实线
+ * 在这个示例中，我们将使用几何着色器将输入的点扩展为实线。
+ * 具体来说，几何着色器会接收顶点着色器输出的点，并为每个点生成一条水平线段。
+ *
+ * 几何着色器是OpenGL渲染管线中的一个可选阶段，位于顶点着色器和片段着色器之间。
+ * 它允许开发者在图形渲染过程中动态地生成、修改或删除图元（如点、线段和三角形）。
+ *
+ * gl_in内建(Built-in)变量，它是一个数组，包含了传递给几何着色器的所有顶点信息。
+ */
+
 #include "GeometryShaderPoint.h"
 REGISTER_SAMPLE(SAMPLE_TYPE_GEOMETRY_SHADER, GeometryShaderPoint)
 static float points[] = {
@@ -23,7 +34,8 @@ void GeometryShaderPoint::Create() {
     glBufferData(GL_ARRAY_BUFFER, sizeof(points), points, GL_STATIC_DRAW);
 
     // position attribute
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) 0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE,
+                          2 * sizeof(float), (void *) nullptr);
     glEnableVertexAttribArray(0);
 
     //创建着色器程序,并编译着色器代码

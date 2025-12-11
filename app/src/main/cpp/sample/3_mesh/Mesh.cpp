@@ -102,3 +102,9 @@ void Mesh::Draw(GLuint programId) {
     // 恢复默认激活的纹理
     glActiveTexture(GL_TEXTURE0);
 }
+
+void Mesh::Delete() {
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &EBO);
+}
