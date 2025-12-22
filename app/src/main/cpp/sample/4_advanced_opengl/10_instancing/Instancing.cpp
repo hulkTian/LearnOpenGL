@@ -56,13 +56,16 @@ void Instancing::Create() {
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), quadVertices, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE,
+                          5 * sizeof(float), (void*)nullptr);
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(2 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE,
+                          5 * sizeof(float), (void*)(2 * sizeof(float)));
     // also set instance data
     glEnableVertexAttribArray(2);
-    glBindBuffer(GL_ARRAY_BUFFER, instanceVBO); // this attribute comes from a different vertex buffer
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+    // this attribute comes from a different vertex buffer
+    glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)nullptr);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     /**
      * 函数告诉了OpenGL该什么时候更新顶点属性的内容至新一组数据。
@@ -70,7 +73,7 @@ void Instancing::Create() {
      * 默认情况下，属性除数是0，告诉OpenGL我们需要在顶点着色器的每次迭代时更新顶点属性。
      * 将它设置为1时，我们告诉OpenGL我们希望在渲染一个新实例的时候更新顶点属性。
      */
-    glVertexAttribDivisor(2, 1); // tell OpenGL this is an instanced vertex attribute.
+    glVertexAttribDivisor(2, 1);
 
     //创建着色器程序,并编译着色器代码
     m_ProgramObj = GLUtils::createProgram("shaders/vs_instancing.glsl",

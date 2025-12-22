@@ -66,7 +66,8 @@ void Asteroids::Draw() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     // configure transformation matrices
-    glm::mat4 projection = glm::perspective(glm::radians(45.0f), SCR_WIDTH / SCR_HEIGHT, 0.1f, 1000.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f),
+                                            SCR_WIDTH / SCR_HEIGHT, 0.1f, 1000.0f);
     glm::mat4 view = cameraUtils.GetViewMatrix();;
     glUseProgram(m_ProgramObj);
     setMat4(m_ProgramObj, "projection", projection);
