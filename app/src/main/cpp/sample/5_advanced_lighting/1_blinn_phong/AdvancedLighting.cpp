@@ -12,6 +12,7 @@
 #include "AdvancedLighting.h"
 
 REGISTER_SAMPLE(SAMPLE_TYPE_ADVANCED_LIGHTING, AdvancedLighting)
+
 void AdvancedLighting::Create() {
     GLUtils::printGLInfo();
 
@@ -23,7 +24,8 @@ void AdvancedLighting::Create() {
 
     // build and compile shaders
     // -------------------------
-    m_ProgramObj = GLUtils::createProgram("shaders/vs_advanced_lighting.glsl", "shaders/fs_advanced_lighting.glsl");
+    m_ProgramObj = GLUtils::createProgram("shaders/vs_advanced_lighting.glsl",
+                                          "shaders/fs_advanced_lighting.glsl");
 
     if (!m_ProgramObj) {
         LOGD("Could not create program")
@@ -34,13 +36,13 @@ void AdvancedLighting::Create() {
     // ------------------------------------------------------------------
     float planeVertices[] = {
             // positions            // normals         // texcoords
-            10.0f, -0.5f,  10.0f,  0.0f, 1.0f, 0.0f,  10.0f,  0.0f,
-            -10.0f, -0.5f,  10.0f,  0.0f, 1.0f, 0.0f,   0.0f,  0.0f,
-            -10.0f, -0.5f, -10.0f,  0.0f, 1.0f, 0.0f,   0.0f, 10.0f,
+            10.0f, -0.5f, 10.0f, 0.0f, 1.0f, 0.0f, 10.0f, 0.0f,
+            -10.0f, -0.5f, 10.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+            -10.0f, -0.5f, -10.0f, 0.0f, 1.0f, 0.0f, 0.0f, 10.0f,
 
-            10.0f, -0.5f,  10.0f,  0.0f, 1.0f, 0.0f,  10.0f,  0.0f,
-            -10.0f, -0.5f, -10.0f,  0.0f, 1.0f, 0.0f,   0.0f, 10.0f,
-            10.0f, -0.5f, -10.0f,  0.0f, 1.0f, 0.0f,  10.0f, 10.0f
+            10.0f, -0.5f, 10.0f, 0.0f, 1.0f, 0.0f, 10.0f, 0.0f,
+            -10.0f, -0.5f, -10.0f, 0.0f, 1.0f, 0.0f, 0.0f, 10.0f,
+            10.0f, -0.5f, -10.0f, 0.0f, 1.0f, 0.0f, 10.0f, 10.0f
     };
     // plane VAO
     glGenVertexArrays(1, &planeVAO);
@@ -49,19 +51,23 @@ void AdvancedLighting::Create() {
     glBindBuffer(GL_ARRAY_BUFFER, planeVBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(planeVertices), planeVertices, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
+                          8 * sizeof(float), (void *) nullptr);
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
+                          (void *) (3 * sizeof(float)));
     glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float),
+                          (void *) (6 * sizeof(float)));
     glBindVertexArray(0);
 
     // load textures
     // -------------
     floorTexture = GLUtils::loadTgaTexture("textures/wood.png", GL_RGBA,
-                                           GL_RGBA, GL_UNSIGNED_BYTE,false,
+                                           GL_RGBA, GL_UNSIGNED_BYTE, false,
                                            GL_REPEAT, GL_REPEAT,
-                                           GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
+                                           GL_LINEAR_MIPMAP_LINEAR,
+                                           GL_LINEAR);
 
     // shader configuration
     // --------------------
@@ -81,14 +87,15 @@ void AdvancedLighting::Draw() {
 
     // draw objects
     glUseProgram(m_ProgramObj);
-    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom), SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom),
+                                            SCR_WIDTH / SCR_HEIGHT,0.1f, 100.0f);
     glm::mat4 view = cameraUtils.GetViewMatrix();
     setMat4(m_ProgramObj, "projection", projection);
     setMat4(m_ProgramObj, "view", view);
     // set light uniforms
     setVec3(m_ProgramObj, "viewPos", cameraUtils.Position);
     setVec3(m_ProgramObj, "lightPos", lightPos);
-    setInt(m_ProgramObj, "blinn", true);
+    setBool(m_ProgramObj, "blinn", cameraUtils.isEnable);
     // floor
     glBindVertexArray(planeVAO);
     glActiveTexture(GL_TEXTURE0);

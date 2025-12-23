@@ -495,7 +495,8 @@ class MainActivity : AppCompatActivity() {
             i++, R.mipmap.advanced_lighting,
             "高级光照-Blinn-Phong",
             "使用Blinn-Phong 优化镜面反射",
-            BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_ADVANCED_LIGHTING).build()
+            BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_ADVANCED_LIGHTING)
+                .setShowBooleanButton(View.VISIBLE).build()
         )
         addItem(
             i++, R.mipmap.advanced_lighting_gamma_correction,
