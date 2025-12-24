@@ -24,7 +24,6 @@ vec3 BlinnPhong(vec3 normal, vec3 fragPos, vec3 lightPos, vec3 lightColor)
     vec3 diffuse = diff * lightColor;
     // specular
     vec3 viewDir = normalize(viewPos - fragPos);
-    vec3 reflectDir = reflect(-lightDir, normal);
     float spec = 0.0;
     vec3 halfwayDir = normalize(lightDir + viewDir);
     spec = pow(max(dot(normal, halfwayDir), 0.0), 64.0);
@@ -48,7 +47,10 @@ void main()
     for (int i = 0; i < 4; ++i)
     lighting += BlinnPhong(normalize(Normal), FragPos, lightPositions[i], lightColors[i]);
     color *= lighting;
+    // 进行 Gamma 校正
     if (gamma)
-    color = pow(color, vec3(1.0/2.2));
+    {
+        color = pow(color, vec3(1.0 / 2.2));
+    }
     FragColor = vec4(color, 1.0);
 }

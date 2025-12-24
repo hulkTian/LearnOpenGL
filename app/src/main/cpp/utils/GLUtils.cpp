@@ -474,7 +474,7 @@ GLuint GLUtils::loadCubemap(const std::vector<std::string> faces, const bool fli
 
             // 为每个面加载纹理数据
             glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB,
-                         width, height, 0, GL_RGB,GL_UNSIGNED_BYTE, imageData);
+                         width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, imageData);
             // 为当前绑定的纹理对象设置环绕、过滤方式
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -486,6 +486,23 @@ GLuint GLUtils::loadCubemap(const std::vector<std::string> faces, const bool fli
         }
     FUN_END_TIME("GLUtils::loadCubemap")
     return textureId;
+}
+
+bool GLUtils::isSupportedSRGBTexture() {
+    GLint supported = 0;
+    glGetInternalformativ(GL_TEXTURE_2D, GL_SRGB8_ALPHA8,
+                          GL_TEXTURE_INTERNAL_FORMAT, 1,
+                          &supported);
+    if (supported != GL_TRUE) {
+        LOGE("Device does not support GL_SRGB8_ALPHA8 internal format for textures.")
+    }
+    glGetInternalformativ(GL_TEXTURE_2D, GL_SRGB,
+                          GL_TEXTURE_INTERNAL_FORMAT, 1,
+                          &supported);
+    if (supported != GL_TRUE) {
+        LOGE("Device does not support GL_SRGB internal format for textures.")
+    }
+    return supported == GL_TRUE;
 }
 
 /**
@@ -525,10 +542,25 @@ GLuint GLUtils::loadTexture(const char *path, bool gammaCorrection) {
         if (data) {
             GLenum internalFormat;
             GLenum dataFormat;
+            if (gammaCorrection) {
+                GLint supported = 0;
+                glGetInternalformativ(GL_TEXTURE_2D, GL_SRGB8_ALPHA8,
+                                      GL_TEXTURE_INTERNAL_FORMAT, 1,
+                                      &supported);
+                if (supported != GL_TRUE) {
+                    LOGE("Device does not support GL_SRGB8_ALPHA8 internal format for textures.")
+                }
+                glGetInternalformativ(GL_TEXTURE_2D, GL_SRGB,
+                                      GL_TEXTURE_INTERNAL_FORMAT, 1,
+                                      &supported);
+                if (supported != GL_TRUE) {
+                    LOGE("Device does not support GL_SRGB internal format for textures.")
+                }
+            }
             if (nrComponents == 1) {
                 internalFormat = dataFormat = GL_RED;
             } else if (nrComponents == 3) {
-                internalFormat = gammaCorrection ? GL_SRGB8 : GL_RGB;
+                internalFormat = gammaCorrection ? GL_SRGB : GL_RGB;
                 dataFormat = GL_RGB;
             } else if (nrComponents == 4) {
                 internalFormat = gammaCorrection ? GL_SRGB8_ALPHA8 : GL_RGBA;

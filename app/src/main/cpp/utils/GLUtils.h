@@ -47,6 +47,8 @@ public:
      */
     static GLuint loadTexture(char const * path, bool gammaCorrection);
 
+    static bool isSupportedSRGBTexture();
+
     /**
      * Loads a texture from assets/texture/<name>
      */

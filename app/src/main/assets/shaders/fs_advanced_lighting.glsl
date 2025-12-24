@@ -24,12 +24,11 @@ void main()
     vec3 diffuse = diff * color;
     // specular
     vec3 viewDir = normalize(viewPos - FragPos);
-    vec3 reflectDir = reflect(-lightDir, normal);
     float spec = 0.0;
     if(blinn)
     {
         vec3 halfwayDir = normalize(lightDir + viewDir);
-        spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
+        spec = pow(max(dot(normal, halfwayDir), 0.0), 8.0);
     }
     else
     {
