@@ -7,6 +7,7 @@
  * 2. 渲染正常场景和阴影：
  * 1）顶点着色器中使用光空间变换矩阵转换顶点坐标到光源空间中
  * 2）片段着色器中采样深度贴图中保存的深度值判断场景中的片段是否在阴影中，用于计算正常片段颜色和阴影中片段颜色
+ *
  */
 
 #include "shadow_mapping_base.h"
@@ -19,43 +20,22 @@ void shadow_mapping_base::Create() {
     // configure global opengl state
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
+    //glFrontFace(GL_CW);
 
     // build and compile shaders
     // -------------------------
-    m_ProgramObj = GLUtils::createProgram("shaders/vs_shadow_mapping_base.glsl", "shaders/fs_shadow_mapping_base.glsl");
-    simpleDepthShader = GLUtils::createProgram("shaders/vs_shadow_mapping_depth.glsl", "shaders/fs_shadow_mapping_depth.glsl");
-    debugDepthQuad = GLUtils::createProgram("shaders/vs_debug_quad.glsl", "shaders/fs_debug_quad.glsl");
+    m_ProgramObj = GLUtils::createProgram("shaders/vs_shadow_mapping_base.glsl",
+                                          "shaders/fs_shadow_mapping_base.glsl");
+    simpleDepthShader = GLUtils::createProgram("shaders/vs_shadow_mapping_depth.glsl",
+                                               "shaders/fs_shadow_mapping_depth.glsl");
+    debugDepthQuad = GLUtils::createProgram("shaders/vs_debug_quad.glsl",
+                                            "shaders/fs_debug_quad.glsl");
 
     if (!m_ProgramObj || !debugDepthQuad) {
         LOGD("Could not create program")
         return;
     }
-
-    // set up vertex data (and buffer(s)) and configure vertex attributes
-    // ------------------------------------------------------------------
-    float planeVertices[] = {
-            // positions            // normals         // texcoords
-            25.0f, -0.5f,  25.0f,  0.0f, 1.0f, 0.0f,  25.0f,  0.0f,
-            -25.0f, -0.5f,  25.0f,  0.0f, 1.0f, 0.0f,   0.0f,  0.0f,
-            -25.0f, -0.5f, -25.0f,  0.0f, 1.0f, 0.0f,   0.0f, 25.0f,
-
-            25.0f, -0.5f,  25.0f,  0.0f, 1.0f, 0.0f,  25.0f,  0.0f,
-            -25.0f, -0.5f, -25.0f,  0.0f, 1.0f, 0.0f,   0.0f, 25.0f,
-            25.0f, -0.5f, -25.0f,  0.0f, 1.0f, 0.0f,  25.0f, 25.0f
-    };
-    // plane VAO
-    glGenVertexArrays(1, &planeVAO);
-    glGenBuffers(1, &planeVBO);
-    glBindVertexArray(planeVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, planeVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(planeVertices), planeVertices, GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(2);
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-    glBindVertexArray(0);
 
     // load textures
     // -------------
@@ -65,13 +45,16 @@ void shadow_mapping_base::Create() {
     // create depth texture
     glGenTextures(1, &depthMap);
     glBindTexture(GL_TEXTURE_2D, depthMap);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 1024, 1024, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 1024, 1024,
+                 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    // todo [采样过多]优化方案第一步：深度贴图设置一个边框，超出边框的深度值都是1.0
+    // todo 解决过采样问题
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+//    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-    GLfloat borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
+    float borderColor[] = {1.0, 1.0, 1.0, 1.0};
     glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
     // attach depth texture as FBO's depth buffer
     glBindFramebuffer(GL_FRAMEBUFFER, depthMapFBO);
@@ -96,6 +79,11 @@ void shadow_mapping_base::Create() {
 void shadow_mapping_base::Draw() {
     //计算每一帧绘制的时间：先记录当前在开始时间
     float currentFrame = TimeUtils::currentTimeSeconds();
+
+    // 先剔除正面，生成阴影贴图时减少阴影悬浮问题
+    if (option_type == 3) {
+        glCullFace(GL_FRONT);
+    }
 
     // render
     // ------
@@ -122,6 +110,11 @@ void shadow_mapping_base::Draw() {
     renderScene(simpleDepthShader);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
+    // 恢复剔除背面
+    if (option_type == 3) {
+        glCullFace(GL_BACK);
+    }
+
     // reset viewport
     glViewport(0, 0, SCR_WIDTH, SCR_HEIGHT);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -129,7 +122,9 @@ void shadow_mapping_base::Draw() {
     // 2. render scene as normal using the generated depth/shadow map
     // --------------------------------------------------------------
     glUseProgram(m_ProgramObj);
-    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(cameraUtils.Zoom),
+                                            (float) SCR_WIDTH / (float) SCR_HEIGHT,
+                                            0.1f, 100.0f);
     glm::mat4 view = cameraUtils.GetViewMatrix();
     setMat4(m_ProgramObj, "projection", projection);
     setMat4(m_ProgramObj, "view", view);
@@ -137,6 +132,9 @@ void shadow_mapping_base::Draw() {
     setVec3(m_ProgramObj, "viewPos", cameraUtils.Position);
     setVec3(m_ProgramObj, "lightPos", lightPos);
     setMat4(m_ProgramObj, "lightSpaceMatrix", lightSpaceMatrix);
+
+    setInt(m_ProgramObj, "type", option_type);
+
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, woodTexture);
     glActiveTexture(GL_TEXTURE1);
@@ -150,10 +148,44 @@ void shadow_mapping_base::Draw() {
     setFloat(debugDepthQuad, "far_plane", far_plane);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, depthMap);
-    //renderQuad(); 不需要调试了
+    //renderQuad(); //不需要调试了
 
     // 计算每一帧绘制的时间，再计算当前帧结束时间
     deltaTime = TimeUtils::currentTimeSeconds() - currentFrame;
+}
+
+void shadow_mapping_base::renderPlane() {
+    if (planeVAO == 0) {
+        // 开启面剔除后，顶点顺序是逆时针为正面
+        float planeVertices[] = {
+                // positions                        // normals         // texcoords
+                25.0f, -0.5f, 25.0f, 0.0f, 1.0f, 0.0f, 25.0f, 0.0f,
+                -25.0f, -0.5f, -25.0f, 0.0f, 1.0f, 0.0f, 0.0f, 25.0f,
+                -25.0f, -0.5f, 25.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+
+                25.0f, -0.5f, 25.0f, 0.0f, 1.0f, 0.0f, 25.0f, 0.0f,
+                25.0f, -0.5f, -25.0f, 0.0f, 1.0f, 0.0f, 25.0f, 25.0f,
+                -25.0f, -0.5f, -25.0f, 0.0f, 1.0f, 0.0f, 0.0f, 25.0f
+        };
+        // plane VAO
+        glGenVertexArrays(1, &planeVAO);
+        glGenBuffers(1, &planeVBO);
+        glBindVertexArray(planeVAO);
+        glBindBuffer(GL_ARRAY_BUFFER, planeVBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(planeVertices), planeVertices, GL_STATIC_DRAW);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
+                              8 * sizeof(float), (void *) nullptr);
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE,
+                              8 * sizeof(float), (void *) (3 * sizeof(float)));
+        glEnableVertexAttribArray(2);
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE,
+                              8 * sizeof(float), (void *) (6 * sizeof(float)));
+        glBindVertexArray(0);
+    }
+    glBindVertexArray(planeVAO);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
 // renders the 3D scene
@@ -161,24 +193,28 @@ void shadow_mapping_base::renderScene(GLuint programObj) {
     // floor
     glm::mat4 model = glm::mat4(1.0f);
     setMat4(programObj, "model", model);
-    glBindVertexArray(planeVAO);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    setNormalMatrix(programObj, "normalMatrix", model);
+    renderPlane();
     // cubes
     model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3(0.0f, 1.5f, 0.0));
     model = glm::scale(model, glm::vec3(0.5f));
     setMat4(programObj, "model", model);
+    setNormalMatrix(programObj, "normalMatrix", model);
     renderCube();
     model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3(2.0f, 0.0f, 1.0));
     model = glm::scale(model, glm::vec3(0.5f));
     setMat4(programObj, "model", model);
+    setNormalMatrix(programObj, "normalMatrix", model);
     renderCube();
     model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3(-1.0f, 0.0f, 2.0));
-    model = glm::rotate(model, glm::radians(60.0f), glm::normalize(glm::vec3(1.0, 0.0, 1.0)));
+    model = glm::rotate(model, glm::radians(60.0f),
+                        glm::normalize(glm::vec3(1.0, 0.0, 1.0)));
     model = glm::scale(model, glm::vec3(0.25));
     setMat4(programObj, "model", model);
+    setNormalMatrix(programObj, "normalMatrix", model);
     renderCube();
 }
 
@@ -237,11 +273,14 @@ void shadow_mapping_base::renderCube() {
         // link vertex attributes
         glBindVertexArray(cubeVAO);
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *) 0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
+                              8 * sizeof(float), (void *) nullptr);
         glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *) (3 * sizeof(float)));
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE,
+                              8 * sizeof(float), (void *) (3 * sizeof(float)));
         glEnableVertexAttribArray(2);
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void *) (6 * sizeof(float)));
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE,
+                              8 * sizeof(float), (void *) (6 * sizeof(float)));
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
     }
@@ -255,7 +294,7 @@ void shadow_mapping_base::renderCube() {
 void shadow_mapping_base::renderQuad() {
     if (quadVAO == 0) {
         float quadVertices[] = {
-                // positions        // texture Coords
+                // positions                    // texture Coords
                 -1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
                 -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
                 1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
@@ -268,10 +307,11 @@ void shadow_mapping_base::renderQuad() {
         glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
         glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
         glEnableVertexAttribArray(0);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) 0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
+                              5 * sizeof(float), (void *) nullptr);
         glEnableVertexAttribArray(1);
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
-                              (void *) (3 * sizeof(float)));
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE,
+                              5 * sizeof(float), (void *) (3 * sizeof(float)));
     }
     glBindVertexArray(quadVAO);
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);

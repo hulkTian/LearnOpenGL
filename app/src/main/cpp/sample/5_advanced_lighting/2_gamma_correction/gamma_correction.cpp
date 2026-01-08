@@ -124,11 +124,7 @@ void gamma_correction::Draw() {
     glBindVertexArray(planeVAO);
     glActiveTexture(GL_TEXTURE0);
     // 根据是否支持sRGB纹理选择绑定的纹理
-    if (GLUtils::isSupportedSRGBTexture()) {
-        glBindTexture(GL_TEXTURE_2D, cameraUtils.isEnable ? floorTextureGammaCorrected : floorTexture);
-    } else {
-        glBindTexture(GL_TEXTURE_2D, floorTexture);
-    }
+    glBindTexture(GL_TEXTURE_2D, cameraUtils.isEnable ? floorTextureGammaCorrected : floorTexture);
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
     // 计算每一帧绘制的时间，再计算当前帧结束时间

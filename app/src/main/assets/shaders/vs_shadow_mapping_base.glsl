@@ -12,11 +12,15 @@ uniform mat4 projection;
 uniform mat4 view;
 uniform mat4 model;
 uniform mat4 lightSpaceMatrix;
+uniform mat3 normalMatrix;
 
 void main()
 {
+    // 计算顶点转换到世界空间的坐标
     FragPos = vec3(model * vec4(aPos, 1.0));
-    Normal = transpose(inverse(mat3(model))) * aNormal;
+    //Normal = transpose(inverse(mat3(model))) * aNormal;
+    // 使用法线变换矩阵把法线从模型空间转换到世界空间
+    Normal = normalMatrix * aNormal;
     TexCoords = aTexCoords;
     // 计算顶点转换到光源坐标空间的坐标
     FragPosLightSpace = lightSpaceMatrix * vec4(FragPos, 1.0);

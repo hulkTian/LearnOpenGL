@@ -25,6 +25,7 @@ private:
     glm::vec3 lightPos = glm::vec3(-2.0f, 4.0f, -1.0f);
     GLuint cubeVAO, cubeVBO;
     GLuint quadVAO, quadVBO;
+    void renderPlane();
     void renderScene(GLuint programObj);
     void renderCube();
     void renderQuad();

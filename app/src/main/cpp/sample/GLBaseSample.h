@@ -73,6 +73,7 @@
 #define SAMPLE_TYPE_ADVANCED_LIGHTING_GAMMA_CORRECTED               (SAMPLE_TYPE + 27.0f)
 #define SAMPLE_TYPE_SHADOW_MAPPING_DEPTH                            (SAMPLE_TYPE + 28.0f)
 #define SAMPLE_TYPE_SHADOW_MAPPING_BASE                             (SAMPLE_TYPE + 29.0f)
+#define SAMPLE_TYPE_POINT_SHADOWS                                   (SAMPLE_TYPE + 29.1f)
 #define SAMPLE_TYPE_NORMAL_MAPPING                                  (SAMPLE_TYPE + 30.0f)
 #define SAMPLE_TYPE_PARALLAX_MAPPING                                (SAMPLE_TYPE + 31.0f)
 #define SAMPLE_TYPE_STEEP_PARALLAX_MAPPING                          (SAMPLE_TYPE + 32.0f)
@@ -150,6 +151,11 @@ public:
 
     virtual void ProgressChanged4(int i) {
         seek4 = i;
+    }
+
+    virtual void SetOptionType(int optionType) {
+        option_type = optionType;
+        LOGD("SetOptionType option_type = %d", option_type)
     }
 
     virtual void MoveCallback(float x, float y) {
@@ -260,6 +266,7 @@ protected:
     unsigned int seek2 = 0;
     unsigned int seek3 = 0;
     unsigned int seek4 = 0;
+    unsigned int option_type = 0;
 
     GLuint quadVAO, quadVBO;
     GLuint debuggingVAO, debuggingVBO;

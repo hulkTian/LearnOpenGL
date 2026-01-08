@@ -19,6 +19,8 @@ class MyGLRender {
 public:
     void SetRenderType(float renderSampleType);
 
+    void SetOptionType(int optionType);
+
     void ProcessInput(int i);
 
     void ProgressChanged(int i);

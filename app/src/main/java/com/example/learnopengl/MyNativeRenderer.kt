@@ -50,6 +50,10 @@ class MyNativeRenderer(activity: Activity) : GLSurfaceView.Renderer {
         nativeProgressChanged4(progress)
     }
 
+    fun setOptionType(type : Int) {
+        nativeOptionType(type)
+    }
+
     fun moveCallback(x: Float, y: Float) {
         nativeMoveCallback(x, y)
     }
@@ -74,5 +78,6 @@ class MyNativeRenderer(activity: Activity) : GLSurfaceView.Renderer {
     private external fun nativeProgressChanged4(progress: Int)
 
     private external fun nativeMoveCallback(x: Float, y: Float)
+    private external fun nativeOptionType(type : Int)
 
 }

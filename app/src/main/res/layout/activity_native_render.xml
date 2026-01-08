@@ -53,9 +53,64 @@
         android:id="@+id/bt_B"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="525dp"
+        android:layout_marginStart="610dp"
         android:layout_marginTop="20dp"
         android:text="BOOLEAN" />
+
+    <RadioGroup
+        android:id="@+id/rg_options"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="730dp"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rb_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="rb_1"
+            android:textColor="@color/design_default_color_primary"
+            android:textSize="28sp"
+            android:checked="true"/>
+
+        <RadioButton
+            android:id="@+id/rb_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:text="rb_1"
+            android:textColor="@color/design_default_color_primary"
+            android:textSize="28sp" />
+
+        <RadioButton
+            android:id="@+id/rb_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:text="rb_1"
+            android:textColor="@color/design_default_color_primary"
+            android:textSize="28sp" />
+
+        <RadioButton
+            android:id="@+id/rb_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:text="rb_1"
+            android:textColor="@color/design_default_color_primary"
+            android:textSize="28sp" />
+
+        <RadioButton
+            android:id="@+id/rb_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:text="rb_1"
+            android:textColor="@color/design_default_color_primary"
+            android:textSize="28sp" />
+
+    </RadioGroup>
 
     <TextView
         android:id="@+id/tv_title"

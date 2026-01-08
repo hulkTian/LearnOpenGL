@@ -516,7 +516,21 @@ class MainActivity : AppCompatActivity() {
             i++, R.mipmap.shadow_mapping_base,
             "高级光照-渲染阴影",
             "使用帧缓冲获取场景深度贴图，在正常的场景中使用深度值渲染阴影",
-            BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_SHADOW_MAPPING_BASE).build()
+            BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_SHADOW_MAPPING_BASE)
+                .setShowRadioGroup(View.VISIBLE)
+                .setRadioButton1("基础阴影")
+                .setRadioButton2("深度偏移")
+                .setRadioButton3("点乘动态偏移")
+                .setRadioButton4("开启正面剔除")
+                .setRadioButton5("PCF，百分比多重采样")
+                .build()
+        )
+        addItem(
+            i++, R.mipmap.normal_mapping,
+            "点阴影",
+            "使用点光源和立方体深度贴图实现点阴影效果",
+            BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_POINT_SHADOWS)
+                .setShowBooleanButton(View.VISIBLE).setEnable(true).build()
         )
         addItem(
             i++, R.mipmap.normal_mapping,

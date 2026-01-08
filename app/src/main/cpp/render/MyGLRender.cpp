@@ -126,6 +126,12 @@ void MyGLRender::SetRenderType(float renderSampleType) {
          m_before_sample, m_curr_sample)
 }
 
+void MyGLRender::SetOptionType(int optionType) {
+    if (m_curr_sample) {
+        m_curr_sample->SetOptionType(optionType);
+    }
+}
+
 /*void MyGLRender::SetRenderType(float renderSampleType) {
     LOGD("MyGLRender::SetRenderType renderSampleType = %f", renderSampleType)
     LOGD("MyGLRenderContext::SetRenderType 0 m_pBeforeSample = %p", m_before_sample)

@@ -408,7 +408,8 @@ GLuint GLUtils::loadHDRTexture(const char *fileName) {
         }
 
         //加载纹理数据
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, imageData);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0,
+                     GL_RGB, GL_FLOAT, imageData);
         // 生成多级渐远纹理
         glGenerateMipmap(GL_TEXTURE_2D);
         // 为当前绑定的纹理对象设置环绕、过滤方式
@@ -488,19 +489,13 @@ GLuint GLUtils::loadCubemap(const std::vector<std::string> faces, const bool fli
     return textureId;
 }
 
-bool GLUtils::isSupportedSRGBTexture() {
+bool GLUtils::isSupportedForTexture(GLenum internalformat) {
     GLint supported = 0;
-    glGetInternalformativ(GL_TEXTURE_2D, GL_SRGB8_ALPHA8,
-                          GL_TEXTURE_INTERNAL_FORMAT, 1,
-                          &supported);
+    glGetInternalformativ(GL_TEXTURE_2D, internalformat, GL_TEXTURE_INTERNAL_FORMAT,
+                          1, &supported);
     if (supported != GL_TRUE) {
-        LOGE("Device does not support GL_SRGB8_ALPHA8 internal format for textures.")
-    }
-    glGetInternalformativ(GL_TEXTURE_2D, GL_SRGB,
-                          GL_TEXTURE_INTERNAL_FORMAT, 1,
-                          &supported);
-    if (supported != GL_TRUE) {
-        LOGE("Device does not support GL_SRGB internal format for textures.")
+        LOGE("Device does not support %d internal format for textures.",
+             supported)
     }
     return supported == GL_TRUE;
 }
@@ -542,41 +537,33 @@ GLuint GLUtils::loadTexture(const char *path, bool gammaCorrection) {
         if (data) {
             GLenum internalFormat;
             GLenum dataFormat;
-            if (gammaCorrection) {
-                GLint supported = 0;
-                glGetInternalformativ(GL_TEXTURE_2D, GL_SRGB8_ALPHA8,
-                                      GL_TEXTURE_INTERNAL_FORMAT, 1,
-                                      &supported);
-                if (supported != GL_TRUE) {
-                    LOGE("Device does not support GL_SRGB8_ALPHA8 internal format for textures.")
-                }
-                glGetInternalformativ(GL_TEXTURE_2D, GL_SRGB,
-                                      GL_TEXTURE_INTERNAL_FORMAT, 1,
-                                      &supported);
-                if (supported != GL_TRUE) {
-                    LOGE("Device does not support GL_SRGB internal format for textures.")
-                }
-            }
             if (nrComponents == 1) {
                 internalFormat = dataFormat = GL_RED;
             } else if (nrComponents == 3) {
                 internalFormat = gammaCorrection ? GL_SRGB : GL_RGB;
-                dataFormat = GL_RGB;
+                dataFormat = gammaCorrection ? GL_SRGB : GL_RGB;
             } else if (nrComponents == 4) {
                 internalFormat = gammaCorrection ? GL_SRGB8_ALPHA8 : GL_RGBA;
-                dataFormat = GL_RGBA;
+                dataFormat = gammaCorrection ? GL_SRGB8_ALPHA8 : GL_RGBA;
             }
 
             glBindTexture(GL_TEXTURE_2D, textureID);
             glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, dataFormat,
                          GL_UNSIGNED_BYTE, data);
-            // todo 需要判断设备是否支持 GL_SRGB8纹理生成多级渐远纹理
-            glGenerateMipmap(GL_TEXTURE_2D);
+            GLUtils::checkGlError("glTexImage2D");
+
+            if (internalFormat == GL_SRGB || internalFormat == GL_SRGB8_ALPHA8) {
+                // 不生成 mipmap，只设置线性过滤
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            } else {
+                glGenerateMipmap(GL_TEXTURE_2D);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            }
 
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
             stbi_image_free(data);
         } else {

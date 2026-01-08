@@ -65,3 +65,9 @@ Java_com_example_learnopengl_MyNativeRenderer_nativeProgressChanged4(JNIEnv *env
                                                                     jint progress) {
     MyGLRender::GetInstance()->ProgressChanged4(progress);
 }
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_example_learnopengl_MyNativeRenderer_nativeOptionType(JNIEnv *env, jobject thiz,
+                                                              jint type) {
+    MyGLRender::GetInstance()->SetOptionType(type);
+}

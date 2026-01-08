@@ -25,7 +25,9 @@ private:
     GLuint woodTexture;
     GLuint cubeVAO;
     GLuint cubeVBO;
+    glm::vec3 lightPos = glm::vec3 (-2.0f, 4.0f, -1.0f);
     void renderScene();
+    void renderPlane();
     void renderCube();
     void renderQuad();
 };

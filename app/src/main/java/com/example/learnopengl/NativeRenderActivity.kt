@@ -122,6 +122,10 @@ class NativeRenderActivity : Activity() {
         }
         binding.btB.visibility = uiConfig.showBooleanButton
         if (uiConfig.showBooleanButton == View.VISIBLE) {
+            if (!uiConfig.isEnable) {
+                mRenderer?.processInput(Key.KEY_B)
+                mGLSurfaceView?.requestRender()
+            }
             binding.btB.setOnClickListener {
                 mRenderer?.processInput(Key.KEY_B)
                 mGLSurfaceView?.requestRender()
@@ -157,6 +161,41 @@ class NativeRenderActivity : Activity() {
             binding.tvTitle4.text = uiConfig.title4
             setSeekBarListener(binding.sbSeekBar4) { progress ->
                 mRenderer?.progressChanged4(progress)
+            }
+        }
+
+        binding.rgOptions.visibility = uiConfig.showRadioGroup
+        if (uiConfig.showRadioGroup == View.VISIBLE) {
+            binding.rb1.text = uiConfig.rb1
+            binding.rb2.text = uiConfig.rb2
+            binding.rb3.text = uiConfig.rb3
+            binding.rb4.text = uiConfig.rb4
+            binding.rb5.text = uiConfig.rb5
+            binding.rgOptions.setOnCheckedChangeListener { _, checkedId ->
+                when (checkedId) {
+                    R.id.rb_1 -> {
+                        mRenderer?.setOptionType(0)
+                        mGLSurfaceView?.requestRender()
+                    }
+
+                    R.id.rb_2 -> {
+                        mRenderer?.setOptionType(1)
+                        mGLSurfaceView?.requestRender()
+                    }
+
+                    R.id.rb_3 -> {
+                        mRenderer?.setOptionType(2)
+                        mGLSurfaceView?.requestRender()
+                    }
+                    R.id.rb_4 -> {
+                        mRenderer?.setOptionType(3)
+                        mGLSurfaceView?.requestRender()
+                    }
+                    R.id.rb_5 -> {
+                        mRenderer?.setOptionType(4)
+                        mGLSurfaceView?.requestRender()
+                    }
+                }
             }
         }
     }
