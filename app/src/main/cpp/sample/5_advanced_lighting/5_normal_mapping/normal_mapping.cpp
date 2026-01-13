@@ -8,17 +8,21 @@
  *
  * 法线贴图是一种偏蓝调的纹理：因为法线普遍偏向z轴（0，0，1）这是一种偏蓝的颜色。
  *
- * 法线贴图的一个问题：法线贴图都普遍指向Z轴正方向，当平面的法线指向正z方向时法线贴图是可以用的。但当平面的法线指向y正方向时，
+ * 法线贴图的一个问题：法线贴图都普遍指向Z轴正方向，当平面的法线指向正z方向时法线贴图是可以用的。但当物体在空间位置变化时，
  * 使用同一个法线贴图就会导致计算光照错误。
  *
- * 解决方法：创建一个空间，这个空间中的法线贴图向量指向正z方向，所有光照向量相对正z方向进行变换。
+ * 解决方法：创建一个空间，这个空间中的法线向量指向正z方向，所有光照向量相对正z方向进行变换。
+ * 这个空间就是切线空间（Tangent Space），也叫做切线-副切线-法线空间（TBN空间）。
+ *
+ * 为什么不选择将法线贴图的法线向量转换到世界空间？因为这样需要对每个片段进行矩阵变换，计算量大。
+ *
  *
  * 切线空间创建步骤：
- * 1. 计算切线和副切线（可以不需要副切线，应为切线、副切线和法线是相互垂直的，可以通过切线和贴图计算出副切线），传递给顶点着色器
+ * 1. 计算切线和副切线（可以不需要副切线，切线、副切线和法线是相互垂直的，可以通过切线和法线贴图计算出副切线），传递给顶点着色器
  * 2. 顶点着色器根据切线和副切线创建TBN矩阵
  * 3. 使用TBN矩阵有两种方式：
  * 1）直接使用TBN矩阵将法线贴图的法线向量转换到世界空间中
- * 2）使用TBN矩阵的逆矩阵把世界空间的顶点位置、光源位置和摄像机位置都置换到切线空间，这样所有的向量都再切线空间进行计算
+ * 2）使用TBN矩阵的逆矩阵把世界空间的顶点位置、光源位置和摄像机位置都置换到切线空间，这样所有的向量都在切线空间进行计算
  */
 #include "normal_mapping.h"
 
@@ -147,7 +151,7 @@ void normal_mapping::renderQuad()
 
 
         float quadVertices[] = {
-                // positions            // normal         // texcoords  // tangent                          // bitangent
+                 // positions                       // normal                    // texcoords         // tangent                                       // bitangent
                 pos1.x, pos1.y, pos1.z, nm.x, nm.y, nm.z, uv1.x, uv1.y, tangent1.x, tangent1.y, tangent1.z, bitangent1.x, bitangent1.y, bitangent1.z,
                 pos2.x, pos2.y, pos2.z, nm.x, nm.y, nm.z, uv2.x, uv2.y, tangent1.x, tangent1.y, tangent1.z, bitangent1.x, bitangent1.y, bitangent1.z,
                 pos3.x, pos3.y, pos3.z, nm.x, nm.y, nm.z, uv3.x, uv3.y, tangent1.x, tangent1.y, tangent1.z, bitangent1.x, bitangent1.y, bitangent1.z,

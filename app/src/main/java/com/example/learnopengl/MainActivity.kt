@@ -5,7 +5,6 @@ import android.opengl.GLSurfaceView
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.SparseArray
-import android.util.SparseIntArray
 import android.view.View
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -664,7 +663,7 @@ class MainActivity : AppCompatActivity() {
     private fun addItem(index: Int, redId: Int, title: String, subtitle: String, type: UIConfig) {
         val item: MutableMap<String, Any?> = HashMap()
         item[ITEM_IMAGE] = redId
-        item[ITEM_TITLE] = title
+        item[ITEM_TITLE] = String.format("%d.%s", index, title)
         item[ITEM_SUBTITLE] = subtitle
         data.add(item)
         //记录item需要展示的内容类型，点击对应item后，根据这个类型展示相应的内容
