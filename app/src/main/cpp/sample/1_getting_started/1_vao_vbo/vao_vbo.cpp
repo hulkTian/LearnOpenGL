@@ -29,7 +29,7 @@ void vao_vbo::Create() {
     /** 2.1 绑定VBO，告诉OpenGL这个VBO是顶点数据缓冲区 */
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     /** 2.2 将顶点数据复制到VBO中，数据大小为sizeof(vertices)，数据来源为vertices数组。GL_STATIC_DRAW：静态绘制，数据不会经常改变时使用 */
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW); 
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     /** 3.第0个顶点属性数据读取规则：由3个float数据组成，每个属性间隔6个float数据，起始位置偏移量为0 */
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE,
                           6 * sizeof(float), (void *) nullptr);
@@ -52,9 +52,10 @@ void vao_vbo::Create() {
      * 6.3.调用glCreateProgram创建着色器程序对象;
      * 6.4.调用glAttachShader绑定顶点着色器对象和片元着色器对象;
      * 6.5.调用glLinkProgram链接着色器程序; */
-    m_ProgramObj = GLUtils::createProgram("shaders/vs_triangle.glsl", "shaders/fs_triangle.glsl");
+    m_ProgramObj = GLUtils::createProgram(
+            "shaders/vs_triangle.glsl", "shaders/fs_triangle.glsl");
 
-    // 设置清屏颜色
+    /** 设置清屏颜色 */
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 }
 
@@ -76,6 +77,7 @@ void vao_vbo::Draw() {
 }
 
 void vao_vbo::Shutdown() {
+    /** 告诉OpenGL*/
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
     GLBaseSample::Shutdown();
