@@ -20,13 +20,13 @@ void vao_vbo::Create() {
             0.0f, 0.5f, 0.0f, 0.0f, 0.0f, 1.0f
     };
 
-    // 1.创建并绑定VAO
+    // 1.创建并绑定VAO，告诉OpenGL怎么读取缓冲在VBO中的顶点数据
     glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
-    // 2.创建并绑定VBO
+    glBindVertexArray(VAO); //绑定VAO，告诉OpenGL当前VAO正在使用
+    // 2.创建一个VBO，存储顶点数据
     glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    // 3.复制顶点数据到VBO
+    glBindBuffer(GL_ARRAY_BUFFER, VBO); //绑定VBO，告诉OpenGL这个VBO是顶点数据缓冲区
+    // 3.复制顶点数据到VBO中，指定数据类型为GLfloat，数据大小为sizeof(vertices)，数据来源为vertices数组
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
     // 4.设置顶点属性读取方式
     // 设置位置属性，放在顶点属性的第0个位置上，每个顶点有3个float数据，步长为6个float数据，起始位置偏移量为0
