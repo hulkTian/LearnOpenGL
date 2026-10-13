@@ -148,10 +148,12 @@ void CubeMaps::Create() {
 
     // 加载立方体贴图纹理
     cubemapTexture = GLUtils::loadCubemap(faces, false);
-    cubeTexture = GLUtils::loadTgaTexture("textures/container.jpg", GL_RGBA,
-                                          GL_RGBA, GL_UNSIGNED_BYTE,false,
-                                          GL_REPEAT, GL_REPEAT,
-                                          GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
+    TextureDesc desc;
+    desc.flip = false;
+    desc.wrapS = desc.wrapT = GL_REPEAT;
+    desc.minFilter = GL_LINEAR_MIPMAP_LINEAR;
+    desc.magFilter = GL_LINEAR;
+    cubeTexture = GLUtils::loadTgaTexture("textures/container.jpg", desc);
 
     m_ProgramObj = GLUtils::createProgram("shaders/vs_cube_map.glsl",
                                           "shaders/fs_cube_map.glsl");

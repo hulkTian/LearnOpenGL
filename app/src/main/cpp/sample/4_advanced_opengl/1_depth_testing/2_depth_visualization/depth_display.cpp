@@ -88,14 +88,13 @@ void depth_display::Create() {
 
     // load textures
     // 纹理过滤和环绕参数需要单独设置，地面纹理要使用GL_REPEAT
-    cubeTexture = GLUtils::loadTgaTexture("textures/marble.png", GL_RGBA,
-                                          GL_RGBA,GL_UNSIGNED_BYTE,false,
-                                          GL_REPEAT, GL_REPEAT,
-                                          GL_NEAREST_MIPMAP_NEAREST, GL_LINEAR);
-    floorTexture = GLUtils::loadTgaTexture("textures/metal.png",GL_RGBA,
-                                           GL_RGBA,GL_UNSIGNED_BYTE,false,
-                                           GL_REPEAT, GL_REPEAT,
-                                           GL_NEAREST_MIPMAP_NEAREST, GL_LINEAR);
+    TextureDesc desc;
+    desc.flip = false;
+    desc.wrapS = desc.wrapT = GL_REPEAT;
+    desc.minFilter = GL_NEAREST_MIPMAP_NEAREST;
+    desc.magFilter = GL_LINEAR;
+    cubeTexture = GLUtils::loadTgaTexture("textures/marble.png", desc);
+    floorTexture = GLUtils::loadTgaTexture("textures/metal.png", desc);
 
     //创建着色器程序,并编译着色器代码
     m_ProgramObj = GLUtils::createProgram("shaders/vs_depth_testing.glsl",

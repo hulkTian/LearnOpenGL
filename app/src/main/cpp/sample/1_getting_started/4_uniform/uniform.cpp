@@ -18,15 +18,15 @@ void uniform::Create() {
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
 
-    //绑定三角形的VAO和VBO
+    /** 绑定三角形的VAO和VBO */
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vVertices), vVertices, GL_STATIC_DRAW);
-    //设置顶点属性
+    /** 设置顶点属性 */
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *) nullptr);
     glEnableVertexAttribArray(0);
 
-    //创建着色器程序,并编译着色器代码
+    /** 创建着色器程序,并编译着色器代码 */
     m_ProgramObj = GLUtils::createProgram("shaders/vs_uniform.glsl",
                                           "shaders/fs_uniform.glsl");
 
@@ -34,7 +34,16 @@ void uniform::Create() {
         LOGD("Could not create program")
         return;
     }
-    //设置清屏颜色
+    /** 获取uniform变量的ID，用于后续更新uniform变量的值
+     *  注意：uniform变量的ID是全局唯一的，不能在不同的着色器程序中使用相同的uniform变量名
+     */
+    vertexColorLocation = glGetUniformLocation(m_ProgramObj, "ourColor");
+    /**检查uniform变量是否存在 */
+    if (vertexColorLocation == -1) {
+        LOGD("uniform variable not found");
+        return;
+    }
+    /**设置清屏颜色 */
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 }
 
@@ -46,12 +55,10 @@ void uniform::Draw() {
 
     glBindVertexArray(VAO);
 
-    // 更新uniform颜色
     float time = TimeUtils::currentTimeSeconds();
     auto greenValue = sin(time) / 2.0f + 0.5f;
-    int vertexColorLocation = glGetUniformLocation(m_ProgramObj, "ourColor");
+    /** 更新uniform变量的值 */
     glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
-
     glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 

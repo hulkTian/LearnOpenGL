@@ -26,12 +26,15 @@ void texture_exercise_2::Create() {
     VAO = GLUtils::setUpVAOAndVBO(vertices, sizeof(vertices), indices, sizeof(indices) ,pointer);
 
     //load texture1
-    texture1 = GLUtils::loadTgaTexture("textures/container.jpg", GL_RGBA, GL_RGBA,GL_UNSIGNED_BYTE,
-                                         true, GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE, GL_NEAREST, GL_LINEAR);
+    TextureDesc desc;
+    desc.magFilter = GL_LINEAR;
+    texture1 = GLUtils::loadTgaTexture("textures/container.jpg", desc);
 
     //load texture1
-    texture2 = GLUtils::loadTgaTexture("textures/awesomeface.png", GL_RGBA, GL_RGBA,GL_UNSIGNED_BYTE,
-                                         true, GL_REPEAT, GL_REPEAT, GL_LINEAR, GL_LINEAR);
+    TextureDesc desc2;
+    desc2.wrapS = desc2.wrapT = GL_REPEAT;
+    desc2.minFilter = desc2.magFilter = GL_LINEAR;
+    texture2 = GLUtils::loadTgaTexture("textures/awesomeface.png", desc2);
 
     //创建着色器程序,并编译着色器代码
     m_ProgramObj = GLUtils::createProgram("shaders/vs_texture_warp.glsl",

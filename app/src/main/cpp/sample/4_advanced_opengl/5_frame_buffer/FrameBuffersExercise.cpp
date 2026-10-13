@@ -121,14 +121,13 @@ void FrameBuffersExercise::Create() {
                           4 * sizeof(float), (void *) (2 * sizeof(float)));
 
     // load textures
-    cubeTexture = GLUtils::loadTgaTexture("textures/container.jpg", GL_RGBA,
-                                          GL_RGBA, GL_UNSIGNED_BYTE, false,
-                                          GL_REPEAT, GL_REPEAT,
-                                          GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
-    floorTexture = GLUtils::loadTgaTexture("textures/metal.png", GL_RGBA,
-                                           GL_RGBA, GL_UNSIGNED_BYTE, false,
-                                           GL_REPEAT, GL_REPEAT,
-                                           GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
+    TextureDesc desc;
+    desc.flip = false;
+    desc.wrapS = desc.wrapT = GL_REPEAT;
+    desc.minFilter = GL_LINEAR_MIPMAP_LINEAR;
+    desc.magFilter = GL_LINEAR;
+    cubeTexture = GLUtils::loadTgaTexture("textures/container.jpg", desc);
+    floorTexture = GLUtils::loadTgaTexture("textures/metal.png", desc);
 
     m_ProgramObj = GLUtils::createProgram("shaders/vs_depth_testing.glsl",
                                           "shaders/fs_depth_testing.glsl");

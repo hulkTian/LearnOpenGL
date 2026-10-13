@@ -171,22 +171,20 @@ void BlendingDiscard::Create() {
 
     // load textures
     // 纹理过滤和环绕参数需要单独设置，地面纹理要使用GL_REPEAT，草的纹理需要使用GL_CLAMP_TO_EDGE
-    cubeTexture = GLUtils::loadTgaTexture("textures/marble.png", GL_RGBA,
-                                          GL_RGBA, GL_UNSIGNED_BYTE,false,
-                                          GL_REPEAT, GL_REPEAT,
-                                          GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
-    floorTexture = GLUtils::loadTgaTexture("textures/metal.png", GL_RGBA,
-                                           GL_RGBA, GL_UNSIGNED_BYTE,false,
-                                           GL_REPEAT, GL_REPEAT,
-                                           GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
-    grassTexture = GLUtils::loadTgaTexture("textures/grass.png", GL_RGBA,
-                                           GL_RGBA, GL_UNSIGNED_BYTE,false,
-                                                 GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE,
-                                                 GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
-    transparentTexture = GLUtils::loadTgaTexture("textures/blending_transparent_window.png",
-                                                 GL_RGBA,GL_RGBA, GL_UNSIGNED_BYTE,false,
-                                                 GL_CLAMP_TO_EDGE, GL_CLAMP_TO_EDGE,
-                                                 GL_LINEAR_MIPMAP_LINEAR, GL_LINEAR);
+    TextureDesc desc;
+    desc.flip = false;
+    desc.wrapS = desc.wrapT = GL_REPEAT;
+    desc.minFilter = GL_LINEAR_MIPMAP_LINEAR;
+    desc.magFilter = GL_LINEAR;
+    cubeTexture = GLUtils::loadTgaTexture("textures/marble.png", desc);
+    floorTexture = GLUtils::loadTgaTexture("textures/metal.png", desc);
+
+    TextureDesc clampDesc;
+    clampDesc.flip = false;
+    clampDesc.minFilter = GL_LINEAR_MIPMAP_LINEAR;
+    clampDesc.magFilter = GL_LINEAR;
+    grassTexture = GLUtils::loadTgaTexture("textures/grass.png", clampDesc);
+    transparentTexture = GLUtils::loadTgaTexture("textures/blending_transparent_window.png", clampDesc);
 
     //创建着色器程序,并编译着色器代码
     m_ProgramObj = GLUtils::createProgram("shaders/vs_blending.glsl",

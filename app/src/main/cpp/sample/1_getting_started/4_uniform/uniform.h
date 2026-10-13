@@ -20,4 +20,5 @@ public:
 private:
     //声明VBO和VAO
     GLuint VBO, VAO;
+    int vertexColorLocation;
 };

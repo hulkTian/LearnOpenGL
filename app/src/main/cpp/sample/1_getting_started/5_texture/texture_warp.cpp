@@ -27,8 +27,10 @@ void texture_warp::Create() {
 
     //load texture1
     // 设置环绕方式为：GL_REPEAT
-    ourTexture = GLUtils::loadTgaTexture("textures/container.jpg", GL_RGBA, GL_RGBA,GL_UNSIGNED_BYTE,
-                                         true, GL_REPEAT, GL_REPEAT,GL_NEAREST,GL_LINEAR);
+    TextureDesc desc;
+    desc.wrapS = desc.wrapT = GL_REPEAT;
+    desc.magFilter = GL_LINEAR;
+    ourTexture = GLUtils::loadTgaTexture("textures/container.jpg", desc);
     // 设置环绕方式为：GL_MIRRORED_REPEAT
     /*ourTexture = GLUtils::loadTgaTexture("textures/container.jpg", GL_RGBA, GL_RGBA,GL_UNSIGNED_BYTE,
                                          true, GL_MIRRORED_REPEAT, GL_MIRRORED_REPEAT, GL_NEAREST_MIPMAP_NEAREST, GL_LINEAR);*/

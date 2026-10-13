@@ -87,35 +87,37 @@ AAsset *GLUtils::loadAsset(const char *path) {
  * @return 着色器代码id
  */
 static GLuint loadShader(GLenum shaderType, const char **source) {
-    //着色器对象id
+    /** 1.声明着色器对象 */
     GLuint shader;
     FUN_BEGIN_TIME("GLUnit::loadShader")
-        //创建着色器对象，需要指定是顶点着色器还是片段着色器
+        /** 2.创建着色器对象，需要指定是顶点着色器还是片段着色器 */
         shader = glCreateShader(shaderType);
         if (shader == 0) {
             LOGE("Could not create shader")
             return 0;
         }
 
-        //加载着色器代码
-        //glShaderSource函数把要编译的着色器对象作为第一个参数。
-        //第二参数指定了传递的源码字符串数量，这里只有一个。
-        //第三个参数是顶点着色器真正的源码，第四个参数我们先设置为NULL。
+        /** 3.加载着色器代码
+        * 第一个参数指定编译的着色器对象句柄，GPU会把加载的代码存储在这个对象中
+        * 第二个参数指定传递的源码字符串数量，这里只有一个
+        * 第三个参数指定顶点着色器真正的源码
+        * 第四个参数传入int数组，指定每段源码字符串的长度，这里只有一个GPU可以自己算长度，所以传入nullptr
+        */
         glShaderSource(shader, 1, source, nullptr);
-
-        //编译着色器代码
+        /**4.编译着色器代码 */
         glCompileShader(shader);
 
-        //检查着色器编译状态，获取编译状态
+        /**5.检查着色器编译状态，获取编译状态 */
         GLint status;
         glGetShaderiv(shader, GL_COMPILE_STATUS, &status);
 
-        //编译不成功，打印错误信息
+        /**6.编译不成功，打印错误信息 */
         if (status != GL_TRUE) {
             GLint infoLen = 0;
-            //获取错误信息的长度
+            /**7.获取错误信息的长度 */  
             glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLen);
             if (infoLen > 1) {
+                //获取错误信息
                 char *infoLog = (char *) malloc(sizeof(char) * infoLen);
                 glGetShaderInfoLog(shader, infoLen, nullptr, infoLog);
                 LOGE("GLUtils::loadShader error compiling shader:\n%s\n", infoLog)
@@ -171,13 +173,13 @@ char *GLUtils::openTextFile(const char *path) {
  */
 GLuint
 GLUtils::createProgram(const char *vertexPath, const char *fragmentPath, const char *geometryPath) {
-    //加载顶点着色器代码
+    /** 1.加载顶点着色器代码 */
     const char *vertexCode = openTextFile(vertexPath);
 
-    //加载片段着色器代码
+    /** 2.加载片段着色器代码 */
     const char *fragmentCode = openTextFile(fragmentPath);
 
-    //加载几何着色器代码
+    /** 3.加载几何着色器代码 */
     const char *geometryCode = nullptr;
     if (geometryPath) {
         geometryCode = openTextFile(geometryPath);
@@ -186,47 +188,59 @@ GLUtils::createProgram(const char *vertexPath, const char *fragmentPath, const c
     }
 
 
-    //声明着色器程序id
+    /** 4.声明着色器程序id */
     GLuint programId;
 
     FUN_BEGIN_TIME("GLUtils::createProgram")
-        //加载顶点着色器代码并创建shader对象
+        /** 4.1.编译顶点着色器代码 */
         GLuint vertexShader = loadShader(GL_VERTEX_SHADER, &vertexCode);
         if (vertexShader == 0) {
+            if (vertexCode != nullptr) {
+                delete[] vertexCode;
+                vertexCode = nullptr;
+            }
             return 0;
         }
 
-        //加载几何着色器代码并创建shader对象
+        /** 4.2.编译几何着色器代码 */
         GLuint geometryShader = 0;
         if (geometryCode) {
             geometryShader = loadShader(GL_GEOMETRY_SHADER, &geometryCode);
             if (geometryShader == 0) {
+                if (geometryCode != nullptr) {
+                    delete[] geometryCode;
+                    geometryCode = nullptr;
+                }
                 return 0;
             }
         } else {
             LOGE("geometry shader code is null")
         }
 
-        //加载片段着色器代码并创建shader对象
+        /** 4.3.编译片段着色器代码 */
         GLuint fragmentShader = loadShader(GL_FRAGMENT_SHADER, &fragmentCode);
         if (fragmentShader == 0) {
             LOGE("fragment shader is null")
+            if (fragmentCode != nullptr) {
+                delete[] fragmentCode;
+                fragmentCode = nullptr;
+            }
             return 0;
         }
 
-        //创建着色器程序对象
+        /** 4.4.创建着色器程序对象 */
         programId = glCreateProgram();
         if (programId == 0) {
             LOGE("Could not create program")
             return 0;
         }
 
-        //绑定顶点着色器对象到着色器程序
+        /** 4.5.在program的attached_shaders列表中添加顶点着色器对象的句柄并增加对顶点着色器对象的引用计数，还要验证shader类型是否合法 */
         LOGI("attach vertex shader to program")
         glAttachShader(programId, vertexShader);
         checkGlError("glAttachShader");
 
-        //绑定几何着色器对象到着色器程序
+        /** 4.6.在program的attached_shaders列表中添加几何着色器对象的句柄并增加对几何着色器对象的引用计数，还要验证shader类型是否合法 */
         if (geometryShader != 0) {
             LOGI("attach geometry shader to program")
             glAttachShader(programId, geometryShader);
@@ -235,19 +249,23 @@ GLUtils::createProgram(const char *vertexPath, const char *fragmentPath, const c
             LOGE("geometry shader object is null")
         }
 
-        //绑定片元着色器对象到着色器程序
+        /** 4.7.在program的attached_shaders列表中添加片段着色器对象的句柄并增加对片段着色器对象的引用计数，还要验证shader类型是否合法 */
         LOGI("attach fragment shader to program")
         glAttachShader(programId, fragmentShader);
         checkGlError("glAttachShader");
 
-        //链接着色器程序
+        /** 4.8.链接着色器程序
+         * 1.检查所有着色器代码中的输入和输出变量是否匹配
+         * 2.分配uniform/attribute变量的location
+         * 3.验证并生成着色器程序的二进制代码
+         */
         glLinkProgram(programId);
 
-        //检查链接状态
+        /** 4.9.检查链接状态 */
         GLint linkStatus;
         glGetProgramiv(programId, GL_LINK_STATUS, &linkStatus);
 
-        //释放顶点着色器对象和片段着色器对象
+        /** 4.10.释放顶点着色器对象和片段着色器对象 */
         glDeleteShader(vertexShader);
         glDeleteShader(fragmentShader);
         if (vertexCode != nullptr) {
@@ -259,7 +277,9 @@ GLUtils::createProgram(const char *vertexPath, const char *fragmentPath, const c
             fragmentCode = nullptr;
         }
 
+        /** 4.11.检查链接状态 */
         if (!linkStatus) {
+            /** 4.11.1.获取着色器程序链接日志 */
             GLint infoLen = 0;
             glGetProgramiv(programId, GL_INFO_LOG_LENGTH, &infoLen);
             if (infoLen > 1) {
@@ -269,7 +289,7 @@ GLUtils::createProgram(const char *vertexPath, const char *fragmentPath, const c
                 free(infoLog);
             }
 
-            //释放着色器程序对象
+            /** 4.11.2.释放着色器程序对象 */
             glDeleteProgram(programId);
             return 0;
         }
@@ -309,56 +329,184 @@ void GLUtils::checkGlError(const char *pGLOperation) {
     }
 }
 
-//从图片中加载纹理
-GLuint GLUtils::loadTgaTexture(const char *fileName, GLint internalformat, GLenum format,
-                               GLenum type, const bool flip,
-                               unsigned int texture_warp_s, unsigned int texture_warp_t,
-                               unsigned int texture_min_filter, unsigned int texture_max_filter) {
-    GLuint textureId;
-    FUN_BEGIN_TIME("GLUtils::loadTgaTexture")
-        glGenTextures(1, &textureId);
-        glBindTexture(GL_TEXTURE_2D, textureId);
-        // 打开assets中的文件
-        AAsset *asset = loadAsset(fileName);
-        if (asset == nullptr) {
-            LOGE("Couldn't load %s", fileName)
-            return textureId;
+/**
+ * 从 assets 读取文件到内存缓冲区（辅助函数，供 decodeAsset/decodeAssetHDR 复用）
+ */
+void *GLUtils::readAssetBuffer(const char *fileName, bool readCheck, off_t *outLength) {
+    AAsset *asset = loadAsset(fileName);
+    if (asset == nullptr) {
+        LOGE("Couldn't load %s", fileName)
+        return nullptr;
+    }
+
+    off_t assetLength = AAsset_getLength(asset);
+    void *assetBuffer = malloc(assetLength);
+    if (readCheck) {
+        int num = AAsset_read(asset, assetBuffer, assetLength);
+        AAsset_close(asset);
+        if (num != assetLength) {
+            LOGE("Couldn't fully read %s", fileName)
+            free(assetBuffer);
+            return nullptr;
         }
-        // 获取文件大小
-        off_t assetLength = AAsset_getLength(asset);
-        void *assetBuffer = malloc(assetLength);
+    } else {
         AAsset_read(asset, assetBuffer, assetLength);
         AAsset_close(asset);
-        // 翻转y轴，使纹理坐标从底部开始
-        stbi_set_flip_vertically_on_load(flip);
+    }
 
-        // 使用stb_image解码图片数据
+    if (outLength) {
+        *outLength = assetLength;
+    }
+    return assetBuffer;
+}
+
+/**
+ * 从 assets 读取文件并解码为 8bit LDR 图像数据（纯 CPU 侧，不创建纹理对象）
+ */
+unsigned char *GLUtils::decodeAsset(const char *fileName, bool flip,
+                                    int *width, int *height, int *channels,
+                                    int forceChannels, bool readCheck) {
+    off_t assetLength;
+    void *assetBuffer = readAssetBuffer(fileName, readCheck, &assetLength);
+    if (assetBuffer == nullptr) {
+        return nullptr;
+    }
+
+    stbi_set_flip_vertically_on_load(flip);
+
+    unsigned char *imageData = stbi_load_from_memory(static_cast<stbi_uc *>(assetBuffer),
+                                                     static_cast<int>(assetLength),
+                                                     width, height, channels, forceChannels);
+    free(assetBuffer);
+
+    if (imageData == nullptr) {
+        LOGD("Image decode failed for %s", fileName)
+    }
+    return imageData;
+}
+
+/**
+ * 从 assets 读取文件并解码为 float HDR 图像数据（纯 CPU 侧，不创建纹理对象）
+ */
+float *GLUtils::decodeAssetHDR(const char *fileName, bool flip,
+                               int *width, int *height, int *channels,
+                               int forceChannels, bool readCheck) {
+    off_t assetLength;
+    void *assetBuffer = readAssetBuffer(fileName, readCheck, &assetLength);
+    if (assetBuffer == nullptr) {
+        return nullptr;
+    }
+
+    stbi_set_flip_vertically_on_load(flip);
+
+    float *imageData = stbi_loadf_from_memory(static_cast<stbi_uc *>(assetBuffer),
+                                              static_cast<int>(assetLength),
+                                              width, height, channels, forceChannels);
+    free(assetBuffer);
+
+    if (imageData == nullptr) {
+        LOGD("HDR image decode failed for %s", fileName)
+    }
+    return imageData;
+}
+
+/**
+ * 通用 2D 纹理加载（核心入口） \n
+ * internalFormat == 0：按解码通道数自动选格式（配合 srgb），解码保留原始通道 \n
+ * internalFormat != 0：按显式格式上传，解码强制转 4 通道 RGBA
+ */
+GLuint GLUtils::loadTexture2D(const char *fileName, const TextureDesc &desc) {
+    GLuint textureId;
+    FUN_BEGIN_TIME("GLUtils::loadTexture2D")
+        /** 1.生成纹理对象 */
+        glGenTextures(1, &textureId);
+        /** 2.绑定纹理对象，告诉 OpenGL 当前操作的是哪个纹理对象 */
+        glBindTexture(GL_TEXTURE_2D, textureId);
+
+        // 自动模式保留原始通道数（识别 GL_RED/GL_RGB/GL_RGBA），显式模式强制 4 通道
+        int forceChannels = (desc.internalFormat == 0) ? 0 : 4;
         int width, height, channels;
-        unsigned char *imageData = stbi_load_from_memory(static_cast<stbi_uc *>(assetBuffer),
-                                                         static_cast<int>(assetLength),
-                                                         &width, &height,
-                                                         &channels, 4);
-
-        free(assetBuffer);
-
+        /** 3.解码图像数据 */
+        unsigned char *imageData = decodeAsset(fileName, desc.flip, &width, &height,
+                                               &channels, forceChannels);
         if (imageData == nullptr) {
-            // 图片解码失败的处理逻辑
-            LOGD("Image data is null")
             return 0;
         }
 
-        //加载纹理数据
-        glTexImage2D(GL_TEXTURE_2D, 0, internalformat, width, height, 0, format, type, imageData);
-        // 生成多级渐远纹理
-        glGenerateMipmap(GL_TEXTURE_2D);
-        // 为当前绑定的纹理对象设置环绕、过滤方式
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texture_min_filter);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texture_max_filter);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, texture_warp_s);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, texture_warp_t);
+        // 确定上传格式（internalformat + format）
+        GLenum internalFormat;
+        GLenum dataFormat;
+        if (desc.internalFormat == 0) {
+            switch (channels) {
+                case 1: internalFormat = dataFormat = GL_RED; break;
+                case 3: internalFormat = desc.srgb ? GL_SRGB : GL_RGB;
+                        dataFormat = GL_RGB; break;
+                case 4: internalFormat = desc.srgb ? GL_SRGB8_ALPHA8 : GL_RGBA;
+                        dataFormat = GL_RGBA; break;
+                default: internalFormat = dataFormat = GL_RGBA; break;
+            }
+        } else {
+            internalFormat = dataFormat = desc.internalFormat;
+        }
+        /**
+         * 4.上传纹理数据，把解码后的图像数据上传纹理对象textureId \n
+         * GL_TEXTURE_2D：2D 纹理目标 \n
+         * 0：mipmap 层级（0 表示基础纹理） \n
+         * internalFormat：纹理格式（GL_RGB、GL_RGBA 等） \n
+         * width：纹理宽度 \n
+         * height：纹理高度 \n
+         * 0：边框宽度（0 表示无边框） \n
+         * dataFormat：数据格式（GL_RGB、GL_RGBA 等） \n
+         * GL_UNSIGNED_BYTE：数据类型（8 无符号字节） \n
+         * imageData：图像数据指针
+         */
+        glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0,
+                     dataFormat, GL_UNSIGNED_BYTE, imageData);
+        checkGlError("glTexImage2D");
+        /**
+         * 5.生成 mipmap（如果配置了） \n
+         * mipmap：多级纹理（mipmap）：用于在不同距离下渲染时保持细节和性能的纹理技术 \n
+         * 生成 mipmap 后，纹理会自动根据距离和缩放级别，选择合适的 mipmap 层级进行渲染 \n
+         * 一个关键约束：minFilter 必须配 MIPMAP 模式才生效，所以这里加了判断 \n
+         */
+        if (desc.mipmap && desc.minFilter != GL_NEAREST && desc.minFilter != GL_LINEAR) {
+            glGenerateMipmap(GL_TEXTURE_2D);
+        }
+        /**
+         * 6.配置缩小过滤模式（命名规律：GL_[层内]_MIPMAP_[层间]，MIPMAP 前=层内筛选，后=层间筛选） \n
+         * GL_NEAREST：最近邻过滤（无 mipmap），像素感，缩小时闪烁 \n
+         * GL_LINEAR：线性过滤（无 mipmap），放大时软边但缩小时闪烁 \n
+         * GL_LINEAR_MIPMAP_LINEAR：层内线性 + 层间线性（三线性过滤），质量最好，远处过渡自然 \n
+         * GL_LINEAR_MIPMAP_NEAREST：层内线性 + 层间最近邻，远处会出现 mip 层硬切换 \n
+         * GL_NEAREST_MIPMAP_LINEAR：层内最近邻 + 层间线性，像素感但远处过渡平滑 \n
+         * GL_NEAREST_MIPMAP_NEAREST：层内最近邻 + 层间最近邻，像素感 + mip 硬切换 \n
+         * */
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, desc.minFilter);
+        /**
+         * 7.配置放大过滤模式
+         * */
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, desc.magFilter);
+        /**
+         * 8.配置水平方向环绕方式
+         * GL_REPEAT：重复环绕（默认）-0.3->0.7 1.3->0.3 \n
+         * GL_MIRRORED_REPEAT：镜像重复环绕 -0.3->0.3 1.3->0.7\n
+         * GL_CLAMP_TO_EDGE：超出范围返回纹理边缘 -0.3->0.0 1.3->1.0\n
+         * GL_CLAMP_TO_BORDER：超出范围返回指定颜色 -0.3->边框颜色 1.3->边框颜色 \n
+         * GL_MIRROR_CLAMP_TO_EDGE：先镜像到最近整数，再 clamp -0.3->0.3 1.3->1.0 \n
+         * */
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, desc.wrapS);
+        /**
+         * 9.配置垂直方向环绕方式
+         * GL_REPEAT：重复环绕（默认）-0.3->0.7 1.3->0.3 \n
+         * GL_MIRRORED_REPEAT：镜像重复环绕 -0.3->0.3 1.3->0.7\n
+         * GL_CLAMP_TO_EDGE：超出范围返回纹理边缘 -0.3->0.0 1.3->1.0\n
+         * GL_CLAMP_TO_BORDER：超出范围返回指定颜色 -0.3->边框颜色 1.3->边框颜色 \n
+         * GL_MIRROR_CLAMP_TO_EDGE：先镜像到最近整数，再 clamp -0.3->0.3 1.3->1.0 \n
+         * */
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, desc.wrapT);
 
         // 当配置环绕方式为GL_CLAMP_TO_BORDER时，需要设置边框颜色
-        if (texture_warp_s == GL_CLAMP_TO_BORDER || texture_warp_t == GL_CLAMP_TO_BORDER) {
+        if (desc.wrapS == GL_CLAMP_TO_BORDER || desc.wrapT == GL_CLAMP_TO_BORDER) {
             GLfloat borderColor[] = {1.0f, 1.0f, 0.0f, 1.0f};
             glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
         }
@@ -366,8 +514,34 @@ GLuint GLUtils::loadTgaTexture(const char *fileName, GLint internalformat, GLenu
         // 释放图片数据
         stbi_image_free(imageData);
 
-    FUN_END_TIME("GLUtils::loadTgaTexture")
+    FUN_END_TIME("GLUtils::loadTexture2D")
     return textureId;
+}
+
+//显式格式路线：未指定格式时默认 GL_RGBA
+GLuint GLUtils::loadTgaTexture(const char *fileName, const TextureDesc &desc) {
+    TextureDesc d = desc;
+    if (d.internalFormat == 0) {
+        d.internalFormat = GL_RGBA;
+    }
+    return loadTexture2D(fileName, d);
+}
+
+//自动格式路线：按通道数推导格式，REPEAT + 线性过滤
+GLuint GLUtils::loadTexture(const char *fileName, bool gammaCorrection) {
+    TextureDesc desc;
+    desc.srgb = gammaCorrection;
+    desc.flip = false;
+    desc.wrapS = desc.wrapT = GL_REPEAT;
+    if (gammaCorrection) {
+        // sRGB 纹理不生成 mipmap，只用线性过滤
+        desc.mipmap = false;
+        desc.minFilter = desc.magFilter = GL_LINEAR;
+    } else {
+        desc.minFilter = GL_LINEAR_MIPMAP_LINEAR;
+        desc.magFilter = GL_LINEAR;
+    }
+    return loadTexture2D(fileName, desc);
 }
 
 //从图片中加载纹理
@@ -377,33 +551,10 @@ GLuint GLUtils::loadHDRTexture(const char *fileName) {
         glGenTextures(1, &textureId);
         glBindTexture(GL_TEXTURE_2D, textureId);
 
-        // 打开assets中的文件
-        AAsset *asset = loadAsset(fileName);
-        if (asset == nullptr) {
-            LOGE("Couldn't load %s", fileName)
-            return textureId;
-        }
-
-        // 获取文件大小
-        off_t assetLength = AAsset_getLength(asset);
-        void *assetBuffer = malloc(assetLength);
-        AAsset_read(asset, assetBuffer, assetLength);
-        AAsset_close(asset);
-
-        // 翻转y轴，使纹理坐标从底部开始
-        stbi_set_flip_vertically_on_load(true);
-
-        // 使用stb_image解码图片数据
+        // 读取并解码 HDR 图片数据（独立函数，纯 CPU 侧操作；HDR 垂直翻转是必需的）
         int width, height, channels;
-        float *imageData = stbi_loadf_from_memory(static_cast<stbi_uc *>(assetBuffer),
-                                                  static_cast<int>(assetLength),
-                                                  &width, &height,
-                                                  &channels, 0);
-        free(assetBuffer);
-
+        float *imageData = decodeAssetHDR(fileName, /*flip=*/true, &width, &height, &channels);
         if (imageData == nullptr) {
-            // 图片解码失败的处理逻辑
-            LOGD("Image data is null")
             return 0;
         }
 
@@ -437,40 +588,13 @@ GLuint GLUtils::loadCubemap(const std::vector<std::string> faces, const bool fli
 
         for (unsigned int i = 0; i < faces.size(); i++) {
 
-            // 打开assets中的文件
-            AAsset *asset = loadAsset(faces[i].c_str());
-            if (asset == nullptr) {
-                LOGE("Could not open %s", faces[i].c_str())
-                return textureId;
-            }
-
-            // 获取文件大小
-            off_t assetLength = AAsset_getLength(asset);
-            void *assetBuffer = malloc(assetLength);
-            int num = AAsset_read(asset, assetBuffer, assetLength);
-            AAsset_close(asset);
-            if (num != assetLength) {
-                LOGE("Couldn't load %s", faces[i].c_str())
-                free(assetBuffer);
-                return textureId;
-            }
-
-            // 翻转y轴，使纹理坐标从底部开始
-            stbi_set_flip_vertically_on_load(flip);
-
-            // 使用stb_image解码图片数据
+            // 读取并解码图片数据（独立函数，纯 CPU 侧操作）
             int width, height, channels;
-            unsigned char *imageData = stbi_load_from_memory(static_cast<stbi_uc *>(assetBuffer),
-                                                             static_cast<int>(assetLength),
-                                                             &width, &height,
-                                                             &channels, 0);
-
-            free(assetBuffer);
-
+            unsigned char *imageData = decodeAsset(faces[i].c_str(), flip,
+                                                   &width, &height, &channels,
+                                                   /*forceChannels=*/0, /*readCheck=*/true);
             if (imageData == nullptr) {
-                // 图片解码失败的处理逻辑
-                LOGD("Image data is null")
-                return 0;
+                return textureId;
             }
 
             // 为每个面加载纹理数据
@@ -498,78 +622,4 @@ bool GLUtils::isSupportedForTexture(GLenum internalformat) {
              supported)
     }
     return supported == GL_TRUE;
-}
-
-/**
- * 加载纹理图片
- * @param path 图片路径
- * @param gammaCorrection 纹理是否需要从非线性颜色空间转到线性颜色空间
- * @return
- */
-GLuint GLUtils::loadTexture(const char *path, bool gammaCorrection) {
-    GLuint textureID;
-    FUN_BEGIN_TIME("GLUtils::loadTexture")
-        glGenTextures(1, &textureID);
-
-        // 打开assets中的文件
-        AAsset *asset = loadAsset(path);
-        if (asset == nullptr) {
-            LOGE("Could not open %s", path)
-            return textureID;
-        }
-
-        // 获取文件大小
-        off_t assetLength = AAsset_getLength(asset);
-        void *assetBuffer = malloc(assetLength);
-        int num = AAsset_read(asset, assetBuffer, assetLength);
-        AAsset_close(asset);
-        if (num != assetLength) {
-            LOGE("Couldn't load %s", path)
-            free(assetBuffer);
-            return textureID;
-        }
-
-        int width, height, nrComponents;
-        unsigned char *data = stbi_load_from_memory(static_cast<stbi_uc *>(assetBuffer),
-                                                    static_cast<int>(assetLength),
-                                                    &width, &height,
-                                                    &nrComponents, 0);
-        if (data) {
-            GLenum internalFormat;
-            GLenum dataFormat;
-            if (nrComponents == 1) {
-                internalFormat = dataFormat = GL_RED;
-            } else if (nrComponents == 3) {
-                internalFormat = gammaCorrection ? GL_SRGB : GL_RGB;
-                dataFormat = gammaCorrection ? GL_SRGB : GL_RGB;
-            } else if (nrComponents == 4) {
-                internalFormat = gammaCorrection ? GL_SRGB8_ALPHA8 : GL_RGBA;
-                dataFormat = gammaCorrection ? GL_SRGB8_ALPHA8 : GL_RGBA;
-            }
-
-            glBindTexture(GL_TEXTURE_2D, textureID);
-            glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, dataFormat,
-                         GL_UNSIGNED_BYTE, data);
-            GLUtils::checkGlError("glTexImage2D");
-
-            if (internalFormat == GL_SRGB || internalFormat == GL_SRGB8_ALPHA8) {
-                // 不生成 mipmap，只设置线性过滤
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            } else {
-                glGenerateMipmap(GL_TEXTURE_2D);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-                glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-            }
-
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-            stbi_image_free(data);
-        } else {
-            LOGE("Texture failed to load at path: %s", path)
-            stbi_image_free(data);
-        }
-    FUN_END_TIME("GLUtils::loadTexture")
-    return textureID;
 }
