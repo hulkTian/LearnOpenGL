@@ -28,10 +28,7 @@ void Transform::Create() {
 
     VAO = GLUtils::setUpVAOAndVBO(vertices, sizeof(vertices), indices, sizeof(indices) ,pointer);
 
-    //load texture1
     texture1 = GLUtils::loadTgaTexture("textures/container.jpg");
-
-    //load texture1
     texture2 = GLUtils::loadTgaTexture("textures/awesomeface.png");
 
     //创建着色器程序,并编译着色器代码
@@ -66,12 +63,15 @@ void Transform::Draw() {
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, texture2);
 
+    /** 变换矩阵必须重置为单位矩阵 */
     glm::mat4 trans = glm::mat4(1.0f);
     /*trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
     trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));*/
     float time = TimeUtils::currentTimeSeconds();
+    /** 先平移再旋转 */
     trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
     trans = glm::rotate(trans, time, glm::vec3(0.0f, 0.0f, 1.0f));
+    /** drawcall之前更新变换矩阵 */
     setMat4(m_ProgramObj, "transform", trans);
 
     //绑定VAO
@@ -80,12 +80,16 @@ void Transform::Draw() {
     //绘制形状
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
+    /** 变换矩阵必须重置为单位矩阵 */
     trans = glm::mat4(1.0f);
     auto scale = abs(static_cast<float>(sin(time)));
+    /** 先缩放再旋转最后位移 */
     trans = glm::translate(trans, glm::vec3(-0.5f, 0.5f, 0.0f));
     trans = glm::scale(trans, glm::vec3(scale, scale, 1.0f));
+    /** drawcall之前更新变换矩阵 */
     setMat4(m_ProgramObj, "transform", trans);
 
+    /** 同一个VAO和programObj变换不同坐标后再次绘制 */
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 

@@ -33,14 +33,6 @@ void texture_exercise_2::Create() {
     desc2.wrapS = desc2.wrapT = GL_REPEAT;
     texture2 = GLUtils::loadTgaTexture("textures/awesomeface.png", desc2);
 
-    //激活纹理单元，给绑定的纹理设置一个位置标签，这时第一个纹理，纹理单元值是0
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture1);
-
-    //这时第二个纹理，纹理单元值是1
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, texture2);
-
     //创建着色器程序,并编译着色器代码
     m_ProgramObj = GLUtils::createProgram("shaders/vs_texture_warp.glsl",
                                           "shaders/fs_triangle7.glsl");
@@ -63,6 +55,14 @@ void texture_exercise_2::Draw() {
     //指定纹理位置
     setInt(m_ProgramObj, "texture1", 0);
     setInt(m_ProgramObj, "texture2", 1);
+
+    //激活纹理单元，给绑定的纹理设置一个位置标签，这时第一个纹理，纹理单元值是0
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture1);
+
+    //这时第二个纹理，纹理单元值是1
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, texture2);
 
     //绑定VAO
     glBindVertexArray(VAO);
