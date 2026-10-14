@@ -106,7 +106,7 @@ class MainActivity : AppCompatActivity() {
         addItem(
             i++, R.mipmap.texture_unit,
             "纹理-练习1",
-            "调整纹理坐标让纹理反转显示",
+            "调整纹理坐标让纹理水平反转显示",
             BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_TEXTURE_EXERCISE_1)
                 .setShowClickLayout(View.GONE).build()
         )
@@ -120,7 +120,7 @@ class MainActivity : AppCompatActivity() {
         addItem(
             i++, R.mipmap.texture_unit,
             "纹理-练习3",
-            "放大纹理使用GL_NEAREST",
+            "放大纹理，过滤方式设置GL_LINEAR",
             BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_TEXTURE_EXERCISE_3)
                 .setShowClickLayout(View.GONE).build()
         )
@@ -129,7 +129,8 @@ class MainActivity : AppCompatActivity() {
             "纹理-练习4",
             "使用uniform控制纹理混合比例",
             BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_TEXTURE_EXERCISE_4)
-                .setShowClickLayout(View.GONE).build()
+                .setShowClickLayout(View.GONE)
+                .setShowSeekBar1(View.VISIBLE).setTitle1("uniform").build()
         )
         addItem(
             i++, R.mipmap.transform,

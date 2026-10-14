@@ -372,6 +372,11 @@ unsigned char *GLUtils::decodeAsset(const char *fileName, bool flip,
         return nullptr;
     }
 
+    /** 
+     * 普通的2D纹理需要设置Y轴翻转，否则会导致纹理显示倒置
+     * 图像扫描是从上到下存的（BMP 例外是从下到上，但 stbi 内部统一成从上到下输出），
+     * 而 OpenGL`glTexImage2D` 读 data 指针时， 内存第一行对应纹理的最底行 ——这是 GPU 硬件设计决定的（光栅化从下往上填像素）。
+     */
     stbi_set_flip_vertically_on_load(flip);
 
     unsigned char *imageData = stbi_load_from_memory(static_cast<stbi_uc *>(assetBuffer),
@@ -467,7 +472,7 @@ GLuint GLUtils::loadTexture2D(const char *fileName, const TextureDesc &desc) {
          * 5.生成 mipmap（如果配置了） \n
          * mipmap：多级纹理（mipmap）：用于在不同距离下渲染时保持细节和性能的纹理技术 \n
          * 生成 mipmap 后，纹理会自动根据距离和缩放级别，选择合适的 mipmap 层级进行渲染 \n
-         * 一个关键约束：minFilter 必须配 MIPMAP 模式才生效，所以这里加了判断 \n
+         * 一个关键约束：minFilter 必须配 MIPMAP 模式才生效，所以这里加了判断
          */
         if (desc.mipmap && desc.minFilter != GL_NEAREST && desc.minFilter != GL_LINEAR) {
             glGenerateMipmap(GL_TEXTURE_2D);
@@ -479,7 +484,7 @@ GLuint GLUtils::loadTexture2D(const char *fileName, const TextureDesc &desc) {
          * GL_LINEAR_MIPMAP_LINEAR：层内线性 + 层间线性（三线性过滤），质量最好，远处过渡自然 \n
          * GL_LINEAR_MIPMAP_NEAREST：层内线性 + 层间最近邻，远处会出现 mip 层硬切换 \n
          * GL_NEAREST_MIPMAP_LINEAR：层内最近邻 + 层间线性，像素感但远处过渡平滑 \n
-         * GL_NEAREST_MIPMAP_NEAREST：层内最近邻 + 层间最近邻，像素感 + mip 硬切换 \n
+         * GL_NEAREST_MIPMAP_NEAREST：层内最近邻 + 层间最近邻，像素感 + mip 硬切换
          * */
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, desc.minFilter);
         /**
@@ -492,7 +497,7 @@ GLuint GLUtils::loadTexture2D(const char *fileName, const TextureDesc &desc) {
          * GL_MIRRORED_REPEAT：镜像重复环绕 -0.3->0.3 1.3->0.7\n
          * GL_CLAMP_TO_EDGE：超出范围返回纹理边缘 -0.3->0.0 1.3->1.0\n
          * GL_CLAMP_TO_BORDER：超出范围返回指定颜色 -0.3->边框颜色 1.3->边框颜色 \n
-         * GL_MIRROR_CLAMP_TO_EDGE：先镜像到最近整数，再 clamp -0.3->0.3 1.3->1.0 \n
+         * GL_MIRROR_CLAMP_TO_EDGE：先镜像到最近整数，再 clamp -0.3->0.3 1.3->1.0
          * */
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, desc.wrapS);
         /**
@@ -501,7 +506,7 @@ GLuint GLUtils::loadTexture2D(const char *fileName, const TextureDesc &desc) {
          * GL_MIRRORED_REPEAT：镜像重复环绕 -0.3->0.3 1.3->0.7\n
          * GL_CLAMP_TO_EDGE：超出范围返回纹理边缘 -0.3->0.0 1.3->1.0\n
          * GL_CLAMP_TO_BORDER：超出范围返回指定颜色 -0.3->边框颜色 1.3->边框颜色 \n
-         * GL_MIRROR_CLAMP_TO_EDGE：先镜像到最近整数，再 clamp -0.3->0.3 1.3->1.0 \n
+         * GL_MIRROR_CLAMP_TO_EDGE：先镜像到最近整数，再 clamp -0.3->0.3 1.3->1.0
          * */
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, desc.wrapT);
 

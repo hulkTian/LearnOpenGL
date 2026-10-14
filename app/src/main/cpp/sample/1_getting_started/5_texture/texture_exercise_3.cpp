@@ -1,7 +1,7 @@
 //
 // Created by ts on 2024/12/18.
 //
-
+//练习3：缩小纹理坐标，采样纹理部分区域
 #include "texture_exercise_3.h"
 REGISTER_SAMPLE(SAMPLE_TYPE_TEXTURE_EXERCISE_3, texture_exercise_3)
 
@@ -25,13 +25,16 @@ void texture_exercise_3::Create() {
 
     VAO = GLUtils::setUpVAOAndVBO(vertices, sizeof(vertices), indices, sizeof(indices) ,pointer);
 
-    //load texture1
     texture1 = GLUtils::loadTgaTexture("textures/container.jpg");
+    texture2 = GLUtils::loadTgaTexture("textures/awesomeface.png");
 
-    //load texture1
-    TextureDesc desc;
-    desc.wrapS = desc.wrapT = GL_REPEAT;
-    texture2 = GLUtils::loadTgaTexture("textures/awesomeface.png", desc);
+    //激活纹理单元，给绑定的纹理设置一个位置标签，这时第一个纹理，纹理单元值是0
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture1);
+
+    //这时第二个纹理，纹理单元值是1
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, texture2);
 
     //创建着色器程序,并编译着色器代码
     m_ProgramObj = GLUtils::createProgram("shaders/vs_texture_warp.glsl",
@@ -53,22 +56,14 @@ void texture_exercise_3::Draw() {
     glUseProgram(m_ProgramObj);
 
     //指定纹理位置
-    glUniform1i(glGetUniformLocation(m_ProgramObj, "texture1"), 0);
-    glUniform1i(glGetUniformLocation(m_ProgramObj, "texture2"), 1);
-
-    //激活纹理单元，给绑定的纹理设置一个位置标签，这时第一个纹理，纹理单元值是0
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture1);
-
-    //这时第二个纹理，纹理单元值是1
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, texture2);
+    setInt(m_ProgramObj, "texture1", 0);
+    setInt(m_ProgramObj, "texture2", 1);
 
     //绑定VAO
     glBindVertexArray(VAO);
 
     //绘制形状
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 }
 
 void texture_exercise_3::Shutdown() {

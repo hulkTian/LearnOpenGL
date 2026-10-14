@@ -57,7 +57,12 @@ void uniform::Draw() {
 
     float time = TimeUtils::currentTimeSeconds();
     auto greenValue = sin(time) / 2.0f + 0.5f;
-    /** 更新uniform变量的值 */
+    /** 
+     * 更新uniform变量的值
+     * 注意：
+     *  1. glUniform4f()函数用于更新uniform变量的值，需要在着色器激活后调用，否则会导致绘制结果错误
+     *  2. uniform变量的ID是全局唯一的，不能在不同的着色器程序中使用相同的uniform变量名
+     */
     glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
     glDrawArrays(GL_TRIANGLES, 0, 3);
 }

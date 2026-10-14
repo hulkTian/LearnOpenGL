@@ -19,4 +19,6 @@ private:
     //声明顶点缓存对象和顶点数组对象
     GLuint VAO;
     GLuint texture1, texture2;
+    /** texture1和texture2的uniform变量位置 */
+    GLint texture1Loc, texture2Loc;
 };

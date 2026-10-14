@@ -1,7 +1,7 @@
 //
 // Created by ts on 2024/12/18.
 //
-
+// 练习4：使用uniform控制纹理混合比例
 #include "texture_exercise_4.h"
 REGISTER_SAMPLE(SAMPLE_TYPE_TEXTURE_EXERCISE_4, texture_exercise_4)
 
@@ -25,16 +25,16 @@ void texture_exercise_4::Create() {
 
     VAO = GLUtils::setUpVAOAndVBO(vertices, sizeof(vertices), indices, sizeof(indices) ,pointer);
 
-    //load texture1
-    TextureDesc desc;
-    desc.magFilter = GL_LINEAR;
-    texture1 = GLUtils::loadTgaTexture("textures/container.jpg", desc);
+    texture1 = GLUtils::loadTgaTexture("textures/container.jpg");
+    texture2 = GLUtils::loadTgaTexture("textures/awesomeface.png");
 
-    //load texture1
-    TextureDesc desc2;
-    desc2.wrapS = desc2.wrapT = GL_REPEAT;
-    desc2.minFilter = desc2.magFilter = GL_LINEAR;
-    texture2 = GLUtils::loadTgaTexture("textures/awesomeface.png", desc2);
+    //激活纹理单元，给绑定的纹理设置一个位置标签，这时第一个纹理，纹理单元值是0
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture1);
+
+    //这时第二个纹理，纹理单元值是1
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, texture2);
 
     //创建着色器程序,并编译着色器代码
     m_ProgramObj = GLUtils::createProgram("shaders/vs_texture_warp.glsl",
@@ -62,19 +62,11 @@ void texture_exercise_4::Draw() {
     //将进度值传入到片段着色器，作为纹理混合的参数
     setFloat(m_ProgramObj, "mixValue", 0.01f * static_cast<float>(seek));
 
-    //激活纹理单元，给绑定的纹理设置一个位置标签，这时第一个纹理，纹理单元值是0
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture1);
-
-    //这时第二个纹理，纹理单元值是1
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, texture2);
-
     //绑定VAO
     glBindVertexArray(VAO);
 
     //绘制形状
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 }
 
 void texture_exercise_4::Shutdown() {

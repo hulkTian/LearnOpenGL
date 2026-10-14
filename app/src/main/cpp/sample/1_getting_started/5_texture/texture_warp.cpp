@@ -41,6 +41,10 @@ void texture_warp::Create() {
     /*ourTexture = GLUtils::loadTgaTexture("textures/container.jpg", GL_RGBA, GL_RGBA,GL_UNSIGNED_BYTE,
                                          true, GL_CLAMP_TO_BORDER, GL_CLAMP_TO_BORDER,GL_NEAREST, GL_LINEAR);*/
 
+    // 全局就这一个纹理，可以先激活绑定，后面绘制就不需要重复调用绑定
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, ourTexture);
+
     //创建着色器程序,并编译着色器代码
     m_ProgramObj = GLUtils::createProgram("shaders/vs_texture_warp.glsl", "shaders/fs_texture_warp.glsl");
 
@@ -48,9 +52,6 @@ void texture_warp::Create() {
         LOGD("Could not create program")
         return;
     }
-
-    glUseProgram(m_ProgramObj);
-    setInt(m_ProgramObj, "ourTexture", 0);
 
     //设置清屏颜色
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -63,14 +64,14 @@ void texture_warp::Draw() {
     //激活着色器程序
     glUseProgram(m_ProgramObj);
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, ourTexture);
+    //设置ourTexture变量使用纹理单元0中的纹理
+    setInt(m_ProgramObj, "ourTexture", 0);
 
     //绑定VAO
     glBindVertexArray(VAO);
 
     //绘制形状
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 }
 
 void texture_warp::Shutdown() {
