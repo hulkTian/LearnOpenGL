@@ -1,7 +1,7 @@
 //
 // Created by tzh on 2025/11/18.
 //
-
+//练习：动态控制fov,观察物体变化
 #include "CoordinateSystemsExercise_1.h"
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
@@ -107,8 +107,8 @@ void CoordinateSystemsExercise_1::Draw() {
     glUseProgram(m_ProgramObj);
 
     //指定纹理位置
-    glUniform1i(glGetUniformLocation(m_ProgramObj, "texture1"), 0);
-    glUniform1i(glGetUniformLocation(m_ProgramObj, "texture2"), 1);
+    setInt(m_ProgramObj, "texture1", 0);
+    setInt(m_ProgramObj, "texture2", 1);
 
     //激活纹理单元，给绑定的纹理设置一个位置标签，这时第一个纹理，纹理单元值是0
     glActiveTexture(GL_TEXTURE0);
@@ -126,8 +126,10 @@ void CoordinateSystemsExercise_1::Draw() {
     // 透视投影矩阵
     float fov = glm::radians(static_cast<float>(seek));
     LOGD("fov: %f", fov)
-    //todo 结论：fov可以控制视野的大小，fov越大，视野越大，看到的东西越多，但物体会显得更小；fov越小，视野越小，看到的东西越少，但物体会显得更大。
-    // aspect可以控制视野的宽高比，影响画面的变形程度。
+    /**
+     * 屏幕尺寸是固定的，fov越大，看到的东西越多，单个箱子在屏幕上占用的像素越少；fov越小，看到的东西越多，单个箱子在屏幕上占用的像素越多。
+     * aspect可以控制视野的宽高比，影响画面的变形程度。
+     */
     glm::mat4 projection = glm::perspective(fov, SCR_WIDTH / SCR_HEIGHT, 0.1f, 100.0f);
     setMat4(m_ProgramObj, "projection", projection);
 

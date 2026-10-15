@@ -33,8 +33,8 @@ GLuint GLUtils::setUpVAOAndVBO(const float *vertices, const GLsizeiptr vSize, co
     // 通过将指针类型转换为size_t并相减来获取顶点数量，再乘以单个顶点占用字节数来计算总字节数
     glBufferData(GL_ARRAY_BUFFER, vSize, vertices, GL_STATIC_DRAW);
 
+    GLuint EBO;
     if (indices != nullptr) {
-        GLuint EBO;
         glGenBuffers(1, &EBO);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 
@@ -59,9 +59,14 @@ GLuint GLUtils::setUpVAOAndVBO(const float *vertices, const GLsizeiptr vSize, co
                               reinterpret_cast<const void *>(offset));
         glEnableVertexAttribArray(i);
     }
-
     // 解绑VAO，恢复默认状态
     glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glDeleteBuffers(1, &VBO);
+    if (EBO) {
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        glDeleteBuffers(1, &EBO);
+    }
     return VAO;
 }
 

@@ -161,8 +161,8 @@ class MainActivity : AppCompatActivity() {
             "坐标系统-练习2",
             "移动观察矩阵位置观察3D场景",
             BuildUI().setType(IMyNativeRendererType.SAMPLE_TYPE_COORDINATE_EXERCISE_2)
-                .setShowClickLayout(View.GONE)
-                .setShowSeekBar1(View.VISIBLE).setTitle1("foV").build()
+                .setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY)
+                .setShowClickLayout(View.GONE).build()
         )
         addItem(
             i++, R.mipmap.coordinate,

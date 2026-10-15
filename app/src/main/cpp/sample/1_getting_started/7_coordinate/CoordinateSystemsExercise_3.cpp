@@ -1,7 +1,7 @@
 //
 // Created by tzh on 2025/11/18.
 //
-
+// 练习：让箱子自转
 #include "CoordinateSystemsExercise_3.h"
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
@@ -107,8 +107,8 @@ void CoordinateSystemsExercise_3::Draw() {
     glUseProgram(m_ProgramObj);
 
     //指定纹理位置
-    glUniform1i(glGetUniformLocation(m_ProgramObj, "texture1"), 0);
-    glUniform1i(glGetUniformLocation(m_ProgramObj, "texture2"), 1);
+    setInt(m_ProgramObj, "texture1", 0);
+    setInt(m_ProgramObj, "texture2", 1);
 
     //激活纹理单元，给绑定的纹理设置一个位置标签，这时第一个纹理，纹理单元值是0
     glActiveTexture(GL_TEXTURE0);
@@ -124,8 +124,7 @@ void CoordinateSystemsExercise_3::Draw() {
     setMat4(m_ProgramObj, "view", view);
 
     // 透视投影矩阵
-    glm::mat4 projection = glm::perspective(glm::radians(60.0f), SCR_WIDTH / SCR_HEIGHT, 0.1f,
-                                            100.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(60.0f), SCR_WIDTH / SCR_HEIGHT, 0.1f,100.0f);
     setMat4(m_ProgramObj, "projection", projection);
 
     for (unsigned int i = 0; i < sizeof(cubePositions) / sizeof(cubePositions[0]); i++) {
